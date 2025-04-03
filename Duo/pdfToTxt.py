@@ -1,19 +1,19 @@
-from PyPDF2 import PdfReader
-
 # Transforma .pdf em .txt
+import PyPDF2
 file = "aRevolucaoDosBichos"
-reader = PdfReader(file+".pdf")
+PATH = "content/"
+reader = PyPDF2.PdfReader(""+PATH+""+file+".pdf")
 qt = 0
 last = 0
 
-with open("txt_cap1.txt",'w',encoding="utf-8") as txt_file:
+with open(PATH+"txt_cap1.txt",'w',encoding="utf-8") as txt_file:
     for page_num in range(len(reader.pages)):
         page = reader.pages[page_num]
         text = page.extract_text()
         # verifica passagem de capítulo
         block = ["1","1","1","1"]
         result = ""
-        ardb = open("ardb.txt","a",encoding="utf-8")
+        ardb = open(PATH+"ardb.txt","a",encoding="utf-8")
         # ardb.write(text) # +"\n\n\n\n\n ------------------------------------------------------------------------ \n\n\n\n\n"
         for char in text:
             block[0] = block[1]
@@ -30,6 +30,6 @@ with open("txt_cap1.txt",'w',encoding="utf-8") as txt_file:
                         pass
                     print(f"cap {num}: {block} : {last}")
                     last = num
-                    txt_file = open(f"txt_cap{num}.txt","w",encoding="utf-8")
+                    txt_file = open(PATH+f"txt_cap{num}.txt","w",encoding="utf-8")
         txt_file.write(text)
 #
