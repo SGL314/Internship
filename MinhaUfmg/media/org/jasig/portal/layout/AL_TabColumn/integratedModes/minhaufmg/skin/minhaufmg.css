@@ -1,0 +1,527 @@
+/* ::::: http://sagitta.cenapad.ufmg.br/portal/media/org/jasig/portal/layout/AL_TabColumn/integratedModes/minhaufmg/skin/minhaufmg.css ::::: */
+body {
+    background: rgb(255, 255, 255) none repeat;
+    font-family: Tahoma,Geneva,Arial,Helvetica,sans-serif;
+    font-size: 11px;
+}
+
+td, th {
+    font-family: Tahoma,Geneva,Arial,Helvetica,sans-serif;
+    font-size: 11px;
+}
+
+a {
+    color: rgb(62, 86, 123);
+    text-decoration: none;
+}
+
+a:visited {
+    color: black;
+}
+
+a:hover {
+    color: rgb(153, 51, 51);
+    text-decoration: underline;
+}
+
+a.navigation {
+    font-weight: bold;
+    color: rgb(54, 130, 154);
+}
+
+a.navigation:visited {
+    font-weight: bold;
+    color: rgb(255, 255, 204);
+}
+
+a.navigation:hover {
+    font-weight: bold;
+    color: rgb(153, 51, 51);
+    text-decoration: underline;
+}
+
+.navigation-selected {
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+}
+
+a.uportal-navigation-category {
+    font-weight: 700;
+    color: rgb(255, 255, 255);
+    font-family: Tahoma,Verdana,Arial;
+}
+
+a.uportal-navigation-category:visited {
+    font-weight: bold;
+    color: rgb(255, 255, 255);
+}
+
+a.uportal-navigation-category:hover {
+    color: rgb(255, 255, 255);
+    font-family: Tahoma,Verdana,Geneva,Arial,Helvetica,sans-serif;
+    text-decoration: underline;
+}
+
+.uportal-navigation-category-selected {
+    font-weight: bold;
+    color: rgb(255, 255, 255);
+}
+
+a.uportal-navigation-channel {
+    color: black;
+}
+
+a.uportal-navigation-channel:visited {
+    color: black;
+}
+
+a.uportal-navigation-channel:hover {
+    color: rgb(153, 51, 51);
+    text-decoration: underline;
+}
+
+.uportal-navigation-channel-selected {
+    background: black none repeat;
+    color: white;
+}
+
+.uportal-text {
+    color: black;
+    font-family: Tahoma, Georgia,Times New Roman,Times,serif;
+    padding-left: 6px;
+    padding-top: 2px;
+}
+
+.uportal-text-small {
+    color: black;
+}
+
+.uportal-button {
+    border: medium none ;
+    background: rgb(153, 153, 102) none repeat;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    height: 20px;
+}
+
+.uportal-label {
+    font-weight: bold;
+    color: rgb(54, 130, 154);
+}
+
+.uportal-input-text {
+    font-family: Tahoma, Georgia,Times New Roman,Times,serif;
+    border: 1px solid #099AC9;
+    background: rgb(255, 255, 255) none repeat;
+    color: black;
+}
+
+.uportal-text-reversed {
+    color: white;
+    font-family: Tahoma, Georgia,Times New Roman,Times,serif;
+}
+
+.uportal-crumbtrail {
+    color: rgb(102, 102, 102);
+}
+
+.uportal-copyright {
+    color: black;
+    font-style: italic;
+}
+
+.uportal-channel-text {
+    color: black;
+    font-family: Tahoma, Georgia,Times New Roman,Times,serif;
+}
+
+.uportal-channel-title {
+    font-weight: bold;
+    font-size: 11px;
+    color: rgb(255, 255, 255);
+}
+
+.uportal-channel-title-reversed {
+    font-weight: bold;
+    color: rgb(102, 51, 51);
+}
+
+.uportal-channel-subtitle {
+    font-weight: bold;
+    color: rgb(153, 153, 153);
+}
+
+.uportal-channel-subtitle-reversed {
+    font-weight: bold;
+    color: rgb(51, 51, 51);
+}
+
+.uportal-channel-emphasis {
+    font-weight: bold;
+    color: rgb(247, 140, 66);
+}
+
+.uportal-channel-strong {
+    font-weight: bold;
+    font-size: 11px;
+    font-family: Tahoma, Tahoma, Georgia,Times New Roman, Times, serif;
+    text-transform: uppercase;
+    padding-left: 5px;
+    color: #336699;
+}
+
+.uportal-channel-code {
+    color: black;
+    font-family: Monaco,Andale Mono,monospace;
+}
+
+.uportal-channel-copyright {
+    color: black;
+    font-style: italic;
+}
+
+.uportal-channel-warning {
+    color: rgb(153, 51, 51);
+}
+
+.uportal-channel-error {
+    color: rgb(153, 51, 51);
+}
+
+.uportal-channel-table-caption {
+    font-weight: bold;
+    color: rgb(153, 51, 51);
+    text-align: center;
+}
+
+.uportal-channel-table-header {
+    color: rgb(62, 86, 123);
+    text-align: left;
+}
+
+.uportal-channel-table-row-even {
+    color: black;
+}
+
+.uportal-channel-table-row-odd {
+    color: rgb(102, 102, 102);
+}
+
+.uportal-background {
+    background: rgb(255, 255, 255) none repeat;
+}
+
+.uportal-background-dark {
+    background: rgb(9, 154, 201) none repeat;
+    font-family: Tahoma;
+    font-size: 11px;
+}
+
+.uportal-background-med {
+    background: #F4F8E3 none repeat;
+    border: 1px solid #CCE281;
+}
+
+.uportal-background-light {
+    background: rgb(203, 225, 126) none repeat;
+}
+
+.uportal-background-content {
+    background: rgb(255, 255, 255) none repeat;
+}
+
+.uportal-background-highlight {
+    background: rgb(255, 255, 153) none repeat;
+}
+
+.uportal-background-shadow {
+    background: rgb(51, 51, 25) none repeat;
+}
+
+.uportal-background-page {
+    background: rgb(235, 235, 235) none repeat;
+    text-align: left;
+}
+
+.uportal-background-semidark {
+    background: rgb(255, 255, 255) none repeat;
+}
+
+.uportal-background-selected {
+    background: rgb(247, 140, 66) none repeat;
+}
+
+.uportal-background-neutral-dark {
+    background: #F4F8E3 none repeat;
+}
+
+.uportal-background-neutral-med {
+    background: rgb(108, 198, 209) none repeat;
+}
+
+.uportal-background-neutral-light {
+    background: rgb(213, 232, 238) none repeat;
+}
+
+.uportal-background-border {
+    background: #F4F8E3;
+}
+
+/* ::::: http://sagitta.cenapad.ufmg.br/portal/media/org/jasig/portal/layout/AL_TabColumn/integratedModes/minhaufmg/skin/minhaufmg_portlet.css ::::: */
+.portlet-font {
+    font-size: x-small;
+    color: black;
+    font-family: Tahoma, Georgia,Times New Roman,Times,serif;
+}
+
+.portlet-font-dim {
+    font-size: x-small;
+    color: gray;
+    font-family: Tahoma, Georgia,Times New Roman,Times,serif;
+}
+
+.portlet-msg-status {
+    font-size: xx-small;
+    color: rgb(153, 51, 51);
+    font-style: italic;
+    font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+}
+
+.portlet-msg-info {
+    font-size: xx-small;
+    color: rgb(153, 51, 51);
+    font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+}
+
+.portlet-msg-error {
+    font-size: xx-small;
+    color: rgb(153, 51, 51);
+    font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+    text-decoration: underline;
+}
+
+.portlet-msg-alert {
+    font-size: xx-small;
+    color: rgb(153, 51, 51);
+    font-style: italic;
+    font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+}
+
+.portlet-msg-success {
+    font-weight: bold;
+    font-size: xx-small;
+    color: rgb(153, 51, 51);
+    font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+}
+
+.portlet-section-header {
+    font-weight: bold;
+    font-size: xx-small;
+    color: rgb(255, 255, 204);
+    font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+    background-color: rgb(127, 128, 77);
+}
+
+.portlet-section-body {
+    font-size: x-small;
+    color: black;
+    font-family: Tahoma, Georgia,Times New Roman,Times,serif;
+}
+
+.portlet-section-alternate {
+    font-size: x-small;
+    color: rgb(102, 102, 102);
+    font-family: Tahoma, Georgia,Times New Roman,Times,serif;
+}
+
+.portlet-section-selected {
+    background: black none repeat;
+    font-size: x-small;
+    color: white;
+    font-family: Tahoma, Georgia,Times New Roman,Times,serif;
+}
+
+.portlet-section-subheader {
+    font-weight: bold;
+    font-size: x-small;
+    color: rgb(153, 153, 153);
+    font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+}
+
+.portlet-section-footer {
+    font-size: xx-small;
+    color: black;
+    font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+}
+
+.portlet-section-text {
+    font-size: xx-small;
+    color: black;
+    font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+}
+
+.portlet-table-header {
+    background: rgb(204, 204, 153) none repeat;
+    font-weight: bold;
+    font-size: x-small;
+    color: rgb(153, 51, 51);
+    font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+    text-align: left;
+}
+
+.portlet-table-body {
+    font-size: x-small;
+    color: black;
+    font-family: Tahoma, Georgia,Times New Roman,Times,serif;
+    background-color: rgb(255, 255, 204);
+}
+
+.portlet-table-alternate {
+    font-size: x-small;
+    color: rgb(102, 102, 102);
+    font-family: Tahoma, Georgia,Times New Roman,Times,serif;
+    background-color: rgb(204, 204, 153);
+}
+
+.portlet-table-selected {
+    font-size: x-small;
+    color: black;
+    font-family: Tahoma, Georgia,Times New Roman,Times,serif;
+    background-color: rgb(255, 153, 51);
+}
+
+.portlet-table-subheader {
+    font-size: xx-small;
+    color: black;
+    font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+}
+
+.portlet-table-footer {
+    font-size: xx-small;
+    color: black;
+    font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+}
+
+.portlet-table-text {
+    font-size: xx-small;
+    color: black;
+    font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+}
+
+.portlet-form-label {
+    font-weight: bold;
+    font-size: xx-small;
+    color: black;
+    font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+}
+
+.portlet-form-input-field {
+    background: rgb(204, 204, 153) none repeat;
+    font-size: x-small;
+    color: black;
+    font-family: Monaco,Andale Mono,monospace;
+}
+
+.portlet-form-button {
+    background: rgb(204, 204, 153) none repeat;
+    font-size: xx-small;
+    color: black;
+    font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+}
+
+.portlet-icon-label {
+    background: rgb(204, 204, 153) none repeat;
+    font-size: xx-small;
+    color: black;
+    font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+}
+
+.portlet-dlg-icon-label {
+    background: rgb(204, 204, 153) none repeat;
+    font-size: xx-small;
+    color: black;
+    font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+}
+
+.portlet-form-field-label {
+    font-weight: bold;
+    font-size: xx-small;
+    color: black;
+    font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+}
+
+.portlet-form-field {
+    font-size: x-small;
+    color: black;
+    font-family: Tahoma, Georgia,Times New Roman,Times,serif;
+}
+
+.portlet-menu {
+    background: rgb(204, 204, 153) none repeat;
+    font-size: xx-small;
+    color: black;
+    font-family: Tahoma, Georgia,Times New Roman,Times,serif;
+}
+
+.portlet-menu-item {
+    background: rgb(204, 204, 153) none repeat;
+    font-size: xx-small;
+    color: black;
+    font-family: Tahoma, Georgia,Times New Roman,Times,serif;
+}
+
+.portlet-menu-item-selected {
+    background: rgb(102, 102, 51) none repeat;
+    font-weight: bold;
+    font-size: xx-small;
+    color: white;
+    font-family: Tahoma, Georgia,Times New Roman,Times,serif;
+}
+
+.portlet-menu-item-hover {
+    background: rgb(102, 102, 51) none repeat;
+    font-weight: bold;
+    font-size: xx-small;
+    color: black;
+    font-family: Tahoma, Georgia,Times New Roman,Times,serif;
+}
+
+.portlet-menu-item-hover-selected {
+    background: rgb(102, 102, 51) none repeat;
+    font-weight: bold;
+    font-size: xx-small;
+    color: white;
+    font-family: Tahoma, Georgia,Times New Roman,Times,serif;
+}
+
+.portlet-menu-cascade-item {
+    background: rgb(204, 204, 153) none repeat;
+    font-weight: bold;
+    font-size: xx-small;
+    color: black;
+    font-family: Tahoma, Georgia,Times New Roman,Times,serif;
+}
+
+.portlet-menu-cascade-item-selected {
+    background: rgb(102, 102, 51) none repeat;
+    font-weight: bold;
+    font-size: xx-small;
+    color: white;
+    font-family: Tahoma, Georgia,Times New Roman,Times,serif;
+}
+
+.portlet-menu-description {
+    background: rgb(204, 204, 153) none repeat;
+    font-size: xx-small;
+    color: black;
+    font-style: italic;
+    font-family: Tahoma, Georgia,Times New Roman,Times,serif;
+}
+
+.portlet-menu-caption {
+    background: rgb(204, 204, 153) none repeat;
+    font-weight: bold;
+    font-size: xx-small;
+    color: black;
+    font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+}

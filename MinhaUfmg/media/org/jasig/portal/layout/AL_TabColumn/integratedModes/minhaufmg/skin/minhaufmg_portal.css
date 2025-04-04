@@ -1,0 +1,111 @@
+.portlet-font {
+	FONT-SIZE: x-small; COLOR: black; FONT-FAMILY: Georgia, "Times New Roman", Times, serif
+}
+.portlet-font-dim {
+	FONT-SIZE: x-small; COLOR: gray; FONT-FAMILY: Georgia, "Times New Roman", Times, serif
+}
+.portlet-msg-status {
+	FONT-SIZE: xx-small; COLOR: #993333; FONT-STYLE: italic; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif
+}
+.portlet-msg-info {
+	FONT-SIZE: xx-small; COLOR: #993333; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif
+}
+.portlet-msg-error {
+	FONT-SIZE: xx-small; COLOR: #993333; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif; TEXT-DECORATION: underline
+}
+.portlet-msg-alert {
+	FONT-SIZE: xx-small; COLOR: #993333; FONT-STYLE: italic; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif
+}
+.portlet-msg-success {
+	FONT-WEIGHT: bold; FONT-SIZE: xx-small; COLOR: #993333; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif
+}
+.portlet-section-header {
+	FONT-WEIGHT: bold; FONT-SIZE: xx-small; COLOR: #ffffcc; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif; BACKGROUND-COLOR: #7f804d
+}
+.portlet-section-body {
+	FONT-SIZE: x-small; COLOR: black; FONT-FAMILY: Georgia, "Times New Roman", Times, serif
+}
+.portlet-section-alternate {
+	FONT-SIZE: x-small; COLOR: #666666; FONT-FAMILY: Georgia, "Times New Roman", Times, serif
+}
+.portlet-section-selected {
+	FONT-SIZE: x-small; BACKGROUND: black; COLOR: white; FONT-FAMILY: Georgia, "Times New Roman", Times, serif
+}
+.portlet-section-subheader {
+	FONT-WEIGHT: bold; FONT-SIZE: x-small; COLOR: #999999; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif
+}
+.portlet-section-footer {
+	FONT-SIZE: xx-small; COLOR: black; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif
+}
+.portlet-section-text {
+	FONT-SIZE: xx-small; COLOR: black; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif
+}
+.portlet-table-header {
+	FONT-WEIGHT: bold; FONT-SIZE: x-small; BACKGROUND: #cccc99; COLOR: #993333; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif; TEXT-ALIGN: left
+}
+.portlet-table-body {
+	FONT-SIZE: x-small; COLOR: black; FONT-FAMILY: Georgia, "Times New Roman", Times, serif; BACKGROUND-COLOR: #ffffcc
+}
+.portlet-table-alternate {
+	FONT-SIZE: x-small; COLOR: #666666; FONT-FAMILY: Georgia, "Times New Roman", Times, serif; BACKGROUND-COLOR: #cccc99
+}
+.portlet-table-selected {
+	FONT-SIZE: x-small; COLOR: black; FONT-FAMILY: Georgia, "Times New Roman", Times, serif; BACKGROUND-COLOR: #ff9933
+}
+.portlet-table-subheader {
+	FONT-SIZE: xx-small; COLOR: black; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif
+}
+.portlet-table-footer {
+	FONT-SIZE: xx-small; COLOR: black; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif
+}
+.portlet-table-text {
+	FONT-SIZE: xx-small; COLOR: black; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif
+}
+.portlet-form-label {
+	FONT-WEIGHT: bold; FONT-SIZE: xx-small; COLOR: black; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif
+}
+.portlet-form-input-field {
+	FONT-SIZE: x-small; BACKGROUND: #cccc99; COLOR: black; FONT-FAMILY: Monaco, Andale Mono, monospace
+}
+.portlet-form-button {
+	FONT-SIZE: xx-small; BACKGROUND: #cccc99; COLOR: black; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif
+}
+.portlet-icon-label {
+	FONT-SIZE: xx-small; BACKGROUND: #cccc99; COLOR: black; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif
+}
+.portlet-dlg-icon-label {
+	FONT-SIZE: xx-small; BACKGROUND: #cccc99; COLOR: black; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif
+}
+.portlet-form-field-label {
+	FONT-WEIGHT: bold; FONT-SIZE: xx-small; COLOR: black; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif
+}
+.portlet-form-field {
+	FONT-SIZE: x-small; COLOR: black; FONT-FAMILY: Georgia, "Times New Roman", Times, serif
+}
+.portlet-menu {
+	FONT-SIZE: xx-small; BACKGROUND: #cccc99; COLOR: black; FONT-FAMILY: Georgia, "Times New Roman", Times, serif
+}
+.portlet-menu-item {
+	FONT-SIZE: xx-small; BACKGROUND: #cccc99; COLOR: black; FONT-FAMILY: Georgia, "Times New Roman", Times, serif
+}
+.portlet-menu-item-selected {
+	FONT-WEIGHT: bold; FONT-SIZE: xx-small; BACKGROUND: #666633; COLOR: white; FONT-FAMILY: Georgia, "Times New Roman", Times, serif
+}
+.portlet-menu-item-hover {
+	FONT-WEIGHT: bold; FONT-SIZE: xx-small; BACKGROUND: #666633; COLOR: black; FONT-FAMILY: Georgia, "Times New Roman", Times, serif
+}
+.portlet-menu-item-hover-selected {
+	FONT-WEIGHT: bold; FONT-SIZE: xx-small; BACKGROUND: #666633; COLOR: white; FONT-FAMILY: Georgia, "Times New Roman", Times, serif
+}
+.portlet-menu-cascade-item {
+	FONT-WEIGHT: bold; FONT-SIZE: xx-small; BACKGROUND: #cccc99; COLOR: black; FONT-FAMILY: Georgia, "Times New Roman", Times, serif
+}
+.portlet-menu-cascade-item-selected {
+	FONT-WEIGHT: bold; FONT-SIZE: xx-small; BACKGROUND: #666633; COLOR: white; FONT-FAMILY: Georgia, "Times New Roman", Times, serif
+}
+.portlet-menu-description {
+	FONT-SIZE: xx-small; BACKGROUND: #cccc99; COLOR: black; FONT-STYLE: italic; FONT-FAMILY: Georgia, "Times New Roman", Times, serif
+}
+.portlet-menu-caption {
+	FONT-WEIGHT: bold; FONT-SIZE: xx-small; BACKGROUND: #cccc99; COLOR: black; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif
+}

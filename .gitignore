@@ -1,0 +1,38 @@
+# Ambiente Virtual
+venv/
+ll_env/
+env/
+.DS_Store
+
+# Arquivos do Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Configurações Sensíveis
+.env
+*.sqlite3
+
+# Logs e Arquivos Temporários
+*.log
+*.pot
+*.pyc
+*.swp
+*.swo
+*.swn
+*.pid
+
+# Migrations desnecessárias
+**/migrations/*.py
+!**/migrations/__init__.py
+
+# Arquivos do IDE
+.vscode/
+.idea/
+*.iml
+
+# Dependências do sistema
+node_modules/
+npm-debug.log
+yarn.lock
