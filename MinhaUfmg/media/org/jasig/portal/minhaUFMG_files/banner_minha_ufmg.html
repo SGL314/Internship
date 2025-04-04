@@ -1,0 +1,32 @@
+
+<!-- saved from url=(0051)https://www.ufmg.br/includes/banner_minha_ufmg.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><style>
+  body {
+    margin: 0px;
+  }
+</style>
+</head><body><div align="center">
+  <a id="linkMinhaUFMG" href="https://www.ufmg.br/festivaldeverao/" target="_blank">
+    <img src="./banner.png" title="FESTIVAL DE VERÃO " width="600" height="70" border="0" id="bannerMinhaUFMG">
+  </a>
+</div>
+
+<script>
+  async function getBannerJson() {
+    const response = await fetch('imagens_minha/data.json', {
+      cache: 'no-cache',
+    });
+    const json = await response.json();
+    return json;
+  }
+  getBannerJson().then((json) => {
+    let { assunto, banner, link } = json;
+    let img = document.getElementById('bannerMinhaUFMG');
+    let a = document.getElementById('linkMinhaUFMG');
+    let timestamp = new Date().getTime();
+    assunto ? (img.title = assunto) : null;
+    banner ? (img.src = 'imagens_minha/' + banner + '?' + timestamp) : null;
+    link ? (a.href = link) : null;
+  });
+</script>
+</body></html>
