@@ -1,0 +1,63 @@
+
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head> <script async src="https://www.googletagmanager.com/gtag/js?id=G-817CMK8Z90"></script><script type="text/javascript" src="/include/injectga4.js"></script>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		
+		<link rel="stylesheet" type="text/css" href="css/idp.css" media="all"/>
+		<script language="javascript" charset="UTF-8" type="text/javascript" src="js/idp.js"></script>
+			
+		<title>SSO - minhaUFMG</title>
+	</head>
+	<body onload="loginFieldFocus()">
+		<div id="box">
+			<form name="loginForm" action="j_security_check" method="post" onsubmit="return validateFormOnSubmit()">
+				
+				<div id="box_links">
+					<ul>
+						<li><a target="_blank" href="https://sistemas.ufmg.br/termos-de-uso">Termos de uso dos recursos de TI da UFMG.</a></li>
+						<li><a target="_blank" href="https://www.ufmg.br/dti/pagina-inicial/servicos/minhaufmg-novo-usuario/">Novo usuário? Veja como acessar a minhaUFMG.</a></li>
+						<li><a target="_blank" href="https://www.grude.ufmg.br/gerus/Registro.nsf/frRegInicIdUsuario?OpenForm&amp;2">Se você esqueceu sua senha, recupere-a.</a></li>
+					</ul>
+					
+				</div>
+				
+				<div id="box_dots"><img src="images/dots.gif" width="5" height="1" alt="Pontos"/></div>
+				
+				<div id="box_login">
+					
+					<div id="box_login_title">Login</div>
+					<div id="box_login_fields">
+						<p><label for="j_username"><img src="images/usuario.gif" alt="Usuario" height="18" width="94"/></label></p>
+						<p><input name="j_username" id="j_username" size="14" maxlength="50" class="box_login_field" type="text"/></p>
+						<p><label for="j_password"><img src="images/senha.gif" alt="Senha" height="18" width="94"/></label></p>
+						<div id="box_login_capslock" class="box_login_capslock" style="display:none">Capslock ligado!</div>
+						<p><input name="j_password" id="j_password" size="14" maxlength="50" class="box_login_field" onkeypress="checkCapsLock(event)" onchange="captchaFieldFocus()" type="password"/></p>
+						<div id="box_login_submit"><input name="submit" id="submit" value="Entrar" class="box_login_submit" type="submit"/></div>
+					</div>
+				</div>
+				<div id="box_warning">
+					&nbsp;
+					
+					&nbsp;
+				</div>
+				
+				<div id="box_message">
+					<div id="box_message_title">Aviso</div>
+					<div id="box_message_text">
+						<p><img src="images/novo.gif" border="0" />Prezado(a) Calouro(a) de Graduação,</br><br/>Informações para Calouros de Graduação do primeiro período letivo de 2025: <a href="https://www.ufmg.br/dti/blog/calouros-grad" target="_blank" style="color: #1B89D6">clique aqui!</a></p>
+					</div>
+				</div>
+				
+			</form>
+		</div>
+		<script>
+			document.getElementById("j_username").setAttribute('autocapitalize', 'off');
+			document.getElementById("j_password").setAttribute('autocapitalize', 'off');
+		</script>
+	</body> 
+</html>
