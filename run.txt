@@ -1,8 +1,0 @@
-Ambiente Virtual:
-    criar: python3 -m venv ll_env
-    entrar:
-        linux: source ll_env/bin/activate
-        windows: ./ll_env/Scripts/activate
-    sair: deactivate
-Rodar jupyter: 
-    run: jupyter nbconvert --to notebook --execute StopWords/Duo/freq.ipynb --output exe.ipynb
