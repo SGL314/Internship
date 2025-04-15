@@ -21,7 +21,7 @@ body {
 }
 
 .indice {
-  width: 30%;
+  width: 10%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -37,7 +37,7 @@ body {
   overflow-y: auto;
 }
 
-.imageWithZoom{
+#imageWithZoom{
   width: auto;
   height: auto;
   transition: transform 0.5s ease;
