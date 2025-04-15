@@ -7,5 +7,9 @@ Ambiente Virtual:
 Rodar jupyter: 
     run: jupyter nbconvert --to notebook --execute StopWords/Duo/freq.ipynb --output exe.ipynb
 Git:
+    git add .: seleciona tudo para no git
+    git commit -m "(mensagem)": da o commit com uma mensagem
+    git push origin (branch): da o push num branch
+    
     git log --online: mostra o histórico de commits e seus hex's
     git reset --hard (hex): exclui o commit
