@@ -622,9 +622,15 @@ Quid iam depofitas proprio mortalis in usus
     content: [`Homem a sentar sobre um Leão, que tenha o freio em boca, & rege com uma mão dito freio, & com a outra punja dito Leão com um estímulo.`],
     images: ['dominio_dsm.png']
   },
+  {
+    id: "101",
+    title: "AAA_DOUTRINA",
+    content: [`Mulher de idade madura, vestida de veste de pavão, que esteja a sentar com os braços abertos, como quisesse abraçar os outros, com a direita mão terá um cetro, acima do qual esteja um Sol, terá ao ventre um livro aberto, & se vê do Céu cair grande quantidade de orvalho.`],
+    images: ['doutrina.png']
+  },
   // {
   //   id: "",
-  //   title: "",
+  //   title: "AAA_",
   //   content: [``],
   //   images: ['semImagem.png']
   // },
