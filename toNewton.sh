@@ -1,0 +1,2 @@
+# scp -r Ripa a2023951482@teiacoltec.org@150.164.102.160:/home/turma2024-integrado/303/a2023951482@teiacoltec.org/hp
+scp Ripa/script.js a2023951482@teiacoltec.org@150.164.102.160:/home/turma2024-integrado/303/a2023951482@teiacoltec.org/hp/Ripa
