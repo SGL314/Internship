@@ -33,6 +33,7 @@ training_args = TrainingArguments(
     per_device_train_batch_size=tamRam,
     per_device_eval_batch_size=tamRam,
     save_total_limit=2,
+    
     load_best_model_at_end=True,
 )
 
