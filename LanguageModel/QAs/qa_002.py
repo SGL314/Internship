@@ -13,7 +13,7 @@ if not os.path.exists(file):
 
 # Lê o conteúdo do arquivo
 with open(file, 'r', encoding='utf-8', errors='ignore') as f:
-    context = f.read().replace('\x00', '')  # remove caracteres nulos
+    context = f.read().replace('\x00', 'fi')  # remove caracteres nulos
 
 # Inicializa o pipeline de QA
 qa_pipeline = pipeline("question-answering", model="distilbert-base-uncased", tokenizer="distilbert-base-uncased")

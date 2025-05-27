@@ -8,8 +8,8 @@ from transformers import BertTokenizerFast
 model = BertForQuestionAnswering.from_pretrained("bert-base-uncased")
 tokenizer = BertTokenizerFast.from_pretrained("bert-base-uncased")
 paragrafos = ["oi mano"]
-
-
+pathModels = "./"
+nameModel = "qa_003_2"
 
 # funções
 def getData(file):
@@ -21,10 +21,10 @@ def getData(file):
     # Separar o texto em parágrafos relevantes
     paragrafos = [p.strip() for p in livro.split("\n") if len(p.strip()) > 50]
 
-def treinar():
-
+def treinar(encoded_dataset):
+    global pathModels,nameModel
     training_args = TrainingArguments(
-        output_dir="./bert-qa-revolucao_003",
+        output_dir=pathModels+nameModel,
         num_train_epochs=2,
         per_device_train_batch_size=1,
         learning_rate=2e-5,
@@ -39,6 +39,10 @@ def treinar():
     )
 
     trainer.train()
+
+    # Salvar modelo e tokenizer após treinamento
+    model.save_pretrained(pathModels + nameModel)
+    tokenizer.save_pretrained(pathModels + nameModel)
 
 def createModel(file):
 
@@ -102,7 +106,7 @@ def createModel(file):
 def perguntar(modelo):
     global init
     from transformers import pipeline
-    qa_pipeline = pipeline("question-answering", model=modelo, tokenizer=tokenizer)
+    qa_pipeline = pipeline("question-answering", model=f"{pathModels}{modelo}", tokenizer=tokenizer)
     print(f"3_Tempo processamento: {tm.time()-init} segundos")
     while True: 
         # Inferência
@@ -110,15 +114,16 @@ def perguntar(modelo):
         init = tm.time()
         if (question == "exit"):
             break
-        resposta = qa_pipeline({
-            "context": paragrafos[0],
-            "question": question
-        })
+        resposta = qa_pipeline(
+            question=question,
+            context=paragrafos[0]
+        )
 
         print("3_Resposta:", resposta["answer"])
         print(f"3_Tempo: {tm.time()-init} segundos")
 
 arquivo = "a_revolucao_dos_bichos.txt"
 getData(arquivo)
+todos_paragrafos = " ".join(paragrafos)
 # createModel(arquivo)
-perguntar("qa_003")
+perguntar(nameModel)
