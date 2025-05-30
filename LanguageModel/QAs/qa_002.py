@@ -5,7 +5,8 @@ import time as tm
 
 # Nome do arquivo
 init = tm.time()
-file = "a_revolucao_dos_bichos.txt"
+# file = "a_revolucao_dos_bichos.txt"
+file = "BíbliaSagrada_NVI_gn.txt"
 
 # Verifica se o arquivo existe
 if not os.path.exists(file):
@@ -28,5 +29,5 @@ def perguntar(pergunta):
     print(f"Resposta: {resposta['answer']}")
 
 # Exemplo de uso
-perguntar("Qual é o assunto principal do texto?")
+perguntar("O que Deus criou no primeiro dia ?")
 print(f"Tempo: {tm.time()-init} segundos")

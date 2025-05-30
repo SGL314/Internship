@@ -8,8 +8,9 @@ from transformers import BertTokenizerFast
 model = BertForQuestionAnswering.from_pretrained("bert-base-uncased")
 tokenizer = BertTokenizerFast.from_pretrained("bert-base-uncased")
 paragrafos = ["oi mano"]
-pathModels = "./"
+pathModels = "../../../Modelos/"
 nameModel = "qa_003_2"
+ind_model = 3.2
 
 # funções
 def getData(file):
@@ -107,7 +108,7 @@ def perguntar(modelo):
     global init
     from transformers import pipeline
     qa_pipeline = pipeline("question-answering", model=f"{pathModels}{modelo}", tokenizer=tokenizer)
-    print(f"3_Tempo processamento: {tm.time()-init} segundos")
+    print(f"{ind_model}_Tempo processamento: {tm.time()-init} segundos")
     while True: 
         # Inferência
         question = input(":> ")
@@ -119,11 +120,11 @@ def perguntar(modelo):
             context=paragrafos[0]
         )
 
-        print("3_Resposta:", resposta["answer"])
-        print(f"3_Tempo: {tm.time()-init} segundos")
+        print(f"{ind_model}_Resposta:", resposta["answer"])
+        print(f"{ind_model}_Tempo: {tm.time()-init} segundos")
 
 arquivo = "a_revolucao_dos_bichos.txt"
 getData(arquivo)
 todos_paragrafos = " ".join(paragrafos)
-# createModel(arquivo)
+createModel(arquivo)
 perguntar(nameModel)
