@@ -60,27 +60,6 @@ os.makedirs(PATH, exist_ok=True)
 
 pdf_file_path = PATH + file + '.pdf'
 txt_file_path_full = PATH + file + '.txt'
-
-# Cria um arquivo PDF dummy para demonstração se o original não existir
-try:
-    with open(pdf_file_path, 'rb') as f:
-        pass
-except FileNotFoundError:
-    print(f"'{pdf_file_path}' não encontrado. Criando um PDF dummy para demonstração.")
-    from reportlab.pdfgen import canvas
-    c = canvas.Canvas(pdf_file_path)
-    c.drawString(100, 750, "Este é um texto de exemplo para o capítulo 1.")
-    c.drawString(100, 730, "Os animais estavam cansados do sr. Jones. Eles queriam liberdade.")
-    c.drawString(100, 710, "Napoleão e Bola-de-Neve assumiram a liderança da fazenda.")
-    c.showPage()
-    c.drawString(100, 750, "Capítulo 2.")
-    c.drawString(100, 730, "A vida na fazenda dos animais era difícil, mas justa.")
-    c.save()
-
-
-# convert_pdf_to_txt(pdf_file_path, txt_file_path_full)  # pdf > txt
-
-
 nltk.download('punkt') # Download 'punkt' para tokenização
 nltk.download('stopwords')
 

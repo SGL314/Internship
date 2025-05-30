@@ -20,7 +20,25 @@ lucas.ferro.2000@hotmail.com
 # prompt: converta um arquivo pdf em txt padrão utf-8
 
 # !pip install PyPDF2
+import nltk
 
+# Instalação do NLTK
+# !pip install nltk==3.6.2
+
+# Importação de bibliotecas
+import pandas as pd
+import nltk
+from nltk.tokenize import word_tokenize,sent_tokenize
+from datetime import datetime
+from collections import Counter
+from nltk import ngrams
+import string
+from wordcloud import WordCloud,STOPWORDS,ImageColorGenerator
+import matplotlib.pyplot as plt
+from PIL import Image
+import re
+from nltk.corpus import stopwords
+nltk.download('punkt_tab')
 import PyPDF2
 import re
 
@@ -87,24 +105,7 @@ txt_file_path = PATH+file+'output.txt'      # Replace with desired output file p
 
 convert_pdf_to_txt(pdf_file_path, txt_file_path)
 
-import nltk
 
-# Instalação do NLTK
-# !pip install nltk==3.6.2
-
-# Importação de bibliotecas
-import pandas as pd
-import nltk
-from nltk.tokenize import word_tokenize,sent_tokenize
-from datetime import datetime
-from collections import Counter
-from nltk import ngrams
-import string
-from wordcloud import WordCloud,STOPWORDS,ImageColorGenerator
-import matplotlib.pyplot as plt
-from PIL import Image
-import re
-nltk.download('punkt_tab')
 
 # pd.set_option('max_columns', None)
 # pd.set_option('max_colwidth', None)
@@ -115,7 +116,6 @@ remove_pt
 
 # Baixa as stopwords para o português no NLTK
 nltk.download('stopwords')
-from nltk.corpus import stopwords
 stop_words_pt = set(stopwords.words('portuguese'))
 len(stop_words_pt)
 stop_words_pt
@@ -133,7 +133,7 @@ stop_words_pt
 # from google.colab import drive
 # drive.mount('/content/drive')
 qt_palavras = 100
-num = 2 # capítulo do livro
+num = 7 # capítulo do livro
 
 with open(PATH + f'txt_cap{num}.txt', 'r', encoding='utf8') as f:
     filecontent = f.read()
