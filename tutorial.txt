@@ -13,3 +13,5 @@ Git:
     
     git log --online: mostra o histórico de commits e seus hex's
     git reset --hard (hex): exclui o commit
+
+apt-cache search (library): find a library by the name
