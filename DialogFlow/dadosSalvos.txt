@@ -1,0 +1,4 @@
+['julia', 'pc', 'parou de funcionar', 104]
+['carlos', 'pc', 'travou', 104]
+['samuel', 'pc', 'travou', 103]
+['julio', 'pc', 'queimou', 105]

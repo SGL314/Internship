@@ -1,0 +1,38 @@
+body{
+    text-align: center;
+    align-items: center;
+    background-color: #e0e0e0
+}
+
+table{
+    border:2px solid black;
+    text-align: center;
+
+    margin: 10px auto 0 auto;
+}
+
+#topo{
+    height: 80px;
+    background-color:burlywood;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px solid black;
+}
+
+h1{
+    
+}
+
+thead{
+    
+    background-color: aquamarine;  
+}
+
+tbody{
+    background-color: antiquewhite;
+}
+
+th, td{
+    border: 1px solid black;
+}
