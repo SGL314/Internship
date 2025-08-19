@@ -176,6 +176,44 @@
         // Adiciona indicador visual de onde será inserido (antes ou depois do card)
         function setDropIndicator(card, e) {
             const bounding = card.getBoundingClientRect();
+            const offset = e.clientY - bounding.top;
+            const height = bounding.height;
+            if (offset < height / 2) {
+                card.style.borderTop = "3px solid #4f8cff";
+                card.style.borderBottom = "";
+                card.dataset.dropPosition = "before";
+            } else {
+                card.style.borderTop = "";
+                card.style.borderBottom = "3px solid #4f8cff";
+                card.dataset.dropPosition = "after";
+            }
+        }
+
+        function handleDropOnCard(targetId, columnId, e) {
+            if (dragTaskId === null || dragTaskId === targetId) return;
+
+            const dragIdx = tasks.findIndex(t => t.id === dragTaskId);
+            const targetIdx = tasks.findIndex(t => t.id === targetId);
+            const dragged = tasks[dragIdx];
+
+            const dropPosition = e.currentTarget.dataset.dropPosition || "before";
+
+            // Remove da posição original
+            tasks.splice(dragIdx, 1);
+
+            // Corrige coluna
+            dragged.column = columnId;
+
+            // Novo índice de inserção
+            let insertIdx = targetIdx;
+            if (dropPosition === "after") insertIdx++;
+
+            // Corrige se arrastando para baixo na mesma coluna
+            if (dragIdx < targetIdx && dropPosition === "after") insertIdx--;
+
+            tasks.splice(insertIdx, 0, dragged);
+
+            renderBoard();
         }
 
         // Limpa indicadores visuais de todos os cards
