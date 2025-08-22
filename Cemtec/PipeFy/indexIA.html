@@ -1,114 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="styles.css">
   <title>KanBan</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6fa;
-      margin: 0;
-    }
-    .kanban-board {
-      display: flex;
-      gap: 20px;
-      padding: 40px;
-    }
-    .kanban-column {
-      background: #fff;
-      border-radius: 8px;
-      border: 2px solid black;
-      box-shadow: 0 2px 8px #0001;
-      width: 300px;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-    }
-    .kanban-column h2 {
-      margin: 0 0 12px 0;
-      font-size: 1.2em;
-    }
-    .kanban-cards {
-      flex: 1;
-      min-height: 40px;
-    }
-    .kanban-card {
-      background: #e3e7ef;
-      border: 2px solid #4f8cff;
-      border-radius: 6px;
-      padding: 12px;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: grab;
-      transition: border 0.2s;
-    }
-    .kanban-card[data-drop-position="before"] {
-      border-top: 12px solid #4f8cff;
-      /*border-top: 12px solid #ff874f;*/
-    }
-    .kanban-card[data-drop-position="after"] {
-      border-bottom: 12px solid #4f8cff;
-    }
-    .kanban-actions button {
-      margin-left: 4px;
-      background: #d1d8e6;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      padding: 2px 6px;
-    }
-    .add-task-form {
-      display: flex;
-      margin-top: 12px;
-    }
-    .add-task-form input {
-      flex: 1;
-      padding: 4px;
-    }
-    .add-task-form button {
-      margin-left: 4px;
-    }
-    #editModal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: #0005;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-    #editModal .modal-content {
-      background: #fff;
-      border-radius: 8px;
-      padding: 24px 32px;
-      min-width: 300px;
-      box-shadow: 0 4px 24px #0003;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      position: relative;
-    }
-    #editModal .modal-content button.close-btn {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: none;
-      border: none;
-      font-size: 1.2em;
-      cursor: pointer;
-    }
-  </style>
 </head>
 <body>
   <div id="editModal">
     <div class="modal-content">
       <button class="close-btn" onclick="closeEditModal()">&times;</button>
       <h3>Editar tarefa</h3>
-      <input id="editInput" type="text" />
+      Nome: <input id="editInput" type="text"/>
+      Data Início: <input id="dataInicio" type="date" min=""/>
+      Data Fim: <input id="dataFim" type="date" />
       <button onclick="saveEdit()" style="padding:8px; background:#4f8cff; color:#fff; border:none; border-radius:4px; font-size:1em; cursor:pointer;">Salvar</button>
     </div>
   </div>
@@ -122,17 +27,24 @@
       { name: "Concluído", id: "done" }
     ];
 
-    let tasks = [ {id:"1", title: "a", index:0, column: "todo"},
-                  {id:"2", title: "b", index:1, column: "todo"},
-                  {id:"3", title: "c", index:2, column: "todo"},
-                  {id:"4", title: "d", index:3, column: "todo"},
-                  {id:"5", title: "e", index:4, column: "todo"}
-    ];
+    let tasks = { "todo": [ {id:"1", title: "a", index:0},
+                          {id:"2", title: "b", index:1},
+                          {id:"3", title: "c", index:2},
+                          {id:"4", title: "d", index:3},
+                          {id:"5", title: "e", index:4}],
+ 
+                  doing: [],
+
+                  done: []
+    };
     let dragTaskId = null;
     let editingTaskId = null;
 
-    function renderBoard() {
-      orderTasks();
+    function renderBoard(columnId = null){
+      orderTasks(columnId);
+      console.log("render: ");
+      pri(tasks);
+      
       const board = document.getElementById("kanbanBoard");
       board.innerHTML = "";
 
@@ -152,7 +64,7 @@
         board.appendChild(colDiv);
 
         const cardsDiv = colDiv.querySelector(".kanban-cards");
-        var colTasks = tasks.filter(t => t.column === col.id);
+        var colTasks = tasks[col.id];
         var nova = [];
         //console.log("preset:");
         colTasks.forEach(function (t) {
@@ -161,16 +73,18 @@
         colTasks = [];
         nova.forEach(function (t) {
           colTasks.push(t);
-          //console.log(t.index);
+          console.log(t);
+          console.log(t.title + ": "+t.index);
         });
         //console.log("appr:");
 
         colTasks.forEach(task => {
+          if (task == null) return;
           const card = document.createElement("div");
           card.className = "kanban-card";
           card.draggable = true;
           card.dataset.id = task.id;
-          console.log(task.index);
+          //console.log(task.index);
 
           card.ondragstart = e => {
             dragTaskId = task.id;
@@ -199,11 +113,15 @@
           };
 
           card.innerHTML = `
-            <span class="span-moving" data-id="${task.id}">${task.title}</span>
-            <span class="kanban-actions">
-              <button onclick="editTask(${task.id})">✏️</button>
-              <button onclick="removeTask(${task.id})">🗑️</button>
-            </span>
+            <div class="top-task">
+              <span class="span-moving" data-id="${task.id}">${task.title}</span>
+              <span class="kanban-actions">
+                <button onclick="editTask(${task.id})">✏️</button>
+                <button onclick="removeTask(${task.id})">🗑️</button>
+              </span>
+            </div>
+            <span class="span-datas" data-id="${task.id}">${task.dataInicio} > ${task.dataFim}</span>
+        
           `;
 
           cardsDiv.appendChild(card);
@@ -211,13 +129,23 @@
       });
     }
 
-    function orderTasks() {
+    function orderTasks(columnId) {
+        if (columnId == null) return;
+        //redefineIndexes();
+
         var nova = [];
-        var ind = tasks.reduce((a,b) => a.index < b.index ? a : b).index;
+        var tasksC = [],tasksOut = [];
+        tasks[columnId].forEach(t => {
+          tasksC.push(t);
+        });
+
+        var ind = tasksC.reduce((a,b) => a.index < b.index ? a : b).index;
+        console.log("antes: ");
         console.log(tasks);
+        pri("ordenando: ");
         var run = 1;
-        while (nova.length != tasks.length) {
-            for (var t of tasks) {
+        while (nova.length != tasksC.length) {
+            for (var t of tasksC) {
                 if (parseInt(t.index) == ind) {
                     nova.push(t);
                     console.log(ind);
@@ -232,16 +160,29 @@
             
             ind ++;
         }
-        tasks = []; 
-        nova.forEach(function (t) {
+        tasks[columnId] = new Array();
+        tasks[columnId].length = 0;
+
+        pri("ordenado irmão: ");
+        pri(nova);
+        pri("tasks limpa: ");
+        pri(tasks); 
+
+        tasksOut.forEach(function (t) {
             tasks.push(t);
         });
-        tasks.forEach(function (t) {
-            console.log(t);
+        nova.forEach(function (t) {
+            tasks[columnId].push(t);
         });
-        for (var t in tasks){
-            tasks[t].index = parseInt(t);
-        }
+        
+        //tasksC.forEach(function (t) {
+            //console.log(t);
+        //});
+       redefineIndexes(columnId);
+    }
+
+    function pri(thing){
+      console.log(thing);
     }
 
     function setDropIndicator(card, e) {
@@ -264,24 +205,28 @@
 
     function handleDropOnCard(targetId, columnId, e) {
         if (dragTaskId === null || dragTaskId === targetId) return;
+        //redefineIndexes();
 
-        const dragIdx = tasks.findIndex(t => t.id.toString() === dragTaskId.toString());
-        const targetIdx = tasks.findIndex(t => t.id.toString() === targetId.toString());
-        const dragged = tasks[dragIdx];
+        const dragIdx = tasks[columnId].findIndex(t => t.id.toString() === dragTaskId.toString());
+        const targetIdx = tasks[columnId].findIndex(t => t.id.toString() === targetId.toString());
+        const dragged = tasks[columnId][dragIdx];
         const dropPosition = e.currentTarget.dataset.dropPosition;
 
         // Remove da posição original
-        tasks.splice(dragIdx, 1);
+        tasks[columnId].splice(dragIdx, 1);
 
         // Atualiza a coluna
         dragged.column = columnId;
 
         // Recalcula tarefas da coluna destino (depois do splice acima)
-        const colTasks = tasks.filter(t => t.column === columnId);
+        const colTasks = tasks[columnId];
         const newTargetIdx = colTasks.findIndex(t => t.id.toString() === targetId.toString());
 
         let insertIdx = newTargetIdx;
-        if (dropPosition === "after") insertIdx+=1;
+        if (dropPosition === "after"){
+          insertIdx+=1;
+          if (targetIdx < dragIdx) insertIdx--;
+        }
         else insertIdx--;
 
         // Encontra o índice global onde inserir
@@ -289,10 +234,11 @@
         console.log("dragged index: " + dragged.index);
 
         // altera os q vem depois
-        tasks.forEach(t => {
-            console.log(t);
+        var tasksC = [];
+        tasks[columnId].forEach(t => {
+          tasksC.push(t);
         });
-        for (var t of tasks){
+        for (var t of tasksC){
             if (t.index > insertIdx) {
                 t.index++;
             }
@@ -300,25 +246,27 @@
                 t.index--;
             }
         }
-        tasks.push(dragged);
-        // organiza
-      //  for (var t in tasks){
-         //  tasks[t].index = parseInt(t);
-      // }
-        // ordena
-        
-        //orderTasks();
-        renderBoard();
+        tasks[columnId].push(dragged);
+        renderBoard(columnId);
     }
-
+    
+    function redefineIndexes(columnId){
+      var i = 0;
+      tasks[columnId].forEach(function (t) {
+        
+        t.index = i;    
+        console.log(i + ": "+t.title); 
+        i ++;
+      });
+    }
 
     function onDropColumn(columnId) {
       if (dragTaskId !== null) {
-        const dragIdx = tasks.findIndex(t => t.id === dragTaskId);
+        const dragIdx = tasks[columnId].findIndex(t => t.id === dragTaskId);
         const dragged = tasks[dragIdx];
-        tasks.splice(dragIdx, 1);
-        dragged.column = columnId;
-        tasks.push(dragged);
+        tasks[columnId].splice(dragIdx, 1);
+        
+        tasks[columnId].push(dragged);
         renderBoard();
       }
     }
@@ -329,8 +277,7 @@
       var newTask = {
         id: String(Date.now()) + Math.random().toString(36).substring(2, 6),
         title: input.value,
-        index: tasks.filter(t => t.column === columnId).length,
-        column: columnId
+        index: tasks.filter(t => t.column === columnId).lengt
       };
       tasks.push(newTask);
       console.log(newTask);
@@ -339,7 +286,12 @@
     }
 
     function editTask(id) {
-      const task = tasks.find(t => t.id === id);
+      var task = null;
+      for (var item in tasks){
+        pri(tasks[item]);
+        task = tasks[item].find(t => t.id === ""+id);
+        if (task != null) break;
+      }
       editingTaskId = id;
       document.getElementById("editInput").value = task.title;
       document.getElementById("editModal").style.display = "flex";
@@ -350,11 +302,22 @@
       editingTaskId = null;
     }
 
+    // edição
+    const hoje = new Date().toISOString().split('T')[0]; // pega só a parte da data
+    document.getElementById("dataInicio").min = hoje;
+
     function saveEdit() {
       const newTitle = document.getElementById("editInput").value.trim();
+      var task = null;
+      for (var item in tasks){
+        task = tasks[item].find(t => ""+t.id === ""+editingTaskId);
+        if (task != null) break;
+      }
       if (newTitle && editingTaskId !== null) {
-        const task = tasks.find(t => t.id === editingTaskId);
-        task.title = newTitle;
+        
+        task.title = newTitle;  
+        task.dataInicio = document.getElementById("dataInicio").value;
+        task.dataFim = document.getElementById("dataFim").value;
         renderBoard();
         closeEditModal();
       }
