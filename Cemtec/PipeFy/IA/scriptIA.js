@@ -257,7 +257,7 @@ function onDropColumn(columnId) {
         for (var col in tasks){
             if (col === columnId) continue;
             dragIdx = tasks[col].findIndex(t => t.id === dragTaskId.toString());
-            if (dragIdx != null){
+            if (dragIdx != null && dragIdx != -1){
                 column = col;
                 break;
             }
