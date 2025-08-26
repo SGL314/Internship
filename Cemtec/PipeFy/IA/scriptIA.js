@@ -123,6 +123,10 @@ function handleDropOnCard(targetId, columnId, e) {
     const dragIdx = tasks[columnId].findIndex(t => t.id.toString() === dragTaskId.toString());
     const targetIdx = tasks[columnId].findIndex(t => t.id.toString() === targetId.toString());
     const dragged = tasks[columnId][dragIdx];
+    if (dragged == null){ // colunas diferentes
+        pri("dragged null");
+        return;
+    }
     const dropPosition = e.currentTarget.dataset.dropPosition;
 
     // define os indices 
@@ -248,11 +252,30 @@ function clearDropIndicators() {
 
 function onDropColumn(columnId) {
     if (dragTaskId !== null) {
-        const dragIdx = tasks[columnId].findIndex(t => t.id === dragTaskId);
-        const dragged = tasks[columnId][dragIdx];
-        tasks[columnId].splice(dragIdx, 1);
         
-        tasks[columnId].push(dragged);
+        var dragIdx = null, dragged = null, column = null;
+        for (var col in tasks){
+            if (col === columnId) continue;
+            dragIdx = tasks[col].findIndex(t => t.id === dragTaskId.toString());
+            if (dragIdx != null){
+                column = col;
+                break;
+            }
+        }
+        pri("CHANGING: ");
+        print(tasks);
+        pri(dragIdx);
+        if (col != null) dragged = tasks[column][dragIdx];
+
+        if (dragged != null){
+            tasks[column].splice(dragIdx, 1);
+            
+            tasks[columnId].push(dragged);
+        }
+
+        redefineIndexes(column);
+        redefineIndexes(columnId);
+
         renderBoard();
     }
 }
@@ -320,4 +343,59 @@ function saveEdit() {
     }
 }
 
+// salvamento
+function salvarJSON(dados, nomeArquivo = takeName()) {
+    const jsonStr = JSON.stringify(dados, null, 2); // pretty print
+    const blob = new Blob([jsonStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = nomeArquivo;
+    link.click();
+
+    URL.revokeObjectURL(url);
+}
+
+function takeName(){
+    return "tasks_"+Math.floor(Date.now() / 1000)+".json";
+}
+
+document.getElementById("fileInput").addEventListener("change", function(event){
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const dados = JSON.parse(e.target.result);
+            tasks = dados;
+            renderBoard(); // atualiza a board
+        } catch(err) {
+            console.error("Erro ao ler JSON:", err);
+        }
+    };
+    reader.readAsText(file);
+});
+
+function sendTasks(){
+    enviarParaSheets(tasks);
+}
+
+function enviarParaSheets(tasks) {
+    fetch("AKfycbx1vkYfymx0aGIiYdqBQ1-C0Go20ldjFrN4ITN6ZUcglGInvp-pLDa_dEZzFoCRWoD40g", {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(tasks)
+    }).then(() => {
+        console.log("Dados enviados para Google Sheets!");
+    }).catch(err => console.error(err));
+}
+
+//
+
 renderBoard();
+salvarJSON();
