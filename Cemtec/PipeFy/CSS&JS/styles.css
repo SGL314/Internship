@@ -9,7 +9,7 @@ body {
     padding: 40px;
 }
 .kanban-column {
-    background: #fff;
+    background: #b7b7b7;
     border-radius: 8px;
     border: 2px solid black;
     box-shadow: 0 2px 8px #0001;
@@ -27,7 +27,7 @@ body {
     min-height: 40px;
 }
 .kanban-card {
-    background: #e3e7ef;
+    background: #a9c3f8;
     border: 2px solid #4f8cff;
     border-radius: 6px;
     padding: 12px;
@@ -48,6 +48,10 @@ body {
 .kanban-card[data-drop-position="after"] {
     border-bottom: 12px solid #4f8cff;
 }
+.kanban-actions{
+    display: flex;
+  padding-left: 40px;
+}
 .kanban-actions button {
     margin-left: 4px;
     background: #d1d8e6;
@@ -57,8 +61,6 @@ body {
     padding: 2px 6px;
 
     align-self: flex-end;
-    display: flex;
-    flex-direction: column;
 }
 .add-task-form {
     display: flex;
@@ -111,4 +113,19 @@ body {
 }
 .span-datas{
     font-size: 15px;
+}
+
+/*cabeçalho*/
+
+.button-cab{
+    border-radius: 8px;
+    border: 2px solid black;
+    padding: 5px;
+    background: #4f8cff;
+    margin-left: 40px;
+    margin-top: 40px;
+}
+.button-cab:hover{
+    box-shadow:0 0 20px #000000;
+    background: #2670fa;
 }

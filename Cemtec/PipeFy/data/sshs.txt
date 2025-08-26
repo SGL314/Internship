@@ -1,0 +1,7 @@
+limpos: 
+miguel 1474, 
+david 2853
+
+
+
+ ssh a2023951474@teiacoltec.org@150.164.102.160
