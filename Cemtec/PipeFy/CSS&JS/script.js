@@ -22,6 +22,7 @@ const columns = [
 let tasks = null;
 let dragTaskId = null;
 let editingTaskId = null;
+let pauseLeituraJSON = false;
 
 function renderBoard(columnId = null){
     if (tasks == null) return;
@@ -357,7 +358,8 @@ function saveEdit() {
 
 // salvamento JSON
 async function escreverJSON(dados) {
-    fetch("../data/write.php", {
+    pauseLeituraJSON = true;
+    fetch("data/write.php", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -365,11 +367,13 @@ async function escreverJSON(dados) {
         body: JSON.stringify(dados)
     })
     .then(res => res.text())
-    .then(resp => console.log('JSON salvo!', resp))
+    .then(resp => console.log('JSON salvo!'))
     .catch(err => console.error('Erro:', err));
-
+    pauseLeituraJSON = false;
 }
 async function lerJSON(lastData, nomeArquivo = takeName()) {
+    while (pauseLeituraJSON){}
+
     fetch(nomeArquivo)
     .then(res => res.json())
     .then(data => {
@@ -386,7 +390,7 @@ async function lerJSON(lastData, nomeArquivo = takeName()) {
 }
 function takeName(){
     // "+Math.floor(Date.now() / 1000)+"
-    return "../data/tasks.json";
+    return "data/tasks.json";
 }
 
 // document.getElementById("fileInput").addEventListener("change", function(event){
@@ -463,8 +467,11 @@ async function getLink() {
     fetch('data/linkGS.txt')
         .then(response => response.text())
         .then(texto => {
-            sheetLink = texto.trim();
-            console.log("Link GS:", sheetLink.split("/")[5]);
+            var link = texto.trim();
+            if (link != sheetLink) {
+                sheetLink = link;
+                console.log("Link GS:", sheetLink.split("/")[5]);
+            }
         })
         .catch(err => console.error("Erro ao carregar linkGS.txt", err));
 
@@ -476,7 +483,7 @@ async function getJSON(){
     var data = null;
     while (true){
         var data = await lerJSON(data);
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 500));
     }
 }
 
