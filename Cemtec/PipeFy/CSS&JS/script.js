@@ -8,30 +8,28 @@ const columns = [
     { name: "Concluído", id: "done" }
 ];
 
-// [ {id:"1", title: "a", index:0},
+//  todo: [ {id:"1", title: "a", index:0},
 //                         {id:"2", title: "b", index:1},
 //                         {id:"3", title: "c", index:2},
 //                         {id:"4", title: "d", index:3},
-//                         {id:"5", title: "e", index:4}]
+//                         {id:"5", title: "e", index:4}],
 
-let tasks = { todo: [ {id:"1", title: "a", index:0},
-                        {id:"2", title: "b", index:1},
-                        {id:"3", title: "c", index:2},
-                        {id:"4", title: "d", index:3},
-                        {id:"5", title: "e", index:4}],
+//                 doing: [],
+// {"id":"5", "title": "e", "index":4}
+//                 done: []
+//                        {id:"5", title: "e", index:4}]
 
-                doing: [],
-
-                done: []
-};
+let tasks = null;
 let dragTaskId = null;
 let editingTaskId = null;
 
 function renderBoard(columnId = null){
+    if (tasks == null) return;
+
     pri("preRender: ");
     print(tasks);
     orderTasks(columnId);
-    console.log("render: ");
+    pri("render: ");
     print(tasks);
     
     const board = document.getElementById("kanbanBoard");
@@ -67,7 +65,7 @@ function renderBoard(columnId = null){
             colTasks.push(t);
             // console.log(t);
         });
-        console.log("appr:");
+        pri("appr:");
         var ind = 0;
 
         colTasks.forEach(task =>{
@@ -76,7 +74,7 @@ function renderBoard(columnId = null){
             card.className = "kanban-card";
             card.draggable = true;
             card.dataset.id = task.id;
-            console.log(task.index);
+            pri(task.index);
 
             card.ondragstart = e => {
                 dragTaskId = task.id;
@@ -109,8 +107,8 @@ function renderBoard(columnId = null){
             <div class="top-task">
                 <span class="span-moving" data-id="${task.id}">${task.title}</span>
                 <span class="kanban-actions">
-                    <button onclick="editTask(${task.id})">✏️</button>
-                    <button onclick="removeTask(${task.id})">🗑️</button>
+                    <button onclick="editTask('${task.id}')">✏️</button>
+                    <button onclick="removeTask('${task.id}')">🗑️</button>
                 </span>
             </div>
             <span class="span-datas" data-id="${task.id}">${(task.dataInicio == undefined) ? "---" : task.dataInicio} > ${(task.dataFim == undefined) ? "---" : task.dataFim}</span>
@@ -164,7 +162,7 @@ function handleDropOnCard(targetId, columnId, e) {
     // Encontra o índice global onde inserir
     dragged.index = insertIdx;
     
-    console.log(dropPosition + " dragged index: " + dragged.index + " "+ indiceIns);
+    pri(dropPosition + " dragged index: " + dragged.index + " "+ indiceIns);
 
     // altera os q vem depois
     var tasksC = [];
@@ -225,7 +223,7 @@ function redefineIndexes(columnId){
     var i = 0;
     tasks[columnId].forEach(function (t) {
         t.index = i;    
-        console.log(i + ": "+t.title); 
+        pri(i + ": "+t.title); 
         i++;
     });
     pri("redefinido: ");
@@ -233,9 +231,11 @@ function redefineIndexes(columnId){
 }
 
 function pri(thing){
+    return;
     console.log(thing);
 }
 function print(thing){
+    return;
     if (thing == null || thing == undefined) pri(thing);
     else console.log(JSON.parse(JSON.stringify(thing)));
 }
@@ -297,8 +297,9 @@ function addTask(event, columnId) {
         index: tasks[columnId].length
     };
     tasks[columnId].push(newTask);
-    console.log(newTask);
+    pri(newTask);
     input.value = "";
+    sendTasks();
     renderBoard();
 }
 
@@ -319,6 +320,7 @@ function removeTask(id) {
         const idx = tasks[col].findIndex(t => t.id === ""+id);
         if (idx !== -1) {
             tasks[col].splice(idx, 1);
+            sendTasks();
             renderBoard();
             break;
         }
@@ -347,27 +349,44 @@ function saveEdit() {
 
         task.dataInicio = document.getElementById("dataInicio").value.split("-").reverse().join("/");
         task.dataFim = document.getElementById("dataFim").value.split("-").reverse().join("/");;
-        renderBoard();
+        sendTasks();
         closeEditModal();
+        renderBoard();
     }
 }
 
-// salvamento
-function salvarJSON(dados, nomeArquivo = takeName()) {
-    const jsonStr = JSON.stringify(dados, null, 2); // pretty print
-    const blob = new Blob([jsonStr], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
+// salvamento JSON
+async function escreverJSON(dados) {
+    fetch("../data/write.php", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dados)
+    })
+    .then(res => res.text())
+    .then(resp => console.log('JSON salvo!', resp))
+    .catch(err => console.error('Erro:', err));
 
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = nomeArquivo;
-    link.click();
-
-    URL.revokeObjectURL(url);
 }
-
+async function lerJSON(lastData, nomeArquivo = takeName()) {
+    fetch(nomeArquivo)
+    .then(res => res.json())
+    .then(data => {
+        if (JSON.stringify(data) !== JSON.stringify(lastData)){
+            tasks = data;
+            console.log("Tasks Carregadas !");
+            // pri(tasks);
+            // pri(last)
+            renderBoard();
+        }
+    })
+    .catch(err => console.error('Erro ao carregar JSON:', err));
+    return tasks;
+}
 function takeName(){
-    return "tasks_"+Math.floor(Date.now() / 1000)+".json";
+    // "+Math.floor(Date.now() / 1000)+"
+    return "../data/tasks.json";
 }
 
 // document.getElementById("fileInput").addEventListener("change", function(event){
@@ -389,6 +408,7 @@ function takeName(){
 
 async function sendTasks(){
     imagemAtualizacaoSheets("carregando");
+    escreverJSON(tasks);
     enviarParaSheets(tasks);
 }
 
@@ -452,8 +472,17 @@ async function getLink() {
     }
 }
 
-//
+async function getJSON(){
+    var data = null;
+    while (true){
+        var data = await lerJSON(data);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+}
+
+//  
 getLink();
+getJSON();
 renderBoard();
 // salvarJSON();
 
