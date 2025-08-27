@@ -390,14 +390,13 @@ function takeName(){
 async function sendTasks(){
     imagemAtualizacaoSheets("carregando");
     enviarParaSheets(tasks);
-    
 }
 
 async function imagemAtualizacaoSheets(tipo){
     var angulo = 0;
     if (tipo == "carregando"){
         var img = document.getElementById("attSheets");
-        img.src = "/imgs/carregando.png";
+        img.src = "imgs/carregando.png";
         img.id = "attSheets";   
 
         // Gira a cada 50ms (ajuste se quiser mais rápido/lento)
@@ -414,7 +413,7 @@ async function imagemAtualizacaoSheets(tipo){
         
         var img = document.getElementById("attSheets");
         img.style.transform = `rotate(0deg)`;
-        img.src = "/imgs/carregado.png";
+        img.src = "imgs/carregado.png";
         img.id = "attSheets";
         document.getElementById("sheetsInteraction").appendChild(img);
 
@@ -439,9 +438,9 @@ async function enviarParaSheets(tasks) {
     }).catch(err => console.error(err));
 }
 
-async function getter() {
+async function getLink() {
     while (true) {
-    fetch('/data/linkGS.txt')
+    fetch('data/linkGS.txt')
         .then(response => response.text())
         .then(texto => {
             sheetLink = texto.trim();
@@ -454,10 +453,9 @@ async function getter() {
 }
 
 //
-getter();
+getLink();
 renderBoard();
 // salvarJSON();
 
 // atualizar  no sheets quando edita uma task
-//  ssh a2023951474@teiacoltec.org@150.164.102.160
 
