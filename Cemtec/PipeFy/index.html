@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -27,3 +28,34 @@
   <script src="CSS&JS/script.js"></script>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="shortcut icon" href="imgs/faviconKanban.ico" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="CSS&JS/styles.css">
+  <title>KanBan</title>
+</head>
+<body>
+  <div id="editModal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeEditModal()">&times;</button>
+      <h3>Editar tarefa</h3>
+      Nome: <input id="editInput" type="text"/>
+      Data Início: <input id="dataInicio" type="date" min=""/>
+      Data Fim: <input id="dataFim" type="date" min=""/>
+      <button onclick="saveEdit()" style="padding:8px; background:#4f8cff; color:#fff; border:none; border-radius:4px; font-size:1em; cursor:pointer;">Salvar</button>
+    </div>
+  </div>
+  <!-- <input type="file" id="fileInput" accept=".json"> -->
+  <div style="height: 40px;" id="sheetsInteraction">
+    <button class="button-cab" onclick="sendTasks()">Atualizar no Sheets</button>
+    <img style="padding: 0px" id="attSheets" src="imgs/carregado.png" width="20" height="20"/>
+  </div>
+  <div class="kanban-board" id="kanbanBoard"></div>
+  <script src="CSS&JS/script.js"></script>
+</body>
+</html>
+>>>>>>> ed529a3 (n entendo)
