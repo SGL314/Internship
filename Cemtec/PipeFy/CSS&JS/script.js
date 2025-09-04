@@ -233,11 +233,11 @@ function redefineIndexes(columnId) {
 }
 
 function pri(thing) {
-    return;
+    // return;
     console.log(thing);
 }
 function print(thing) {
-    return;
+    // return;
     if (thing == null || thing == undefined) pri(thing);
     else console.log(JSON.parse(JSON.stringify(thing)));
 }
@@ -262,10 +262,10 @@ function clearDropIndicators() {
 
 function onDropColumn(columnId) {
     if (dragTaskId !== null) {
-
+        print("Finding: "+columnId);
         var dragIdx = null, dragged = null, column = null;
         for (var col in tasks) {
-            if (col === columnId) continue;
+            if (col == columnId) continue;
             dragIdx = tasks[col].findIndex(t => t.id === dragTaskId.toString());
             if (dragIdx != null && dragIdx != -1) {
                 column = col;
@@ -274,16 +274,20 @@ function onDropColumn(columnId) {
         }
         pri("CHANGING: ");
         print(tasks);
+        pri(column);
         pri(dragIdx);
-        if (col != null) dragged = tasks[column][dragIdx];
+        try{
+            if (col != null) dragged = tasks[column][dragIdx];
 
-        if (dragged != null) {
-            tasks[column].splice(dragIdx, 1);
+            if (dragged != null) {
+                tasks[column].splice(dragIdx, 1);
 
-            tasks[columnId].push(dragged);
+                tasks[columnId].push(dragged);
+            }
+            redefineIndexes(column);
+        }catch (e){
+            
         }
-
-        redefineIndexes(column);
         redefineIndexes(columnId);
         sendTasks();
         renderBoard();
@@ -389,7 +393,7 @@ async function lerJSON(lastData, nomeArquivo = takeName()) {
                 // pri(tasks);
                 // pri(last)
                 renderBoard();
-                canReadJSON = false;
+                canReadJSON = true;
             }
         })
         .catch(err => console.error('Erro ao carregar JSON:', err));
@@ -418,6 +422,7 @@ function takeName() {
 // });
 
 async function sendTasks() {
+    pri("----------SALVING----------");
     imagemAtualizacaoSheets("carregando");
     escreverJSON(tasks);
     enviarParaSheets(tasks);
@@ -490,13 +495,20 @@ async function getJSON() {
     var data = null;
     while (true) {
         var data = await lerJSON(data);
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 1500));
     }
 }
 
+async function iden(){
+    while (true){
+        document.getElementById("iden").style = (!canReadJSON)?"color: red;":"color: green";
+        await new Promise(resolve => setTimeout(resolve, 500));
+    }
+}
 //  
 getLink();
 getJSON();
+// iden();
 renderBoard();
 // salvarJSON();
 
