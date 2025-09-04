@@ -1,13 +1,142 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <link rel="shortcut icon" href="imgs/faviconKanban.ico" type="image/x-icon">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="CSS&JS/styles.css">
-  <title>KanBan</title>
-</head>
-<body>
+
+<!-- CSS -->
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f4f6fa;
+    margin: 0;
+}
+.kanban-board {
+    display: flex;
+    gap: 20px;
+    padding: 40px;
+}
+.kanban-column {
+    background: #b7b7b7;
+    border-radius: 8px;
+    border: 2px solid black;
+    box-shadow: 0 2px 8px #0001;
+    width: 300px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+}
+.kanban-column h2 {
+    margin: 0 0 12px 0;
+    font-size: 1.2em;
+}
+.kanban-cards {
+    flex: 1;
+    min-height: 40px;
+}
+.kanban-card {
+    background: #a9c3f8;
+    border: 2px solid #4f8cff;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* cursor: grab; */
+    transition: border 0.2s;
+
+    display: flex;
+    flex-direction: column;
+}
+.kanban-card[data-drop-position="before"] {
+    border-top: 12px solid #4f8cff;
+    /*border-top: 12px solid #ff874f;*/
+}
+.kanban-card[data-drop-position="after"] {
+    border-bottom: 12px solid #4f8cff;
+}
+.kanban-actions{
+    display: flex;
+  padding-left: 40px;
+}
+.kanban-actions button {
+    margin-left: 4px;
+    background: #d1d8e6;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 2px 6px;
+
+    align-self: flex-end;
+}
+.add-task-form {
+    display: flex;
+    margin-top: 12px;
+}
+.add-task-form input {
+    flex: 1;
+    padding: 4px;
+}
+.add-task-form button {
+    margin-left: 4px;
+}
+#editModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: #0005;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+#editModal .modal-content {
+    background: #fff;
+    border-radius: 8px;
+    padding: 24px 32px;
+    min-width: 300px;
+    box-shadow: 0 4px 24px #0003;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+}
+#editModal .modal-content button.close-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+.top-task{
+    display: flex;
+    flex-direction: row;
+}
+.span-moving{
+    font-size: 20px;
+}
+.span-datas{
+    font-size: 15px;
+}
+
+/*cabeçalho*/
+
+.button-cab{
+    border-radius: 8px;
+    border: 2px solid black;
+    padding: 5px;
+    background: #4f8cff;
+    margin-left: 40px;
+    margin-top: 40px;
+}
+.button-cab:hover{
+    box-shadow:0 0 20px #000000;
+    background: #2670fa;
+}
+</style>
+
+<!-- HTML -->
+
   <div id="editModal">
     <div class="modal-content">
       <button class="close-btn" onclick="closeEditModal()">&times;</button>
@@ -21,10 +150,536 @@
   <!-- <input type="file" id="fileInput" accept=".json"> -->
   <div style="height: 40px;" id="sheetsInteraction">
     <button class="button-cab" onclick="sendTasks()">Atualizar no Sheets</button>
-    <img style="padding: 0px" id="attSheets" src="imgs/carregado.png" width="20" height="20"/>
+     <img style="padding: 0px" id="attSheets" src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/09/carregado.png" width="20" height="20"/>
   </div>
   <!-- <h4 id="iden" style="color: red;">o</h4> -->
   <div class="kanban-board" id="kanbanBoard"></div>
-  <script src="CSS&JS/script.js"></script>
-</body>
-</html>
+
+<!-- SCRIPT -->
+
+  <script>
+
+    //
+let sheetLink = ""; //link da planilha
+
+//
+const columns = [
+    { name: "A Fazer", id: "todo" },
+    { name: "Em Progresso", id: "doing" },
+    { name: "Concluído", id: "done" }
+];
+
+//  todo: [ {id:"1", title: "a", index:0},
+//                         {id:"2", title: "b", index:1},
+//                         {id:"3", title: "c", index:2},
+//                         {id:"4", title: "d", index:3},
+//                         {id:"5", title: "e", index:4}],
+
+//                 doing: [],
+// {"id":"5", "title": "e", "index":4}
+//                 done: []
+//                        {id:"5", title: "e", index:4}]
+
+let tasks = null;
+let dragTaskId = null;
+let editingTaskId = null;
+let pauseLeituraJSON = false;
+var canReadJSON = true;
+
+function renderBoard(columnId = null) {
+    if (tasks == null) return;
+
+    pri("preRender: ");
+    print(tasks);
+    orderTasks(columnId);
+    pri("render: ");
+    print(tasks);
+
+    const board = document.getElementById("kanbanBoard");
+    board.innerHTML = "";
+
+    columns.forEach(col => {
+        const colDiv = document.createElement("div");
+        colDiv.className = "kanban-column";
+        colDiv.innerHTML = `
+            <h2>${col.name}</h2>
+            <div class="kanban-cards" id="cards-${col.id}"
+            ondragover="event.preventDefault()"
+            ondrop="onDropColumn('${col.id}')"></div>
+            <form class="add-task-form" onsubmit="addTask(event, '${col.id}')">
+            <input type="text" placeholder="Nova tarefa..." required>
+            <button type="submit">+</button>
+            </form>
+        `;
+        board.appendChild(colDiv);
+
+        const cardsDiv = colDiv.querySelector(".kanban-cards");
+        let colTasks = [...tasks[col.id]].sort((a, b) => a.index - b.index); // IA
+        var nova = [];
+        //console.log("preset:");
+        colTasks.forEach(function (t) {
+            nova.push(t);
+        });
+        colTasks = [];
+        nova.forEach(function (t) {
+            // if (t != null){
+            //     console.log(t.title + ": "+t.index);
+            // }
+            colTasks.push(t);
+            // console.log(t);
+        });
+        pri("appr:");
+        var ind = 0;
+
+        colTasks.forEach(task => {
+            if (task == null) return;
+            const card = document.createElement("div");
+            card.className = "kanban-card";
+            card.draggable = true;
+            card.dataset.id = task.id;
+            pri(task.index);
+
+            card.ondragstart = e => {
+                dragTaskId = task.id;
+                card.classList.add("dragging");
+                e.dataTransfer.effectAllowed = "move";
+            };
+
+            card.ondragend = () => {
+                dragTaskId = null;
+                card.classList.remove("dragging");
+                clearDropIndicators();
+            };
+
+            card.ondragover = e => {
+                e.preventDefault();
+                setDropIndicator(card, e);
+            };
+
+            card.ondragleave = () => {
+                card.removeAttribute("data-drop-position");
+            };
+
+            card.ondrop = e => {
+                e.preventDefault();
+                pri("at render: t " + task.id + " c " + col.id);
+                handleDropOnCard(task.id, col.id, e);
+            };
+
+            card.innerHTML = `
+            <div class="top-task">
+                <span class="span-moving" data-id="${task.id}">${task.title}</span>
+                <span class="kanban-actions">
+                    <button onclick="editTask('${task.id}')">✏️</button>
+                    <button onclick="removeTask('${task.id}')">🗑️</button>
+                </span>
+            </div>
+            <span class="span-datas" data-id="${task.id}">${(task.dataInicio == undefined) ? "---" : task.dataInicio} > ${(task.dataFim == undefined) ? "---" : task.dataFim}</span>
+        
+            `;
+
+            cardsDiv.appendChild(card);
+        });
+    });
+}
+
+function handleDropOnCard(targetId, columnId, e) {
+
+    if (dragTaskId === null || dragTaskId === targetId) return;
+    pri("entering");
+    //redefineIndexes();
+
+    const dragIdx = tasks[columnId].findIndex(t => t.id.toString() === dragTaskId.toString());
+    const targetIdx = tasks[columnId].findIndex(t => t.id.toString() === targetId.toString());
+    const dragged = tasks[columnId][dragIdx];
+    if (dragged == null) { // colunas diferentes
+        pri("dragged null");
+        return;
+    }
+    const dropPosition = e.currentTarget.dataset.dropPosition;
+
+    // define os indices 
+    var indiceIns = tasks[columnId][targetIdx].index;
+
+    // Remove da posição original
+    tasks[columnId].splice(dragIdx, 1);
+
+    pri("place: ");
+    print(tasks);
+
+
+    pri("after splice: ");
+    pri(targetId + " " + columnId + " " + dragIdx + ">" + tasks[columnId][dragIdx] + " " + tasks[columnId][targetIdx]);
+
+    // Recalcula tarefas da coluna destino (depois do splice acima)
+    // const colTasks = tasks[columnId];
+    // const newTargetIdx = colTasks.findIndex(t => t.id.toString() === targetId.toString());      
+
+    let insertIdx = indiceIns;
+    if (dropPosition === "after") {
+        // insertIdx+=1;
+        // if (dragIdx+1 >= targetIdx) insertIdx--;
+    }
+    else insertIdx--;
+
+    // Encontra o índice global onde inserir
+    dragged.index = insertIdx;
+
+    pri(dropPosition + " dragged index: " + dragged.index + " " + indiceIns);
+
+    // altera os q vem depois
+    var tasksC = [];
+    tasks[columnId].forEach(t => {
+        tasksC.push(t);
+    });
+    pri("tasksC: ");
+    print(tasksC);
+    for (var t of tasksC) {
+        if (t.index > insertIdx) {
+            // t.index++;
+        }
+        if (t.index <= insertIdx) {
+            t.index--;
+        }
+    }
+    tasks[columnId].splice(0, tasks[columnId].length);
+    tasksC.splice(dragged.index, 0, dragged);
+    tasks[columnId] = tasksC;
+    pri("handle: "); print(tasks);
+    renderBoard(columnId);
+}
+
+function orderTasks(columnId) {
+    // return;
+    pri("orderTasks: ");
+    print(tasks[columnId]);
+    if (columnId == null) return;
+
+    // Remove null/undefined
+    var nova = new Array();
+    var ind = tasks[columnId].reduce((a, b) => a.index < b.index ? a : b).index;
+    while (nova.length != tasks[columnId].length) {
+        for (var t of tasks[columnId]) {
+            if (t.index == ind) {
+                pri("achou: " + t.title + " com index " + t.index);
+                nova.push(t);
+                break;
+            }
+        }
+        ind++;
+    }
+    // nova.sort((a, b) => a.index - b.index);
+    pri("nova: ");
+    print(nova);
+    tasks[columnId].splice(0, tasks[columnId].length);
+    tasks[columnId] = nova;
+    pri("ordenado: ");
+    print(tasks[columnId]);
+
+    // Ordena por índice
+
+    // Reindexa para garantir sequencial
+    redefineIndexes(columnId);
+}
+
+function redefineIndexes(columnId) {
+    var i = 0;
+    tasks[columnId].forEach(function (t) {
+        t.index = i;
+        pri(i + ": " + t.title);
+        i++;
+    });
+    pri("redefinido: ");
+    print(tasks[columnId]);
+}
+
+function pri(thing) {
+    // return;
+    console.log(thing);
+}
+function print(thing) {
+    // return;
+    if (thing == null || thing == undefined) pri(thing);
+    else console.log(JSON.parse(JSON.stringify(thing)));
+}
+
+function setDropIndicator(card, e) {
+    const bounding = card.getBoundingClientRect();
+    const offset = e.clientY - bounding.top;
+    const height = bounding.height;
+
+    if (offset < height / 2) {
+        card.dataset.dropPosition = "before";
+    } else {
+        card.dataset.dropPosition = "after";
+    }
+}
+
+function clearDropIndicators() {
+    document.querySelectorAll('.kanban-card').forEach(card => {
+        card.removeAttribute("data-drop-position");
+    });
+}
+
+function onDropColumn(columnId) {
+    if (dragTaskId !== null) {
+        print("Finding: "+columnId);
+        var dragIdx = null, dragged = null, column = null;
+        for (var col in tasks) {
+            if (col == columnId) continue;
+            dragIdx = tasks[col].findIndex(t => t.id === dragTaskId.toString());
+            if (dragIdx != null && dragIdx != -1) {
+                column = col;
+                break;
+            }
+        }
+        pri("CHANGING: ");
+        print(tasks);
+        pri(column);
+        pri(dragIdx);
+        try{
+            if (col != null) dragged = tasks[column][dragIdx];
+
+            if (dragged != null) {
+                tasks[column].splice(dragIdx, 1);
+
+                tasks[columnId].push(dragged);
+            }
+            redefineIndexes(column);
+        }catch (e){
+            
+        }
+        redefineIndexes(columnId);
+        sendTasks();
+        renderBoard();
+    }
+}
+
+function addTask(event, columnId) {
+    event.preventDefault();
+    const input = event.target.querySelector("input");
+    var newTask = {
+        id: String(Date.now()) + Math.random().toString(36).substring(2, 6),
+        title: input.value,
+        index: tasks[columnId].length
+    };
+    tasks[columnId].push(newTask);
+    pri(newTask);
+    input.value = "";
+    sendTasks();
+    renderBoard();
+}
+
+function editTask(id) {
+    var task = null;
+    for (var item in tasks) {
+        pri(tasks[item]);
+        task = tasks[item].find(t => t.id === "" + id);
+        if (task != null) break;
+    }
+    editingTaskId = id;
+    document.getElementById("editInput").value = task.title;
+    document.getElementById("editModal").style.display = "flex";
+}
+
+function removeTask(id) {
+    for (const col in tasks) {
+        const idx = tasks[col].findIndex(t => t.id === "" + id);
+        if (idx !== -1) {
+            tasks[col].splice(idx, 1);
+            sendTasks();
+            renderBoard();
+            break;
+        }
+    }
+}
+
+function closeEditModal() {
+    document.getElementById("editModal").style.display = "none";
+    editingTaskId = null;
+}
+
+// edição
+const hoje = new Date().toISOString().split('T')[0]; // pega só a parte da data
+document.getElementById("dataInicio").min = hoje;
+document.getElementById("dataFim").min = hoje;
+
+function saveEdit() {
+    const newTitle = document.getElementById("editInput").value.trim();
+    var task = null;
+    for (var item in tasks) {
+        task = tasks[item].find(t => "" + t.id === "" + editingTaskId);
+        if (task != null) break;
+    }
+    if (newTitle && editingTaskId !== null) {
+        task.title = newTitle;
+
+        task.dataInicio = document.getElementById("dataInicio").value.split("-").reverse().join("/");
+        task.dataFim = document.getElementById("dataFim").value.split("-").reverse().join("/");;
+        sendTasks();
+        closeEditModal();
+        renderBoard();
+    }
+}
+
+// salvamento JSON
+async function escreverJSON(dados) {
+    pauseLeituraJSON = true;
+    fetch("data/write.php", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dados)
+    })
+        .then(res => res.text())
+        .then(resp => {
+            console.log('JSON salvo!');
+
+        }
+        )
+        .catch(err => console.error('Erro:', err));
+    pauseLeituraJSON = false;
+    canReadJSON = true;
+}
+async function lerJSON(lastData, nomeArquivo = takeName()) {
+    while (pauseLeituraJSON) { }
+
+    fetch("https://script.google.com/macros/s/AKfycbyNLBVOekJ0S3fAWjAv5JkG44bWJ7AhkVjja6FQDvd2YOeC0S8i7MH3AES8MBBE4uLJKw/exec") //link pega sheet
+        .then(res => res.json())
+        .then(data => {
+            if (JSON.stringify(data) !== JSON.stringify(lastData) && canReadJSON) {
+                sheet2tasks(data);
+                console.log("JSON carregado !");
+                // pri(tasks);
+                // pri(last)
+                renderBoard();
+                canReadJSON = true;
+            }
+        })
+        .catch(err => console.error('Erro ao carregar JSON:', err));
+    return tasks;
+}
+function takeName() {
+    // "+Math.floor(Date.now() / 1000)+"
+    return "data/tasks.json";
+}
+
+function sheet2tasks(data){
+  tasks = [];
+  var colunas = [["todo","doing","done"],["Criado","Fazendo","Feito"]];
+  for (var tar of data){
+    var newTask = {
+        id: String(Date.now()) + Math.random().toString(36).substring(2, 6),
+        title: tar["Tarefa"],
+        index: tasks[columnId].length,
+        dataInicio: tar["Data Início"],
+        dataFim: tar["Data Fim"]
+    };
+    for (var col in tasks){
+      if (col == tar["Estado"]){
+        tasks[col].push(newTask); 
+      }
+    }
+  }
+  pri("GETTING");
+  pri(tasks);
+}
+
+// document.getElementById("fileInput").addEventListener("change", function(event){
+//     const file = event.target.files[0];
+//     if (!file) return;
+
+//     const reader = new FileReader();
+//     reader.onload = function(e) {
+//         try {
+//             const dados = JSON.parse(e.target.result);
+//             tasks = dados;
+//             renderBoard(); // atualiza a board
+//         } catch(err) {
+//             console.error("Erro ao ler JSON:", err);
+//         }
+//     };
+//     reader.readAsText(file);
+// });
+
+async function sendTasks() {
+    pri("----------SALVING----------");
+    imagemAtualizacaoSheets("carregando");
+    escreverJSON(tasks);
+    enviarParaSheets(tasks);
+}
+
+async function imagemAtualizacaoSheets(tipo) {
+    var angulo = 0;
+    if (tipo == "carregando") {
+        var img = document.getElementById("attSheets");
+        img.src = "http://cemtec.demec.ufmg.br/wp-content/uploads/2025/09/carregando.png";
+        img.id = "attSheets";
+
+        // Gira a cada 50ms (ajuste se quiser mais rápido/lento)
+        intervalo = setInterval(() => {
+            angulo += 5;
+            img.style.transform = `rotate(${angulo}deg)`;
+        }, 25);
+
+        setTimeout(() => {
+            clearInterval(intervalo);
+        }, 1500);
+    } else {
+        clearInterval(intervalo);
+
+        var img = document.getElementById("attSheets");
+        img.style.transform = `rotate(0deg)`;
+        img.src = "imgs/carregado.png";
+        img.id = "attSheets";
+        document.getElementById("sheetsInteraction").appendChild(img);
+
+        img.style.transform = `rotate(${angulo}deg))`;
+        img.style.transition = "transform 6s"; // animação suave
+    }
+}
+
+async function enviarParaSheets(tasks) {
+    console.log("Enviando dados para Google Sheets...");
+
+    fetch(sheetLink, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(tasks)
+    }).then(() => {
+        imagemAtualizacaoSheets("carregado");
+        console.log("Dados enviados para Google Sheets !");
+    }).catch(err => console.error(err));
+}
+
+async function getLink() {
+    sheetLink = "https://script.google.com/macros/s/AKfycbziQB2zXnaNlKx_kXY1ILVr_-bzVmsj_CEmSTH4D6PYkhDmdmUzl2w7fVrZYy5U4IS0yA/exec";
+}   
+
+async function getJSON() {
+    var data = null;
+    while (true) {
+        var data = await lerJSON(data);
+        await new Promise(resolve => setTimeout(resolve, 1500));
+    }
+}
+
+async function iden(){
+    while (true){
+        document.getElementById("iden").style = (!canReadJSON)?"color: red;":"color: green";
+        await new Promise(resolve => setTimeout(resolve, 500));
+    }
+}
+//  
+getLink();
+getJSON();
+// iden();
+renderBoard();
+// salvarJSON();
+
+
+  </script>
