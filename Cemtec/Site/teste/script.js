@@ -1,172 +1,4 @@
-
-<!-- CSS -->
-
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #f4f6fa;
-    margin: 0;
-}
-.kanban-board {
-    display: flex;
-    gap: 20px;
-    padding: 40px;
-}
-.kanban-column {
-    background: #b7b7b7;
-    border-radius: 8px;
-    border: 2px solid black;
-    box-shadow: 0 2px 8px #0001;
-    width: 300px;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-}
-.kanban-column h2 {
-    margin: 0 0 12px 0;
-    font-size: 1.2em;
-}
-.kanban-cards {
-    flex: 1;
-    min-height: 40px;
-}
-.kanban-card {
-    background: #a9c3f8;
-    border: 2px solid #4f8cff;
-    border-radius: 6px;
-    padding: 12px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    /* cursor: grab; */
-    transition: border 0.2s;
-
-    display: flex;
-    flex-direction: column;
-}
-.kanban-card[data-drop-position="before"] {
-    border-top: 12px solid #4f8cff;
-    /*border-top: 12px solid #ff874f;*/
-}
-.kanban-card[data-drop-position="after"] {
-    border-bottom: 12px solid #4f8cff;
-}
-.kanban-actions{
-    display: flex;
-  padding-left: 40px;
-}
-.kanban-actions button {
-    margin-left: 4px;
-    background: #d1d8e6;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    padding: 2px 6px;
-
-    align-self: flex-end;
-}
-.add-task-form {
-    display: flex;
-    margin-top: 12px;
-}
-.add-task-form input {
-    flex: 1;
-    padding: 4px;
-}
-.add-task-form button {
-    margin-left: 4px;
-}
-#editModal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: #0005;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-#editModal .modal-content {
-    background: #fff;
-    border-radius: 8px;
-    padding: 24px 32px;
-    min-width: 300px;
-    box-shadow: 0 4px 24px #0003;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    position: relative;
-}
-#editModal .modal-content button.close-btn {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: none;
-    border: none;
-    font-size: 1.2em;
-    cursor: pointer;
-}
-
-.top-task{
-    display: flex;
-    flex-direction: row;
-}
-.span-moving{
-    font-size: 20px;
-}
-.span-datas{
-    font-size: 15px;
-}
-
-.normalButton{
-  background-color: #d1d1d1;
-}
-.normalInput{
-  background-color: #d1d1d1;
-}
-
-/*cabeçalho*/
-
-.button-cab{
-    border-radius: 8px;
-    border: 2px solid black;
-    padding: 5px;
-    background: #4f8cff;
-    margin-left: 40px;
-    margin-top: 40px;
-}
-.button-cab:hover{
-    box-shadow:0 0 20px #000000;
-    background: #2670fa;
-}
-</style>
-
-<!-- HTML -->
-
-  <div id="editModal">
-    <div class="modal-content">
-      <button class="close-btn" onclick="closeEditModal()">&times;</button>
-      <h3>Editar tarefa</h3>
-      Nome: <input class="normalInput" id="editInput" type="text"/>
-      Data Início: <input class="normalInput" id="dataInicio" type="date" min=""/>
-      Data Fim: <input class="normalInput" id="dataFim" type="date" min=""/>
-      <button class="nomalButton" onclick="saveEdit()" style="padding:8px; background:#4f8cff; color:#fff; border:none; border-radius:4px; font-size:1em; cursor:pointer;">Salvar</button>
-    </div>
-  </div>
-  <!-- <input type="file" id="fileInput" accept=".json"> -->
-  <div style="height: 40px;" id="sheetsInteraction">
-    <button class="button-cab" onclick="sendTasks()">Atualizar no Sheets</button>
-     <img style="padding: 0px" id="attSheets" src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/09/carregado.png" width="20" height="20"/>
-  </div>
-  <!-- <h4 id="iden" style="color: red;">o</h4> -->
-  <div class="kanban-board" id="kanbanBoard"></div>
-
-<!-- SCRIPT -->
-
-  <script>
-
-    //
+//
 let sheetLink = ""; //link da planilha
 
 //
@@ -183,6 +15,8 @@ const columns = [
 //                         {id:"5", title: "e", index:4}],
 
 //                 doing: [],
+
+
 // {"id":"5", "title": "e", "index":4}
 //                 done: []
 //                        {id:"5", title: "e", index:4}]
@@ -236,7 +70,7 @@ function renderBoard(columnId = null) {
             colTasks.push(t);
             // console.log(t);
         });
-        pri("appr:");
+        // pri("appr:");
         var ind = 0;
 
         colTasks.forEach(task => {
@@ -245,7 +79,7 @@ function renderBoard(columnId = null) {
             card.className = "kanban-card";
             card.draggable = true;
             card.dataset.id = task.id;
-            pri(task.index);
+            // pri(task.index);
 
             card.ondragstart = e => {
                 dragTaskId = task.id;
@@ -278,14 +112,13 @@ function renderBoard(columnId = null) {
             <div class="top-task">
                 <span class="span-moving" data-id="${task.id}">${task.title}</span>
                 <span class="kanban-actions">
-                    <button onclick="editTask('${task.id}')">✏️</button>
-                    <button onclick="removeTask('${task.id}')">🗑️</button>
+                    <button onclick="editTask('${task.id}')">E</button>
+                    <button onclick="removeTask('${task.id}')">L</button>
                 </span>
             </div>
             <span class="span-datas" data-id="${task.id}">${(task.dataInicio == undefined) ? "---" : task.dataInicio} > ${(task.dataFim == undefined) ? "---" : task.dataFim}</span>
         
             `;
-
             cardsDiv.appendChild(card);
         });
     });
@@ -294,7 +127,7 @@ function renderBoard(columnId = null) {
 function handleDropOnCard(targetId, columnId, e) {
 
     if (dragTaskId === null || dragTaskId === targetId) return;
-    pri("entering");
+    // pri("entering");
     //redefineIndexes();
 
     const dragIdx = tasks[columnId].findIndex(t => t.id.toString() === dragTaskId.toString());
@@ -305,19 +138,18 @@ function handleDropOnCard(targetId, columnId, e) {
         return;
     }
     const dropPosition = e.currentTarget.dataset.dropPosition;
-
     // define os indices 
     var indiceIns = tasks[columnId][targetIdx].index;
 
     // Remove da posição original
     tasks[columnId].splice(dragIdx, 1);
 
-    pri("place: ");
-    print(tasks);
+    // pri("place: ");
+    // print(tasks);
 
 
-    pri("after splice: ");
-    pri(targetId + " " + columnId + " " + dragIdx + ">" + tasks[columnId][dragIdx] + " " + tasks[columnId][targetIdx]);
+    // pri("after splice: ");
+    // pri(targetId + " " + columnId + " " + dragIdx + ">" + tasks[columnId][dragIdx] + " " + tasks[columnId][targetIdx]);
 
     // Recalcula tarefas da coluna destino (depois do splice acima)
     // const colTasks = tasks[columnId];
@@ -332,16 +164,15 @@ function handleDropOnCard(targetId, columnId, e) {
 
     // Encontra o índice global onde inserir
     dragged.index = insertIdx;
-
-    pri(dropPosition + " dragged index: " + dragged.index + " " + indiceIns);
+    // pri(dropPosition + " dragged index: " + dragged.index + " " + indiceIns);
 
     // altera os q vem depois
     var tasksC = [];
     tasks[columnId].forEach(t => {
         tasksC.push(t);
     });
-    pri("tasksC: ");
-    print(tasksC);
+    // pri("tasksC: ");
+    // print(tasksC);
     for (var t of tasksC) {
         if (t.index > insertIdx) {
             // t.index++;
@@ -353,7 +184,7 @@ function handleDropOnCard(targetId, columnId, e) {
     tasks[columnId].splice(0, tasks[columnId].length);
     tasksC.splice(dragged.index, 0, dragged);
     tasks[columnId] = tasksC;
-    pri("handle: "); print(tasks);
+    // pri("handle: "); print(tasks);
     renderBoard(columnId);
 }
 
@@ -486,6 +317,7 @@ function editTask(id) {
         if (task != null) break;
     }
     editingTaskId = id;
+    document.getElementById("headEditTask").innerHTML = "Editando tarefa: "+task.title;
     document.getElementById("editInput").value = task.title;
     document.getElementById("editModal").style.display = "flex";
 }
@@ -519,36 +351,38 @@ function saveEdit() {
         task = tasks[item].find(t => "" + t.id === "" + editingTaskId);
         if (task != null) break;
     }
-    if (newTitle && editingTaskId !== null) {
+    if (newTitle && editingTaskId !== null && task!= null) {
         task.title = newTitle;
 
         task.dataInicio = document.getElementById("dataInicio").value.split("-").reverse().join("/");
         task.dataFim = document.getElementById("dataFim").value.split("-").reverse().join("/");;
         sendTasks();
-        closeEditModal();
-        renderBoard();
     }
+    closeEditModal();
+    renderBoard();
 }
 
 // salvamento JSON
-async function lerJSON(lastData, nomeArquivo = takeName()) {
+async function lerJSON( nomeArquivo = takeName()) {
     while (pauseLeituraJSON) { }
-
+    print("Lendo Sheets ...");
+    
     fetch("https://script.google.com/macros/s/AKfycbyNLBVOekJ0S3fAWjAv5JkG44bWJ7AhkVjja6FQDvd2YOeC0S8i7MH3AES8MBBE4uLJKw/exec") //link pega sheet
-        .then(res => res.json())
-        .then(data => {
-            if (JSON.stringify(data) !== JSON.stringify(lastData) && canReadJSON) {
-                tasks = sheet2tasks(data);
-                lastData = data;
-                console.log("JSON carregado !");
-                // pri(tasks);
-                // pri(last)
-                renderBoard();
-                canReadJSON = true;
-            }
-        })
-        .catch(err => console.error('Erro ao carregar JSON:', err));
-    return tasks;
+    .then(res => res.json())
+    .then(data => {
+        if (JSON.stringify(data) !== JSON.stringify(lastData) && canReadJSON) {
+            print("Dados coletados do Sheets.");
+            tasks = sheet2tasks(data);
+            lastData = data;
+            console.log("JSON carregado !");
+            // pri(tasks);
+            // pri(last)
+            canReadJSON = true;
+            renderBoard();
+        }
+        print("Sheets lido.");
+    })
+    .catch(err => console.error('Erro ao carregar JSON:', err));
 }
 function takeName() {
     // "+Math.floor(Date.now() / 1000)+"
@@ -565,8 +399,8 @@ function sheet2tasks(data){
         id: String(Date.now()) + Math.random().toString(36).substring(2, 6),
         title: tar["Tarefa"],
         index: -1,
-        dataInicio: tar["Data Início"],
-        dataFim: tar["Data Fim"]
+        dataInicio: tar["Data Início"].replace("T03:00:00.000Z","").split("-").reverse().join("/"),
+        dataFim: tar["Data Fim"].replace("T03:00:00.000Z","").split("-").reverse().join("/")
     };
     for (var col in tasks){
       if (col == colunas[0][colunas[1].indexOf(tar["Estado"])]){
@@ -636,12 +470,12 @@ async function imagemAtualizacaoSheets(tipo) {
         img.style.transform = `rotate(${angulo}deg))`;
         img.style.transition = "transform 6s"; // animação suave
     }
-    canReadJSON = true;
+    pauseLeituraJSON = false;
 }
 
 async function enviarParaSheets(tasks) {
     console.log("Enviando dados para Google Sheets...");
-    // pauseLeituraJSON = true;
+    pauseLeituraJSON = false;
     canReadJSON = false;
 
     fetch(sheetLink, {
@@ -654,6 +488,7 @@ async function enviarParaSheets(tasks) {
     }).then(() => {
         imagemAtualizacaoSheets("carregado");
         console.log("Dados enviados para Google Sheets !");
+        canReadJSON = true;
     }).catch(err => console.error(err));
 }
 
@@ -662,9 +497,8 @@ async function getLink() {
 }   
 
 async function getJSON() {
-    var data = null;
     while (true) {
-        var data = await lerJSON(data);
+        await lerJSON();
         await new Promise(resolve => setTimeout(resolve, 1500));
     }
 }
@@ -682,5 +516,3 @@ getJSON();
 renderBoard();
 // salvarJSON();
 
-
-  </script>

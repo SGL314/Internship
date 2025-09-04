@@ -1,8 +1,4 @@
-
-<!-- CSS -->
-
-<style>
-  body {
+<style>body {
     font-family: Arial, sans-serif;
     background: #f4f6fa;
     margin: 0;
@@ -123,7 +119,7 @@
   background-color: #d1d1d1;
 }
 .normalInput{
-  background-color: #d1d1d1;
+  background-color: #f4f4f4;
 }
 
 /*cabeçalho*/
@@ -139,15 +135,11 @@
 .button-cab:hover{
     box-shadow:0 0 20px #000000;
     background: #2670fa;
-}
-</style>
-
-<!-- HTML -->
-
+}</style>
   <div id="editModal">
     <div class="modal-content">
       <button class="close-btn" onclick="closeEditModal()">&times;</button>
-      <h3>Editar tarefa</h3>
+      <h3 id="headEditTask">Editar tarefa</h3>
       Nome: <input class="normalInput" id="editInput" type="text"/>
       Data Início: <input class="normalInput" id="dataInicio" type="date" min=""/>
       Data Fim: <input class="normalInput" id="dataFim" type="date" min=""/>
@@ -162,11 +154,8 @@
   <!-- <h4 id="iden" style="color: red;">o</h4> -->
   <div class="kanban-board" id="kanbanBoard"></div>
 
-<!-- SCRIPT -->
 
-  <script>
-
-    //
+<script>//
 let sheetLink = ""; //link da planilha
 
 //
@@ -183,6 +172,8 @@ const columns = [
 //                         {id:"5", title: "e", index:4}],
 
 //                 doing: [],
+
+
 // {"id":"5", "title": "e", "index":4}
 //                 done: []
 //                        {id:"5", title: "e", index:4}]
@@ -236,7 +227,7 @@ function renderBoard(columnId = null) {
             colTasks.push(t);
             // console.log(t);
         });
-        pri("appr:");
+        // pri("appr:");
         var ind = 0;
 
         colTasks.forEach(task => {
@@ -245,7 +236,7 @@ function renderBoard(columnId = null) {
             card.className = "kanban-card";
             card.draggable = true;
             card.dataset.id = task.id;
-            pri(task.index);
+            // pri(task.index);
 
             card.ondragstart = e => {
                 dragTaskId = task.id;
@@ -285,7 +276,6 @@ function renderBoard(columnId = null) {
             <span class="span-datas" data-id="${task.id}">${(task.dataInicio == undefined) ? "---" : task.dataInicio} > ${(task.dataFim == undefined) ? "---" : task.dataFim}</span>
         
             `;
-
             cardsDiv.appendChild(card);
         });
     });
@@ -294,7 +284,7 @@ function renderBoard(columnId = null) {
 function handleDropOnCard(targetId, columnId, e) {
 
     if (dragTaskId === null || dragTaskId === targetId) return;
-    pri("entering");
+    // pri("entering");
     //redefineIndexes();
 
     const dragIdx = tasks[columnId].findIndex(t => t.id.toString() === dragTaskId.toString());
@@ -305,19 +295,18 @@ function handleDropOnCard(targetId, columnId, e) {
         return;
     }
     const dropPosition = e.currentTarget.dataset.dropPosition;
-
     // define os indices 
     var indiceIns = tasks[columnId][targetIdx].index;
 
     // Remove da posição original
     tasks[columnId].splice(dragIdx, 1);
 
-    pri("place: ");
-    print(tasks);
+    // pri("place: ");
+    // print(tasks);
 
 
-    pri("after splice: ");
-    pri(targetId + " " + columnId + " " + dragIdx + ">" + tasks[columnId][dragIdx] + " " + tasks[columnId][targetIdx]);
+    // pri("after splice: ");
+    // pri(targetId + " " + columnId + " " + dragIdx + ">" + tasks[columnId][dragIdx] + " " + tasks[columnId][targetIdx]);
 
     // Recalcula tarefas da coluna destino (depois do splice acima)
     // const colTasks = tasks[columnId];
@@ -332,16 +321,15 @@ function handleDropOnCard(targetId, columnId, e) {
 
     // Encontra o índice global onde inserir
     dragged.index = insertIdx;
-
-    pri(dropPosition + " dragged index: " + dragged.index + " " + indiceIns);
+    // pri(dropPosition + " dragged index: " + dragged.index + " " + indiceIns);
 
     // altera os q vem depois
     var tasksC = [];
     tasks[columnId].forEach(t => {
         tasksC.push(t);
     });
-    pri("tasksC: ");
-    print(tasksC);
+    // pri("tasksC: ");
+    // print(tasksC);
     for (var t of tasksC) {
         if (t.index > insertIdx) {
             // t.index++;
@@ -353,7 +341,7 @@ function handleDropOnCard(targetId, columnId, e) {
     tasks[columnId].splice(0, tasks[columnId].length);
     tasksC.splice(dragged.index, 0, dragged);
     tasks[columnId] = tasksC;
-    pri("handle: "); print(tasks);
+    // pri("handle: "); print(tasks);
     renderBoard(columnId);
 }
 
@@ -486,6 +474,7 @@ function editTask(id) {
         if (task != null) break;
     }
     editingTaskId = id;
+    document.getElementById("headEditTask").innerHTML = "Editando tarefa: "+task.title;
     document.getElementById("editInput").value = task.title;
     document.getElementById("editModal").style.display = "flex";
 }
@@ -519,36 +508,38 @@ function saveEdit() {
         task = tasks[item].find(t => "" + t.id === "" + editingTaskId);
         if (task != null) break;
     }
-    if (newTitle && editingTaskId !== null) {
+    if (newTitle && editingTaskId !== null && task!= null) {
         task.title = newTitle;
 
         task.dataInicio = document.getElementById("dataInicio").value.split("-").reverse().join("/");
         task.dataFim = document.getElementById("dataFim").value.split("-").reverse().join("/");;
         sendTasks();
-        closeEditModal();
-        renderBoard();
     }
+    closeEditModal();
+    renderBoard();
 }
 
 // salvamento JSON
-async function lerJSON(lastData, nomeArquivo = takeName()) {
+async function lerJSON( nomeArquivo = takeName()) {
     while (pauseLeituraJSON) { }
-
+    print("Lendo Sheets ...");
+    
     fetch("https://script.google.com/macros/s/AKfycbyNLBVOekJ0S3fAWjAv5JkG44bWJ7AhkVjja6FQDvd2YOeC0S8i7MH3AES8MBBE4uLJKw/exec") //link pega sheet
-        .then(res => res.json())
-        .then(data => {
-            if (JSON.stringify(data) !== JSON.stringify(lastData) && canReadJSON) {
-                tasks = sheet2tasks(data);
-                lastData = data;
-                console.log("JSON carregado !");
-                // pri(tasks);
-                // pri(last)
-                renderBoard();
-                canReadJSON = true;
-            }
-        })
-        .catch(err => console.error('Erro ao carregar JSON:', err));
-    return tasks;
+    .then(res => res.json())
+    .then(data => {
+        if (JSON.stringify(data) !== JSON.stringify(lastData) && canReadJSON) {
+            print("Dados coletados do Sheets.");
+            tasks = sheet2tasks(data);
+            lastData = data;
+            console.log("JSON carregado !");
+            // pri(tasks);
+            // pri(last)
+            canReadJSON = true;
+            renderBoard();
+        }
+        print("Sheets lido.");
+    })
+    .catch(err => console.error('Erro ao carregar JSON:', err));
 }
 function takeName() {
     // "+Math.floor(Date.now() / 1000)+"
@@ -565,8 +556,8 @@ function sheet2tasks(data){
         id: String(Date.now()) + Math.random().toString(36).substring(2, 6),
         title: tar["Tarefa"],
         index: -1,
-        dataInicio: tar["Data Início"],
-        dataFim: tar["Data Fim"]
+        dataInicio: tar["Data Início"].replace("T03:00:00.000Z","").split("-").reverse().join("/"),
+        dataFim: tar["Data Fim"].replace("T03:00:00.000Z","").split("-").reverse().join("/")
     };
     for (var col in tasks){
       if (col == colunas[0][colunas[1].indexOf(tar["Estado"])]){
@@ -636,12 +627,12 @@ async function imagemAtualizacaoSheets(tipo) {
         img.style.transform = `rotate(${angulo}deg))`;
         img.style.transition = "transform 6s"; // animação suave
     }
-    canReadJSON = true;
+    pauseLeituraJSON = false;
 }
 
 async function enviarParaSheets(tasks) {
     console.log("Enviando dados para Google Sheets...");
-    // pauseLeituraJSON = true;
+    pauseLeituraJSON = false;
     canReadJSON = false;
 
     fetch(sheetLink, {
@@ -654,6 +645,7 @@ async function enviarParaSheets(tasks) {
     }).then(() => {
         imagemAtualizacaoSheets("carregado");
         console.log("Dados enviados para Google Sheets !");
+        canReadJSON = true;
     }).catch(err => console.error(err));
 }
 
@@ -662,9 +654,8 @@ async function getLink() {
 }   
 
 async function getJSON() {
-    var data = null;
     while (true) {
-        var data = await lerJSON(data);
+        await lerJSON();
         await new Promise(resolve => setTimeout(resolve, 1500));
     }
 }
@@ -682,5 +673,4 @@ getJSON();
 renderBoard();
 // salvarJSON();
 
-
-  </script>
+</script>
