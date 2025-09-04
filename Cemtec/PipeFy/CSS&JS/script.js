@@ -511,6 +511,3 @@ getJSON();
 // iden();
 renderBoard();
 // salvarJSON();
-
-// atualizar  no sheets quando edita uma task
-
