@@ -27,8 +27,10 @@ let editingTaskId = null;
 let pauseLeituraJSON = false;
 var canReadJSON = true;
 var lastData = null;
+var logged = false;
 
 function renderBoard(columnId = null) {
+    if (!logged) return;    
     if (tasks == null) return;
 
     pri("preRender: ");
@@ -507,6 +509,28 @@ async function iden(){
     while (true){
         document.getElementById("iden").style = (!canReadJSON)?"color: red;":"color: green";
         await new Promise(resolve => setTimeout(resolve, 500));
+    }
+}
+//login
+async function login(){
+    var user = document.getElementById("user").value;
+    var password = document.getElementById("password").value;
+    pri("Enviado: ("+user+", "+password+")")
+    const response = await fetch("/wp-admin/admin-ajax.php?action=verifica_senha", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ "user":user,"pass":password })
+      });
+    var resposta = await response.json();
+    console.log("Resposta: "+resposta.message);
+    if (resposta.success){
+        logged = true;
+        document.getElementById("user").value = "";
+        document.getElementById("password").value = "";
+        renderBoard();
+    }else{
+        logged = false;
+        renderBoard();
     }
 }
 //  

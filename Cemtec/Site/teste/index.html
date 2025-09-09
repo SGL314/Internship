@@ -9,12 +9,15 @@
       <button class="nomalButton" onclick="saveEdit()" style="padding:8px; background:#4f8cff; color:#fff; border:none; border-radius:4px; font-size:1em; cursor:pointer;">Salvar</button>
     </div>
   </div>
+  <div class="div-login">
+    <input class="normalInput" id="user" type="text"placeholder="Usuário"/> <br>
+    <input class="normalInput" id="password" type="password" placeholder="Senha"/> <br><br>
+    <button class="button-login" onclick="login()">Entrar</button>
+  
   <!-- <input type="file" id="fileInput" accept=".json"> -->
-  <div style="height: 40px;" id="sheetsInteraction">
     <button class="button-cab" onclick="sendTasks()">Atualizar no Sheets</button>
      <img style="padding: 0px" id="attSheets" src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/09/carregado.png" width="20" height="20"/>
   </div>
-  <!-- <h4 id="iden" style="color: red;">o</h4> -->
   <div class="kanban-board" id="kanbanBoard"></div>
 
 

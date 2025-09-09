@@ -130,11 +130,25 @@
     padding: 5px;
     background: #4f8cff;
     margin-left: 40px;
-    margin-top: 40px;
 }
 .button-cab:hover{
     box-shadow:0 0 20px #000000;
     background: #2670fa;
+}
+
+/* login */
+.div-login{
+    margin-left: 40px;
+    margin-top: 20px;
+
+    display: block;
+    align-items: center;
+}
+.button-login{
+    border-radius: 8px;
+    border: 2px solid black;
+    padding: 5px;
+    background: #4f8cff;
 }</style>
   <div id="editModal">
     <div class="modal-content">
@@ -146,12 +160,15 @@
       <button class="nomalButton" onclick="saveEdit()" style="padding:8px; background:#4f8cff; color:#fff; border:none; border-radius:4px; font-size:1em; cursor:pointer;">Salvar</button>
     </div>
   </div>
+  <div class="div-login">
+    <input class="normalInput" id="user" type="text"placeholder="Usuário"/> <br>
+    <input class="normalInput" id="password" type="password" placeholder="Senha"/> <br><br>
+    <button class="button-login" onclick="login()">Entrar</button>
+  
   <!-- <input type="file" id="fileInput" accept=".json"> -->
-  <div style="height: 40px;" id="sheetsInteraction">
     <button class="button-cab" onclick="sendTasks()">Atualizar no Sheets</button>
      <img style="padding: 0px" id="attSheets" src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/09/carregado.png" width="20" height="20"/>
   </div>
-  <!-- <h4 id="iden" style="color: red;">o</h4> -->
   <div class="kanban-board" id="kanbanBoard"></div>
 
 
@@ -184,8 +201,10 @@ let editingTaskId = null;
 let pauseLeituraJSON = false;
 var canReadJSON = true;
 var lastData = null;
+var logged = false;
 
 function renderBoard(columnId = null) {
+    if (!logged) return;    
     if (tasks == null) return;
 
     pri("preRender: ");
@@ -664,6 +683,28 @@ async function iden(){
     while (true){
         document.getElementById("iden").style = (!canReadJSON)?"color: red;":"color: green";
         await new Promise(resolve => setTimeout(resolve, 500));
+    }
+}
+//login
+async function login(){
+    var user = document.getElementById("user").value;
+    var password = document.getElementById("password").value;
+    pri("Enviado: ("+user+", "+password+")")
+    const response = await fetch("/wp-admin/admin-ajax.php?action=verifica_senha", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ "user":user,"pass":password })
+      });
+    var resposta = await response.json();
+    console.log("Resposta: "+resposta.message);
+    if (resposta.success){
+        logged = true;
+        document.getElementById("user").value = "";
+        document.getElementById("password").value = "";
+        renderBoard();
+    }else{
+        logged = false;
+        renderBoard();
     }
 }
 //  

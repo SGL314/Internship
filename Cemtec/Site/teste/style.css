@@ -130,9 +130,23 @@ body {
     padding: 5px;
     background: #4f8cff;
     margin-left: 40px;
-    margin-top: 40px;
 }
 .button-cab:hover{
     box-shadow:0 0 20px #000000;
     background: #2670fa;
+}
+
+/* login */
+.div-login{
+    margin-left: 40px;
+    margin-top: 20px;
+
+    display: block;
+    align-items: center;
+}
+.button-login{
+    border-radius: 8px;
+    border: 2px solid black;
+    padding: 5px;
+    background: #4f8cff;
 }
