@@ -28,6 +28,7 @@ let pauseLeituraJSON = false;
 var canReadJSON = true;
 var lastData = null;
 var logged = false;
+var intervalo = null;
 
 function renderBoard(columnId = null) {
     if (!logged) return;    
@@ -116,7 +117,7 @@ function renderBoard(columnId = null) {
                 <span class="kanban-actions">
                     <button onclick="editTask('${task.id}')">E</button>
                     <button onclick="removeTask('${task.id}')">L</button>
-                </span>
+                </span> <!-- EMOJIS -->
             </div>
             <span class="span-datas" data-id="${task.id}">${(task.dataInicio == undefined) ? "---" : task.dataInicio} > ${(task.dataFim == undefined) ? "---" : task.dataFim}</span>
         
@@ -318,6 +319,7 @@ function editTask(id) {
         task = tasks[item].find(t => t.id === "" + id);
         if (task != null) break;
     }
+    pri("Task to edit: "+task);
     editingTaskId = id;
     document.getElementById("headEditTask").innerHTML = "Editando tarefa: "+task.title;
     document.getElementById("editInput").value = task.title;
@@ -515,8 +517,22 @@ async function iden(){
 async function login(){
     var user = document.getElementById("user").value;
     var password = document.getElementById("password").value;
+
+    let qt = 1;
+    var logando = setInterval(()=> {
+        let pnts = "";
+        for (let i=0;i<qt;i++){
+            pnts += ".";
+        }
+        document.getElementById("infoLogin").innerHTML = "Processando "+pnts;
+        qt++;
+        if (qt>5){
+            qt = 1;
+        }
+    }, 333);
+
     pri("Enviado: ("+user+", "+password+")")
-    const response = await fetch("/wp-admin/admin-ajax.php?action=verifica_senha", {
+    const response = await fetch("../wp-admin/admin-ajax.php?action=verifica_senha", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ "user":user,"pass":password })
@@ -524,12 +540,23 @@ async function login(){
     var resposta = await response.json();
     console.log("Resposta: "+resposta.message);
     if (resposta.success){
+        clearInterval(logando);
         logged = true;
         document.getElementById("user").value = "";
         document.getElementById("password").value = "";
+        document.getElementById("infoLogin").innerHTML = "Bem vindo "+user+"!";
         renderBoard();
     }else{
+        clearInterval(logando);
         logged = false;
+        document.getElementById("user").value = "";
+        document.getElementById("password").value = "";
+
+        document.getElementById("infoLogin").innerHTML = "Usuário ou Senha incorretos";
+        setTimeout(() => {
+            document.getElementById("infoLogin").innerHTML = "Digite o Usuário e Senha";
+        }, 5000);
+
         renderBoard();
     }
 }

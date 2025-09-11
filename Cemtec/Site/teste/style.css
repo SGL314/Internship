@@ -116,37 +116,69 @@ body {
 }
 
 .normalButton{
-  background-color: #d1d1d1;
+  background-color: #d1d1d1 !important;
 }
 .normalInput{
-  background-color: #f4f4f4;
+  background-color: #f4f4f4 !important;
+  border: 2px solid black !important;
+  border-radius: 8px !important;
+  height: 30px !important;
+  width: 180px !important;
+
+  color: rgb(0, 0, 0) !important;
+  font-style: bold !important;
+  font-size: 14px !important;        /* tamanho da fonte */
+  font-family: Arial, sans-serif !important; /* família da fonte */
+}
+.normalInput::placeholder{
+    font-size: 11px !important;         /* tamanho da fonte */
+    font-family: Arial, sans-serif !important; 
+    color: rgb(0, 0, 0) !important;
 }
 
 /*cabeçalho*/
 
 .button-cab{
-    border-radius: 8px;
-    border: 2px solid black;
-    padding: 5px;
-    background: #4f8cff;
-    margin-left: 40px;
+    border-radius: 8px !important;
+    border: 2px solid black !important;
+    padding: 5px !important;
+    background: #4f8cff !important;
+
+    margin-top: 0px !important;
+    margin-right: 5px !important;
 }
 .button-cab:hover{
-    box-shadow:0 0 20px #000000;
-    background: #2670fa;
+    box-shadow:0 0 20px #000000 !important;
+    background: #2670fa !important;
 }
 
 /* login */
 .div-login{
-    margin-left: 40px;
-    margin-top: 20px;
+    margin-left: 40px !important;
+    margin-top: 20px !important;
 
-    display: block;
-    align-items: center;
+    display: block !important;
+    align-items: center !important;
 }
 .button-login{
-    border-radius: 8px;
-    border: 2px solid black;
-    padding: 5px;
-    background: #4f8cff;
+    border-radius: 8px !important;
+    border: 2px solid black !important;
+    padding: 5px !important;
+    background: #4f8cff !important;
+}
+.button-login:hover{
+    box-shadow:0 0 20px #000000 !important;
+    background: #2670fa !important;
+}
+.inline {
+    display: flex !important;
+    flex-direction: row !important;
+    height: 30px !important;
+    margin-bottom: 2px !important;
+    margin-top: 2px !important;
+}
+.info{
+    margin-top: 6px !important;
+    margin-left: 5px !important;
+    /* text-size-adjust: 30px; */
 }
