@@ -28,7 +28,8 @@ let pauseLeituraJSON = false;
 var canReadJSON = true;
 var lastData = null;
 var logged = false;
-var intervalo = null;
+var atualization = null;
+var colorByArea = true; //
 
 function renderBoard(columnId = null) {
     if (!logged) return;    
@@ -52,8 +53,8 @@ function renderBoard(columnId = null) {
             ondragover="event.preventDefault()"
             ondrop="onDropColumn('${col.id}')"></div>
             <form class="add-task-form" onsubmit="addTask(event, '${col.id}')">
-            <input type="text" placeholder="Nova tarefa..." required>
-            <button type="submit">+</button>
+                <input class="normalInput" type="text" placeholder="Nova tarefa ..." required>
+                <button class="normalButton" type="submit">+</button>
             </form>
         `;
         board.appendChild(colDiv);
@@ -310,6 +311,7 @@ function addTask(event, columnId) {
     input.value = "";
     sendTasks();
     renderBoard();
+    editTask(newTask.id); // quando cria coloca pra editar tbm
 }
 
 function editTask(id) {
@@ -321,9 +323,16 @@ function editTask(id) {
     }
     pri("Task to edit: "+task);
     editingTaskId = id;
+
     document.getElementById("headEditTask").innerHTML = "Editando tarefa: "+task.title;
     document.getElementById("editInput").value = task.title;
     document.getElementById("editModal").style.display = "flex";
+
+    pri("datas: ");
+    document.getElementById("dataInicio").value = task.dataInicio.split("/").reverse().join("-");
+    document.getElementById("dataFim").value = task.dataFim.split("/").reverse().join("-");
+    pri("rec: "+document.getElementById("dataInicio").value);
+    pri("rec: "+document.getElementById("dataFim").value);
 }
 
 function removeTask(id) {
@@ -454,16 +463,13 @@ async function imagemAtualizacaoSheets(tipo) {
         img.id = "attSheets";
 
         // Gira a cada 50ms (ajuste se quiser mais rápido/lento)
-        intervalo = setInterval(() => {
+        clearInterval(atualization);
+        atualization = setInterval(() => {
             angulo += 5;
             img.style.transform = `rotate(${angulo}deg)`;
         }, 25);
-
-        setTimeout(() => {
-            clearInterval(intervalo);
-        }, 1500);
     } else {
-        clearInterval(intervalo);
+        clearInterval(atualization);
 
         var img = document.getElementById("attSheets");
         img.style.transform = `rotate(0deg)`;
@@ -566,4 +572,4 @@ getJSON();
 // iden();
 renderBoard();
 // salvarJSON();
-
+// SCRIPT_SGL

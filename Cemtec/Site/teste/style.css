@@ -116,7 +116,14 @@ body {
 }
 
 .normalButton{
-  background-color: #d1d1d1 !important;
+    border-radius: 8px !important;
+    border: 2px solid black !important;
+    padding: 5px !important;
+    background: #4f8cff !important;
+}
+.normalButton:hover{
+    box-shadow:0 0 20px #000000 !important;
+    background: #2670fa !important;
 }
 .normalInput{
   background-color: #f4f4f4 !important;
