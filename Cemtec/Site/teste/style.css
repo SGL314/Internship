@@ -3,20 +3,34 @@ body {
     background: #ffffff;
     margin: 0;
 }
+.geral{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
 .kanban-board {
     display: flex;
     gap: 20px;
-    padding: 40px;
+    padding-top: 40px;
 }
 .kanban-column {
     background: #b7b7b7;
     border-radius: 8px;
     border: 2px solid black;
     box-shadow: 0 2px 8px #0001;
-    width: 300px;
+    width: 320px;
     padding: 16px;
     display: flex;
     flex-direction: column;
+}
+#col-todo {
+    background: #f28b82;
+}
+#col-doing {
+    background: #fbbc04;
+}
+#col-done {
+    background: #34a853;
 }
 .kanban-column h2 {
     margin: 0 0 12px 0;
@@ -50,11 +64,11 @@ body {
 }
 .kanban-actions{
     display: flex;
-  padding-left: 40px;
+    padding-left: 40px;
 }
 .kanban-actions button {
     margin-left: 4px;
-    background: #d1d8e6;
+    background: #a9c3f8;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -64,7 +78,8 @@ body {
 }
 .add-task-form {
     display: flex;
-    margin-top: 12px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 .add-task-form input {
     flex: 1;
@@ -84,24 +99,30 @@ body {
     z-index: 1000;
 }
 #editModal .modal-content {
-    background: #fff;
-    border-radius: 8px;
-    padding: 24px 32px;
-    min-width: 300px;
-    box-shadow: 0 4px 24px #0003;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    position: relative;
+    background: #fff !important;
+    border-radius: 8px !important;
+    padding: 24px 32px !important;
+    min-width: 300px !important;
+    box-shadow: 0 4px 24px #0003 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    position: relative !important;
 }
 #editModal .modal-content button.close-btn {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: none;
-    border: none;
-    font-size: 1.2em;
-    cursor: pointer;
+    position: absolute !important;
+    top: 8px !important;
+    right: 8px !important;
+    background: none !important;
+    border: none !important;
+    font-size: 1.2em !important;
+    cursor: pointer !important;
+}
+.modal-content{ 
+    width: 430px !important;
+    /* max-height: 500px !important;   altura máxima */
+    /* overflow-y: auto !important;    adiciona scroll vertical quando precisar */
+    /* overflow-x: hidden !important;  esconde scroll horizontal */
 }
 
 .top-task{
@@ -120,12 +141,15 @@ body {
     border: 2px solid black !important;
     padding: 5px !important;
     background: #4f8cff !important;
+    font-weight: bold !important;
+    color: black !important;
 }
 .normalButton:hover{
     box-shadow:0 0 10px #000000 !important;
     background: #2670fa !important;
+    color: black !important; 
 }
-.normalInput{
+.normalInput,.normalInput_noLimitWidth{
   background-color: #dfdfdf !important;
   border: 2px solid black !important;
   border-radius: 8px !important;
@@ -137,7 +161,42 @@ body {
   font-size: 14px !important;        /* tamanho da fonte */
   font-family: Arial, sans-serif !important; /* família da fonte */
 }
-.normalInput::placeholder{
+.normalInput::placeholder,.normalInput_noLimitWidth::placeholder{
+    font-size: 11px !important;         /* tamanho da fonte */
+    font-family: Arial, sans-serif !important; 
+    color: rgb(0, 0, 0) !important;
+}
+.normalInput_noLimitWidth{
+    width: auto !important;
+    line-height: 30px !important;
+}
+.normalInput_noLimitWidth {
+  height: 30px !important;          /* altura fixa igual p/ todos */
+  line-height: 30px !important;     /* faz o texto ficar centralizado */
+  padding: 0 10px !important;       /* espaço interno lateral */
+  font-size: 14px !important;
+  box-sizing: border-box !important;
+}
+
+.normalInput_noLimitWidth[type="date"] {
+  /* line-height: normal !important;   evita bug visual */
+  /* padding: 0 10px !important;       garante alinhamento */
+  /* display: flex !important; */
+  /* align-items: center !important;   força o conteúdo a ficar centralizado */
+}
+textarea{
+    background-color: #dfdfdf !important;
+    border: 2px solid black !important;
+    border-radius: 8px !important;
+
+    color: rgb(0, 0, 0) !important;
+    font-style: bold !important;
+    font-size: 14px !important;        /* tamanho da fonte */
+    font-family: Arial, sans-serif !important; /* família da fonte */ 
+    resize: vertical;   /* usuário pode puxar a borda e aumentar */
+    min-height: 30px;   /* tamanho mínimo */
+}
+textarea::placeholder{
     font-size: 11px !important;         /* tamanho da fonte */
     font-family: Arial, sans-serif !important; 
     color: rgb(0, 0, 0) !important;
@@ -161,11 +220,12 @@ body {
 
 /* login */
 .div-login{
-    margin-left: 40px !important;
+    margin-left: 10px !important;
     margin-top: 20px !important;
 
     display: block !important;
     align-items: center !important;
+    min-width:461px;
 }
 .button-login{
     border-radius: 8px !important;
@@ -181,11 +241,13 @@ body {
     display: flex !important;
     flex-direction: row !important;
     height: 30px !important;
-    margin-bottom: 2px !important;
+    margin-bottom: 10px !important;
     margin-top: 2px !important;
+
+    gap: 5px !important;
 }
 .info{
     margin-top: 6px !important;
-    margin-left: 5px !important;
+    /* margin-left: 5px !important; */
     /* text-size-adjust: 30px; */
 }

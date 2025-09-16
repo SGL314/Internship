@@ -4,8 +4,8 @@
       <button class="close-btn" onclick="closeEditModal()">&times;</button>
       <h3 id="headEditTask">Editar tarefa</h3>
       Nome: <input id="editInput" class="normalInput_noLimitWidth" type="text"/>
-      Descrição: <textarea id="descricao" class="normalInput_noLimitWidth" type="text"></textarea>
-      Equipamentos Utilizados: <textarea id="equipamentos" class="normalInput_noLimitWidth" type="text-area"></textarea>
+      Descrição: <textarea id="descricao" type="text"></textarea>
+      Equipamentos Utilizados: <textarea id="equipamentos" type="text-area"></textarea>
       Data Início: <input id="dataInicio" class="normalInput_noLimitWidth" type="date"/>
       Data Fim: <input id="dataFim" class="normalInput_noLimitWidth" type="date"/>
       <button class="normalButton" onclick="saveEdit()">Salvar</button>
@@ -19,7 +19,7 @@
           <input class="normalInput" id="user" type="text" name="username" autocomplete="username" placeholder="Usuário" required/>
           <h4 class="info" id="infoLogin">Digite o Usuário e Senha</h4>
         </div>
-        <div clas="inline">
+        <div class="inline">
           <input class="normalInput" id="password" type="password" name="password" autocomplete="current-password" placeholder="Senha" required/>
           <button class="normalButton" onclick="login()">Entrar</button>
         </div>
@@ -30,8 +30,8 @@
           <button class="normalButton" onclick="sendTasks()">Atualizar no Sheets</button>
           <img style="padding: 0px" id="attSheets" src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/09/carregado.png" width="30" height="30"/>
         </div>
-        <div class="kanban-board" id="kanbanBoard"></div>
       </div>
+      <div class="kanban-board" id="kanbanBoard"></div>
     </div>
   </div>
   

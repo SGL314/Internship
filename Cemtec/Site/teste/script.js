@@ -32,7 +32,7 @@ var atualization = null;
 var colorByArea = true; //
 
 function renderBoard(columnId = null) {
-    if (!logged) return;    
+    if (!logged) return; // DIFFER
     if (tasks == null) return;
 
     pri("preRender: ");
@@ -43,20 +43,31 @@ function renderBoard(columnId = null) {
 
     const board = document.getElementById("kanbanBoard");
     board.innerHTML = "";
+    
 
     columns.forEach(col => {
         const colDiv = document.createElement("div");
         colDiv.className = "kanban-column";
-        colDiv.innerHTML = `
-            <h2>${col.name}</h2>
-            <div class="kanban-cards" id="cards-${col.id}"
-            ondragover="event.preventDefault()"
-            ondrop="onDropColumn('${col.id}')"></div>
-            <form class="add-task-form" onsubmit="addTask(event, '${col.id}')">
-                <input class="normalInput" type="text" placeholder="Nova tarefa ..." required>
-                <button class="normalButton" type="submit">+</button>
-            </form>
-        `;
+        colDiv.id = "col-" + col.id;
+
+        if (col.id == "todo"){
+            colDiv.innerHTML = `
+                <h2>${col.name}</h2>
+                <form class="add-task-form" onsubmit="addTask(event, '${col.id}')">
+                    <input class="normalInput" type="text" placeholder="Nova tarefa ..." required>
+                    <button class="normalButton" type="submit">+</button>
+                </form>
+                <div class="kanban-cards" id="cards-${col.id}"
+                ondragover="event.preventDefault()"
+                ondrop="onDropColumn('${col.id}')"></div>`;
+        }else{
+            colDiv.innerHTML = `
+                <h2>${col.name}</h2>
+                <div style="height: 50px;"></div>
+                <div class="kanban-cards" id="cards-${col.id}"
+                ondragover="event.preventDefault()"
+                ondrop="onDropColumn('${col.id}')"></div>`;
+        }
         board.appendChild(colDiv);
 
         const cardsDiv = colDiv.querySelector(".kanban-cards");
@@ -114,7 +125,7 @@ function renderBoard(columnId = null) {
 
             card.innerHTML = `
             <div class="top-task">
-                <span class="span-moving" data-id="${task.id}">${task.title}</span>
+                <span class="span-moving" style="width: 154px;" data-id="${task.id}">${task.title}</span>
                 <span class="kanban-actions">
                     <button onclick="editTask('${task.id}')">E</button>
                     <button onclick="removeTask('${task.id}')">L</button>
@@ -328,11 +339,9 @@ function editTask(id) {
     document.getElementById("editInput").value = task.title;
     document.getElementById("editModal").style.display = "flex";
 
-    pri("datas: ");
+    // pri("datas: ");
     document.getElementById("dataInicio").value = task.dataInicio.split("/").reverse().join("-");
     document.getElementById("dataFim").value = task.dataFim.split("/").reverse().join("-");
-    pri("rec: "+document.getElementById("dataInicio").value);
-    pri("rec: "+document.getElementById("dataFim").value);
 }
 
 function removeTask(id) {
@@ -354,8 +363,8 @@ function closeEditModal() {
 
 // edição
 const hoje = new Date().toISOString().split('T')[0]; // pega só a parte da data
-document.getElementById("dataInicio").min = hoje;
-document.getElementById("dataFim").min = hoje;
+// document.getElementById("dataInicio").min = hoje;
+// document.getElementById("dataFim").min = hoje;
 
 function saveEdit() {
     const newTitle = document.getElementById("editInput").value.trim();

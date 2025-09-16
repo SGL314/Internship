@@ -14,7 +14,8 @@ with open("teste/style.css", "r") as file:
     for line in file.readlines():
         css += line
 
-js = js.replace("innerStrangeThing_JS_001","")
+js = js.replace("""E</button>
+                    <button onclick="removeTask('${task.id}')">L""",especific)
 
 with open("index.html", "w") as file:
     file.write(f"<style>\n{css}\n</style>\n{html}\n<script>\n{js}\n</script>")

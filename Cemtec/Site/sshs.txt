@@ -14,5 +14,7 @@ ADEREÇO:
 1:alterar cores; 
 2:corrigir botões quando adiciona; VER
 
+CODIGOS:
+rm teste/*; cp outOfWP/* teste;
 
-
+rm outOfWP/*; cp teste/* outOfWP;
