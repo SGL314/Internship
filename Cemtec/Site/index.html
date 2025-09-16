@@ -1,6 +1,7 @@
-<style>body {
+<style>
+body {
     font-family: Arial, sans-serif;
-    background: #f4f6fa;
+    background: #ffffff;
     margin: 0;
 }
 .kanban-board {
@@ -122,11 +123,11 @@
     background: #4f8cff !important;
 }
 .normalButton:hover{
-    box-shadow:0 0 20px #000000 !important;
+    box-shadow:0 0 10px #000000 !important;
     background: #2670fa !important;
 }
 .normalInput{
-  background-color: #f4f4f4 !important;
+  background-color: #dfdfdf !important;
   border: 2px solid black !important;
   border-radius: 8px !important;
   height: 30px !important;
@@ -155,7 +156,7 @@
     margin-right: 5px !important;
 }
 .button-cab:hover{
-    box-shadow:0 0 20px #000000 !important;
+    box-shadow:0 0 10px #000000 !important;
     background: #2670fa !important;
 }
 
@@ -174,7 +175,7 @@
     background: #4f8cff !important;
 }
 .button-login:hover{
-    box-shadow:0 0 20px #000000 !important;
+    box-shadow:0 0 10px #000000 !important;
     background: #2670fa !important;
 }
 .inline {
@@ -188,7 +189,9 @@
     margin-top: 6px !important;
     margin-left: 5px !important;
     /* text-size-adjust: 30px; */
-}</style>
+}
+</style>
+
   <div id="editModal">
     <div class="modal-content">
       <button class="close-btn" onclick="closeEditModal()">&times;</button>
@@ -217,8 +220,8 @@
   </div>
   <div class="kanban-board" id="kanbanBoard"></div>
 
-
-<script>//
+<script>
+//
 let sheetLink = ""; //link da planilha
 
 //
@@ -793,4 +796,5 @@ getJSON();
 renderBoard();
 // salvarJSON();
 // SCRIPT_SGL
+
 </script>

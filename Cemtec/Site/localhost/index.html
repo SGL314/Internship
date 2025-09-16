@@ -4,10 +4,15 @@ body {
     background: #ffffff;
     margin: 0;
 }
+.geral{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
 .kanban-board {
     display: flex;
     gap: 20px;
-    padding: 40px;
+    padding-top: 40px;
 }
 .kanban-column {
     background: #b7b7b7;
@@ -18,6 +23,15 @@ body {
     padding: 16px;
     display: flex;
     flex-direction: column;
+}
+#col-todo {
+    background: #f28b82;
+}
+#col-doing {
+    background: #fbbc04;
+}
+#col-done {
+    background: #34a853;
 }
 .kanban-column h2 {
     margin: 0 0 12px 0;
@@ -51,11 +65,11 @@ body {
 }
 .kanban-actions{
     display: flex;
-  padding-left: 40px;
+    padding-left: 40px;
 }
 .kanban-actions button {
     margin-left: 4px;
-    background: #d1d8e6;
+    background: #a9c3f8;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -65,7 +79,8 @@ body {
 }
 .add-task-form {
     display: flex;
-    margin-top: 12px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 .add-task-form input {
     flex: 1;
@@ -105,6 +120,7 @@ body {
     cursor: pointer;
 }
 
+
 .top-task{
     display: flex;
     flex-direction: row;
@@ -121,12 +137,13 @@ body {
     border: 2px solid black !important;
     padding: 5px !important;
     background: #4f8cff !important;
+    font-weight: bold !important;
 }
 .normalButton:hover{
     box-shadow:0 0 10px #000000 !important;
     background: #2670fa !important;
 }
-.normalInput{
+.normalInput,.normalInput_noLimitWidth{
   background-color: #dfdfdf !important;
   border: 2px solid black !important;
   border-radius: 8px !important;
@@ -138,10 +155,13 @@ body {
   font-size: 14px !important;        /* tamanho da fonte */
   font-family: Arial, sans-serif !important; /* família da fonte */
 }
-.normalInput::placeholder{
+.normalInput::placeholder,.normalInput_noLimitWidth::placeholder{
     font-size: 11px !important;         /* tamanho da fonte */
     font-family: Arial, sans-serif !important; 
     color: rgb(0, 0, 0) !important;
+}
+.normalInput_noLimitWidth{
+    width: auto !important;
 }
 
 /*cabeçalho*/
@@ -196,29 +216,39 @@ body {
     <div class="modal-content">
       <button class="close-btn" onclick="closeEditModal()">&times;</button>
       <h3 id="headEditTask">Editar tarefa</h3>
-      Nome: <input id="editInput" type="text"/>
-      Data Início: <input id="dataInicio" type="date" min=""/>
-      Data Fim: <input id="dataFim" type="date" min=""/>
-      <button class="nomalButton" onclick="saveEdit()">Salvar</button>
+      Nome: <input id="editInput" class="normalInput_noLimitWidth" type="text"/>
+      Descrição: <textarea id="descricao" class="normalInput_noLimitWidth" type="text"></textarea>
+      Equipamentos Utilizados: <textarea id="equipamentos" class="normalInput_noLimitWidth" type="text-area"></textarea>
+      Data Início: <input id="dataInicio" class="normalInput_noLimitWidth" type="date"/>
+      Data Fim: <input id="dataFim" class="normalInput_noLimitWidth" type="date"/>
+      <button class="normalButton" onclick="saveEdit()">Salvar</button>
     </div>
   </div>
-  <div class="div-login">
-    <div class="inline">
-      <input class="normalInput" id="user" type="text" name="username" autocomplete="username" placeholder="Usuário" required/>
-      <h4 class="info" id="infoLogin">Digite o Usuário e Senha</h4>
-    </div>
-    <div clas="inline">
-      <input class="normalInput" id="password" type="password" name="password" autocomplete="current-password" placeholder="Senha" required/>
-      <button class="button-login" onclick="login()">Entrar</button>
-    </div>
   
-  <!-- <input type="file" id="fileInput" accept=".json"> -->
-    <div class="inline">
-      <button class="button-cab" onclick="sendTasks()">Atualizar no Sheets</button>
-      <img style="padding: 0px" id="attSheets" src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/09/carregado.png" width="30" height="30"/>
+  <div class="geral">
+    <div>
+      <div class="div-login">
+        <div class="inline">
+          <input class="normalInput" id="user" type="text" name="username" autocomplete="username" placeholder="Usuário" required/>
+          <h4 class="info" id="infoLogin">Digite o Usuário e Senha</h4>
+        </div>
+        <div clas="inline">
+          <input class="normalInput" id="password" type="password" name="password" autocomplete="current-password" placeholder="Senha" required/>
+          <button class="normalButton" onclick="login()">Entrar</button>
+        </div>
+      
+      <!-- <input type="file" id="fileInput" accept=".json"> -->
+      
+        <div class="inline">
+          <button class="normalButton" onclick="sendTasks()">Atualizar no Sheets</button>
+          <img style="padding: 0px" id="attSheets" src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/09/carregado.png" width="30" height="30"/>
+        </div>
+        <div class="kanban-board" id="kanbanBoard"></div>
+      </div>
     </div>
   </div>
-  <div class="kanban-board" id="kanbanBoard"></div>
+  
+  <!-- DIFFER -->
 
 <script>
 //
@@ -255,7 +285,7 @@ var atualization = null;
 var colorByArea = true; //
 
 function renderBoard(columnId = null) {
-    if (!logged) return;    
+    // if (!logged) return; // DIFFER
     if (tasks == null) return;
 
     pri("preRender: ");
@@ -266,20 +296,31 @@ function renderBoard(columnId = null) {
 
     const board = document.getElementById("kanbanBoard");
     board.innerHTML = "";
+    
 
     columns.forEach(col => {
         const colDiv = document.createElement("div");
         colDiv.className = "kanban-column";
-        colDiv.innerHTML = `
-            <h2>${col.name}</h2>
-            <div class="kanban-cards" id="cards-${col.id}"
-            ondragover="event.preventDefault()"
-            ondrop="onDropColumn('${col.id}')"></div>
-            <form class="add-task-form" onsubmit="addTask(event, '${col.id}')">
-                <input class="normalInput" type="text" placeholder="Nova tarefa ..." required>
-                <button class="normalButton" type="submit">+</button>
-            </form>
-        `;
+        colDiv.id = "col-" + col.id;
+
+        if (col.id == "todo"){
+            colDiv.innerHTML = `
+                <h2>${col.name}</h2>
+                <form class="add-task-form" onsubmit="addTask(event, '${col.id}')">
+                    <input class="normalInput" type="text" placeholder="Nova tarefa ..." required>
+                    <button class="normalButton" type="submit">+</button>
+                </form>
+                <div class="kanban-cards" id="cards-${col.id}"
+                ondragover="event.preventDefault()"
+                ondrop="onDropColumn('${col.id}')"></div>`;
+        }else{
+            colDiv.innerHTML = `
+                <h2>${col.name}</h2>
+                <div style="height: 50px;"></div>
+                <div class="kanban-cards" id="cards-${col.id}"
+                ondragover="event.preventDefault()"
+                ondrop="onDropColumn('${col.id}')"></div>`;
+        }
         board.appendChild(colDiv);
 
         const cardsDiv = colDiv.querySelector(".kanban-cards");
@@ -337,11 +378,11 @@ function renderBoard(columnId = null) {
 
             card.innerHTML = `
             <div class="top-task">
-                <span class="span-moving" data-id="${task.id}">${task.title}</span>
+                <span class="span-moving" style="width: 154px;" data-id="${task.id}">${task.title}</span>
                 <span class="kanban-actions">
-                    <button onclick="editTask('${task.id}')">E</button>
-                    <button onclick="removeTask('${task.id}')">L</button>
-                </span> <!-- EMOJIS -->
+                    <button onclick="editTask('${task.id}')">
+✏️</button>
+                    <button onclick="removeTask('${task.id}')">🗑️
             </div>
             <span class="span-datas" data-id="${task.id}">${(task.dataInicio == undefined) ? "---" : task.dataInicio} > ${(task.dataFim == undefined) ? "---" : task.dataFim}</span>
         
@@ -551,11 +592,9 @@ function editTask(id) {
     document.getElementById("editInput").value = task.title;
     document.getElementById("editModal").style.display = "flex";
 
-    pri("datas: ");
+    // pri("datas: ");
     document.getElementById("dataInicio").value = task.dataInicio.split("/").reverse().join("-");
     document.getElementById("dataFim").value = task.dataFim.split("/").reverse().join("-");
-    pri("rec: "+document.getElementById("dataInicio").value);
-    pri("rec: "+document.getElementById("dataFim").value);
 }
 
 function removeTask(id) {
@@ -577,8 +616,8 @@ function closeEditModal() {
 
 // edição
 const hoje = new Date().toISOString().split('T')[0]; // pega só a parte da data
-document.getElementById("dataInicio").min = hoje;
-document.getElementById("dataFim").min = hoje;
+// document.getElementById("dataInicio").min = hoje;
+// document.getElementById("dataFim").min = hoje;
 
 function saveEdit() {
     const newTitle = document.getElementById("editInput").value.trim();

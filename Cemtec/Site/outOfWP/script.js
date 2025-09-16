@@ -1,226 +1,3 @@
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background: #ffffff;
-    margin: 0;
-}
-.kanban-board {
-    display: flex;
-    gap: 20px;
-    padding: 40px;
-}
-.kanban-column {
-    background: #b7b7b7;
-    border-radius: 8px;
-    border: 2px solid black;
-    box-shadow: 0 2px 8px #0001;
-    width: 300px;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-}
-.kanban-column h2 {
-    margin: 0 0 12px 0;
-    font-size: 1.2em;
-}
-.kanban-cards {
-    flex: 1;
-    min-height: 40px;
-}
-.kanban-card {
-    background: #a9c3f8;
-    border: 2px solid #4f8cff;
-    border-radius: 6px;
-    padding: 12px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    /* cursor: grab; */
-    transition: border 0.2s;
-
-    display: flex;
-    flex-direction: column;
-}
-.kanban-card[data-drop-position="before"] {
-    border-top: 12px solid #4f8cff;
-    /*border-top: 12px solid #ff874f;*/
-}
-.kanban-card[data-drop-position="after"] {
-    border-bottom: 12px solid #4f8cff;
-}
-.kanban-actions{
-    display: flex;
-  padding-left: 40px;
-}
-.kanban-actions button {
-    margin-left: 4px;
-    background: #d1d8e6;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    padding: 2px 6px;
-
-    align-self: flex-end;
-}
-.add-task-form {
-    display: flex;
-    margin-top: 12px;
-}
-.add-task-form input {
-    flex: 1;
-    padding: 4px;
-}
-.add-task-form button {
-    margin-left: 4px;
-}
-#editModal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: #0005;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-#editModal .modal-content {
-    background: #fff;
-    border-radius: 8px;
-    padding: 24px 32px;
-    min-width: 300px;
-    box-shadow: 0 4px 24px #0003;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    position: relative;
-}
-#editModal .modal-content button.close-btn {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: none;
-    border: none;
-    font-size: 1.2em;
-    cursor: pointer;
-}
-
-.top-task{
-    display: flex;
-    flex-direction: row;
-}
-.span-moving{
-    font-size: 20px;
-}
-.span-datas{
-    font-size: 15px;
-}
-
-.normalButton{
-    border-radius: 8px !important;
-    border: 2px solid black !important;
-    padding: 5px !important;
-    background: #4f8cff !important;
-}
-.normalButton:hover{
-    box-shadow:0 0 10px #000000 !important;
-    background: #2670fa !important;
-}
-.normalInput{
-  background-color: #dfdfdf !important;
-  border: 2px solid black !important;
-  border-radius: 8px !important;
-  height: 30px !important;
-  width: 180px !important;
-
-  color: rgb(0, 0, 0) !important;
-  font-style: bold !important;
-  font-size: 14px !important;        /* tamanho da fonte */
-  font-family: Arial, sans-serif !important; /* família da fonte */
-}
-.normalInput::placeholder{
-    font-size: 11px !important;         /* tamanho da fonte */
-    font-family: Arial, sans-serif !important; 
-    color: rgb(0, 0, 0) !important;
-}
-
-/*cabeçalho*/
-
-.button-cab{
-    border-radius: 8px !important;
-    border: 2px solid black !important;
-    padding: 5px !important;
-    background: #4f8cff !important;
-
-    margin-top: 0px !important;
-    margin-right: 5px !important;
-}
-.button-cab:hover{
-    box-shadow:0 0 10px #000000 !important;
-    background: #2670fa !important;
-}
-
-/* login */
-.div-login{
-    margin-left: 40px !important;
-    margin-top: 20px !important;
-
-    display: block !important;
-    align-items: center !important;
-}
-.button-login{
-    border-radius: 8px !important;
-    border: 2px solid black !important;
-    padding: 5px !important;
-    background: #4f8cff !important;
-}
-.button-login:hover{
-    box-shadow:0 0 10px #000000 !important;
-    background: #2670fa !important;
-}
-.inline {
-    display: flex !important;
-    flex-direction: row !important;
-    height: 30px !important;
-    margin-bottom: 2px !important;
-    margin-top: 2px !important;
-}
-.info{
-    margin-top: 6px !important;
-    margin-left: 5px !important;
-    /* text-size-adjust: 30px; */
-}
-</style>
-
-  <div id="editModal">
-    <div class="modal-content">
-      <button class="close-btn" onclick="closeEditModal()">&times;</button>
-      <h3 id="headEditTask">Editar tarefa</h3>
-      Nome: <input id="editInput" type="text"/>
-      Data Início: <input id="dataInicio" type="date" min=""/>
-      Data Fim: <input id="dataFim" type="date" min=""/>
-      <button class="nomalButton" onclick="saveEdit()">Salvar</button>
-    </div>
-  </div>
-  <div class="div-login">
-    <div class="inline">
-      <input class="normalInput" id="user" type="text" name="username" autocomplete="username" placeholder="Usuário" required/>
-      <h4 class="info" id="infoLogin">Digite o Usuário e Senha</h4>
-    </div>
-    <div clas="inline">
-      <input class="normalInput" id="password" type="password" name="password" autocomplete="current-password" placeholder="Senha" required/>
-      <button class="button-login" onclick="login()">Entrar</button>
-    </div>
-  
-  <!-- <input type="file" id="fileInput" accept=".json"> -->
-    <div class="inline">
-      <button class="button-cab" onclick="sendTasks()">Atualizar no Sheets</button>
-      <img style="padding: 0px" id="attSheets" src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/09/carregado.png" width="30" height="30"/>
-    </div>
-  </div>
-  <div class="kanban-board" id="kanbanBoard"></div>
-
-<script>
 //
 let sheetLink = ""; //link da planilha
 
@@ -255,7 +32,7 @@ var atualization = null;
 var colorByArea = true; //
 
 function renderBoard(columnId = null) {
-    if (!logged) return;    
+    // if (!logged) return; // DIFFER
     if (tasks == null) return;
 
     pri("preRender: ");
@@ -266,20 +43,31 @@ function renderBoard(columnId = null) {
 
     const board = document.getElementById("kanbanBoard");
     board.innerHTML = "";
+    
 
     columns.forEach(col => {
         const colDiv = document.createElement("div");
         colDiv.className = "kanban-column";
-        colDiv.innerHTML = `
-            <h2>${col.name}</h2>
-            <div class="kanban-cards" id="cards-${col.id}"
-            ondragover="event.preventDefault()"
-            ondrop="onDropColumn('${col.id}')"></div>
-            <form class="add-task-form" onsubmit="addTask(event, '${col.id}')">
-                <input class="normalInput" type="text" placeholder="Nova tarefa ..." required>
-                <button class="normalButton" type="submit">+</button>
-            </form>
-        `;
+        colDiv.id = "col-" + col.id;
+
+        if (col.id == "todo"){
+            colDiv.innerHTML = `
+                <h2>${col.name}</h2>
+                <form class="add-task-form" onsubmit="addTask(event, '${col.id}')">
+                    <input class="normalInput" type="text" placeholder="Nova tarefa ..." required>
+                    <button class="normalButton" type="submit">+</button>
+                </form>
+                <div class="kanban-cards" id="cards-${col.id}"
+                ondragover="event.preventDefault()"
+                ondrop="onDropColumn('${col.id}')"></div>`;
+        }else{
+            colDiv.innerHTML = `
+                <h2>${col.name}</h2>
+                <div style="height: 50px;"></div>
+                <div class="kanban-cards" id="cards-${col.id}"
+                ondragover="event.preventDefault()"
+                ondrop="onDropColumn('${col.id}')"></div>`;
+        }
         board.appendChild(colDiv);
 
         const cardsDiv = colDiv.querySelector(".kanban-cards");
@@ -337,7 +125,7 @@ function renderBoard(columnId = null) {
 
             card.innerHTML = `
             <div class="top-task">
-                <span class="span-moving" data-id="${task.id}">${task.title}</span>
+                <span class="span-moving" style="width: 154px;" data-id="${task.id}">${task.title}</span>
                 <span class="kanban-actions">
                     <button onclick="editTask('${task.id}')">E</button>
                     <button onclick="removeTask('${task.id}')">L</button>
@@ -551,11 +339,9 @@ function editTask(id) {
     document.getElementById("editInput").value = task.title;
     document.getElementById("editModal").style.display = "flex";
 
-    pri("datas: ");
+    // pri("datas: ");
     document.getElementById("dataInicio").value = task.dataInicio.split("/").reverse().join("-");
     document.getElementById("dataFim").value = task.dataFim.split("/").reverse().join("-");
-    pri("rec: "+document.getElementById("dataInicio").value);
-    pri("rec: "+document.getElementById("dataFim").value);
 }
 
 function removeTask(id) {
@@ -577,8 +363,8 @@ function closeEditModal() {
 
 // edição
 const hoje = new Date().toISOString().split('T')[0]; // pega só a parte da data
-document.getElementById("dataInicio").min = hoje;
-document.getElementById("dataFim").min = hoje;
+// document.getElementById("dataInicio").min = hoje;
+// document.getElementById("dataFim").min = hoje;
 
 function saveEdit() {
     const newTitle = document.getElementById("editInput").value.trim();
@@ -796,5 +582,3 @@ getJSON();
 renderBoard();
 // salvarJSON();
 // SCRIPT_SGL
-
-</script>
