@@ -547,11 +547,19 @@ async function login(){
     }, 333);
 
     pri("Enviado: ("+user+", "+password+")")
-    const response = await fetch("../wp-admin/admin-ajax.php?action=verifica_senha", {
+    // const response = await fetch("../wp-admin/admin-ajax.php?action=verifica_senha", {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify({ "user":user,"pass":password })
+    //   });
+
+    const response = await fetch("https://cemtec.demec.ufmg.br/wp-json/login/v1/verifica", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ "user":user,"pass":password })
-      });
+        body: JSON.stringify({ "user": user, "pass": password })
+        });
+
+
     var resposta = await response.json();
     console.log("Resposta: "+resposta.message);
     if (resposta.success){

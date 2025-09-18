@@ -20,10 +20,10 @@ js = js.replace("""E</button>
 with open("index.html", "w") as file:
     file.write(f"<style>\n{css}\n</style>\n{html}\n<script>\n{js}\n</script>")
 
-with open("all.html", "w") as file:
+with open("all_toWP.html", "w") as file:
     file.write(f"<style>\n{css}\n</style>\n{html}\n<script>\n{js}\n</script>")
 
-#out of WP
+#out of WP > index.html
 
 html = ""
 js = ""
