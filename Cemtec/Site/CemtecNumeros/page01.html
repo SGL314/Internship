@@ -1,0 +1,109 @@
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      background: #111;
+      color: white;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 150px;
+      padding: 100px 200px;
+    }
+
+    .box {
+        padding: 60px;
+        font-size: 2rem;
+        opacity: 0;
+        transform: translateX(350px);
+        transition: all 2s ease-out;
+
+        background: #263238;
+        color: #fff;
+        border-radius: 12px;
+        text-align: center;
+    }
+    .box h2{
+        margin: 0px;
+        font-size: 1.8em;
+    }
+    .box p{
+        margin: 5px 0 0;
+    }
+
+    /* animação vinda da esquerda */
+    .box.from-left {
+      transform: translateX(-350px);
+    }
+
+    /* quando estiver visível */
+    .box.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  </style>
+
+
+<h2 style="text-align: center; color: #333; font-weight: 700; margin-bottom: 5px;">
+  📈 Resultados
+</h2>
+<p style="text-align: center; color: #777; margin-bottom: 40px;">
+  *Os dados apresentados compreendem o período entre 2019 e 2024
+</p>
+  <section class="container">
+        <div class="box">
+            <h2>🏬 <span style="color:#ffffff;">+20</span></h2>
+            <p>Empresas atendidas</p>
+        </div>
+        <div class="box">
+            <h2>🤝 <span style="color:#ffffff;">15</span></h2>
+            <p>Serviços oferecidos</p>
+        </div>
+        <div class="box">
+            <h2>💵 <span style="color:#ffffff;">+25 milhões</span></h2>
+            <p>Em projetos executados</p>
+        </div>
+        <div class="box" >
+            <h2>🧾 <span style="color:#ffffff;">+50</span></h2>
+            <p>Projetos em colaboração com o setor privado</p>
+        </div>
+        <div class="box">
+            <h2>📜 <span style="color:#ffffff;">+65</span></h2>
+            <p>Certificados de Calibração emitidos</p>
+        </div>
+  </section>
+
+  <script>
+  const boxes = document.querySelectorAll('.box');
+
+  boxes.forEach((box, index) => {
+    if (index % 2 === 0) {
+      box.classList.add('from-left');
+    }
+
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('show');
+          } else {
+            entry.target.classList.remove('show'); // 👉 remove classe se sair da tela
+          }
+        });
+      },
+      {
+        threshold: 0.3
+      }
+    );
+
+    observer.observe(box);
+  });
+</script>

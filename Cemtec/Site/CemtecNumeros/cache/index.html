@@ -1,0 +1,164 @@
+
+  <style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: white;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 150px;
+  padding: 100px 200px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.box {
+  position: relative;
+  padding: 50px 40px;
+  font-size: 2rem;
+  opacity: 0;
+  transform: translateX(350px);
+  transition: all 3s ease-out;
+  background: linear-gradient(145deg, #2c3e50, #1c262b);
+  color: #fff;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(4px);
+  width: 600px;
+}
+
+.box h2 {
+  margin: 0;
+  font-size: 3rem;
+  color: #00e5ff;
+  font-weight: 700;
+}
+
+.box p {
+  margin-top: 15px;
+  font-size: 1.1rem;
+  color: #ddd;
+  letter-spacing: 0.5px;
+}
+
+/* animação vinda da esquerda */
+.box.from-left {
+  transform: translateX(-350px);
+}
+
+/* quando estiver visível */
+.box.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Responsivo básico */
+@media (max-width: 900px) {
+  .container {
+    padding: 60px 40px;
+    gap: 100px;
+  }
+
+  .box {
+    font-size: 1.6rem;
+    padding: 40px 30px;
+  }
+
+  .box h2 {
+    font-size: 2.5rem;
+  }
+
+  .box p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 40px 20px;
+    gap: 80px;
+  }
+
+  .box {
+    font-size: 1.4rem;
+    padding: 30px 20px;
+  }
+
+  .box h2 {
+    font-size: 2rem;
+  }
+
+  .box p {
+    font-size: 0.9rem;
+  }
+}
+
+  </style>
+
+
+<h1 style="text-align: center; color: #333; font-size: 60px; margin-bottom: 5px; margin-top:100px;">
+  📈 Resultados
+</h1>
+<p style="text-align: center; color: #777; margin-bottom: 40px; font-size: 12px;">
+  *Os dados apresentados compreendem o período entre 2019 e 2024
+</p>
+  <section class="container">
+  <div class="box">
+    <h2>🏬 +20</h2>
+    <p>Empresas atendidas</p>
+  </div>
+  <div class="box">
+    <h2>🤝 15</h2>
+    <p>Serviços oferecidos</p>
+  </div>
+  <div class="box">
+    <h2>💵 +25 milhões</h2>
+    <p>Em projetos executados</p>
+  </div>
+  <div class="box">
+    <h2>🧾 +50</h2>
+    <p>Projetos com o setor privado</p>
+  </div>
+  <div class="box">
+    <h2>📜 +65</h2>
+    <p>Certificados emitidos</p>
+  </div>
+
+  </section>
+
+  <script>
+  const boxes = document.querySelectorAll('.box');
+
+  boxes.forEach((box, index) => {
+    if (index % 2 === 0) {
+      box.classList.add('from-left');
+    }
+
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('show');
+          } else {
+            entry.target.classList.remove('show'); // 👉 remove classe se sair da tela
+          }
+        });
+      },
+      {
+        threshold: 0.3
+      }
+    );
+
+    observer.observe(box);
+  });
+</script>
