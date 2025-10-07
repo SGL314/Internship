@@ -1,3 +1,298 @@
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #ffffff;
+    margin: 0;
+}
+.geral{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+.kanban-board {
+    display: flex;
+    gap: 20px;
+    padding-top: 40px;
+}
+.kanban-column {
+    background: #b7b7b7;
+    border-radius: 8px;
+    border: 2px solid black;
+    box-shadow: 0 2px 8px #0001;
+    width: 320px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+}
+#col-todo {
+    background: #f28b82;
+}
+#col-doing {
+    background: #fbbc04;
+}
+#col-done {
+    background: #34a853;
+}
+.kanban-column h2 {
+    margin: 0 0 12px 0;
+    font-size: 1.2em;
+}
+.kanban-cards {
+    flex: 1;
+    min-height: 40px;
+}
+.kanban-card {
+    background: #a9c3f8;
+    border: 2px solid #4f8cff;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* cursor: grab; */
+    transition: border 0.2s;
+
+    display: flex;
+    flex-direction: column;
+}
+.kanban-card[data-drop-position="before"] {
+    border-top: 12px solid #4f8cff;
+    /*border-top: 12px solid #ff874f;*/
+}
+.kanban-card[data-drop-position="after"] {
+    border-bottom: 12px solid #4f8cff;
+}
+.kanban-actions{
+    display: flex;
+    padding-left: 40px;
+}
+.kanban-actions button {
+    margin-left: 4px;
+    background: #a9c3f8;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 2px 6px;
+
+    align-self: flex-end;
+}
+.add-task-form {
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.add-task-form input {
+    flex: 1;
+    padding: 4px;
+}
+.add-task-form button {
+    margin-left: 4px;
+}
+#editModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: #0005;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+#editModal .modal-content {
+    background: #fff !important;
+    border-radius: 8px !important;
+    padding: 24px 32px !important;
+    min-width: 300px !important;
+    box-shadow: 0 4px 24px #0003 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    position: relative !important;
+}
+#editModal .modal-content button.close-btn {
+    position: absolute !important;
+    top: 8px !important;
+    right: 8px !important;
+    background: none !important;
+    border: none !important;
+    font-size: 1.2em !important;
+    cursor: pointer !important;
+}
+.modal-content{ 
+    width: 430px !important;
+    /* max-height: 500px !important;   altura máxima */
+    /* overflow-y: auto !important;    adiciona scroll vertical quando precisar */
+    /* overflow-x: hidden !important;  esconde scroll horizontal */
+}
+
+.top-task{
+    display: flex;
+    flex-direction: row;
+}
+.span-moving{
+    font-size: 20px;
+}
+.span-datas{
+    font-size: 15px;
+}
+
+.normalButton{
+    border-radius: 8px !important;
+    border: 2px solid black !important;
+    padding: 5px !important;
+    background: #4f8cff !important;
+    font-weight: bold !important;
+    color: black !important;
+}
+.normalButton:hover{
+    box-shadow:0 0 10px #000000 !important;
+    background: #2670fa !important;
+    color: black !important; 
+}
+.normalInput,.normalInput_noLimitWidth{
+  background-color: #dfdfdf !important;
+  border: 2px solid black !important;
+  border-radius: 8px !important;
+  height: 30px !important;
+  width: 180px !important;
+
+  color: rgb(0, 0, 0) !important;
+  font-style: bold !important;
+  font-size: 14px !important;        /* tamanho da fonte */
+  font-family: Arial, sans-serif !important; /* família da fonte */
+}
+.normalInput::placeholder,.normalInput_noLimitWidth::placeholder{
+    font-size: 11px !important;         /* tamanho da fonte */
+    font-family: Arial, sans-serif !important; 
+    color: rgb(0, 0, 0) !important;
+}
+.normalInput_noLimitWidth{
+    width: auto !important;
+    line-height: 30px !important;
+}
+.normalInput_noLimitWidth {
+  height: 30px !important;          /* altura fixa igual p/ todos */
+  line-height: 30px !important;     /* faz o texto ficar centralizado */
+  padding: 0 10px !important;       /* espaço interno lateral */
+  font-size: 14px !important;
+  box-sizing: border-box !important;
+}
+
+.normalInput_noLimitWidth[type="date"] {
+  /* line-height: normal !important;   evita bug visual */
+  /* padding: 0 10px !important;       garante alinhamento */
+  /* display: flex !important; */
+  /* align-items: center !important;   força o conteúdo a ficar centralizado */
+}
+textarea{
+    background-color: #dfdfdf !important;
+    border: 2px solid black !important;
+    border-radius: 8px !important;
+
+    color: rgb(0, 0, 0) !important;
+    font-style: bold !important;
+    font-size: 14px !important;        /* tamanho da fonte */
+    font-family: Arial, sans-serif !important; /* família da fonte */ 
+    resize: vertical;   /* usuário pode puxar a borda e aumentar */
+    min-height: 30px;   /* tamanho mínimo */
+}
+textarea::placeholder{
+    font-size: 11px !important;         /* tamanho da fonte */
+    font-family: Arial, sans-serif !important; 
+    color: rgb(0, 0, 0) !important;
+}
+
+/*cabeçalho*/
+
+.button-cab{
+    border-radius: 8px !important;
+    border: 2px solid black !important;
+    padding: 5px !important;
+    background: #4f8cff !important;
+
+    margin-top: 0px !important;
+    margin-right: 5px !important;
+}
+.button-cab:hover{
+    box-shadow:0 0 10px #000000 !important;
+    background: #2670fa !important;
+}
+
+/* login */
+.div-login{
+    margin-left: 10px !important;
+    margin-top: 20px !important;
+
+    display: block !important;
+    align-items: center !important;
+    min-width:461px;
+}
+.button-login{
+    border-radius: 8px !important;
+    border: 2px solid black !important;
+    padding: 5px !important;
+    background: #4f8cff !important;
+}
+.button-login:hover{
+    box-shadow:0 0 10px #000000 !important;
+    background: #2670fa !important;
+}
+.inline {
+    display: flex !important;
+    flex-direction: row !important;
+    height: 30px !important;
+    margin-bottom: 10px !important;
+    margin-top: 2px !important;
+
+    gap: 5px !important;
+}
+.info{
+    margin-top: 6px !important;
+    /* margin-left: 5px !important; */
+    /* text-size-adjust: 30px; */
+}
+</style>
+
+  <div id="editModal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeEditModal()">&times;</button>
+      <h3 id="headEditTask">Editar tarefa</h3>
+      Nome: <input id="editInput" class="normalInput_noLimitWidth" type="text"/>
+      Descrição: <textarea id="descricao" type="text"></textarea>
+      Equipamentos Utilizados: <textarea id="equipamentos" type="text-area"></textarea>
+      Data Início: <input id="dataInicio" class="normalInput_noLimitWidth" type="date"/>
+      Data Fim: <input id="dataFim" class="normalInput_noLimitWidth" type="date"/>
+      <button class="normalButton" onclick="saveEdit()">Salvar</button>
+    </div>
+  </div>
+  
+  <div class="geral">
+    <div>
+      <div class="div-login">
+        <div class="inline">
+          <input class="normalInput" id="user" type="text" name="username" autocomplete="username" placeholder="Usuário" required/>
+          <h4 class="info" id="infoLogin">Digite o Usuário e Senha</h4>
+        </div>
+        <div class="inline">
+          <input class="normalInput" id="password" type="password" name="password" autocomplete="current-password" placeholder="Senha" required/>
+          <button class="normalButton" onclick="login()">Entrar</button>
+        </div>
+      
+      <!-- <input type="file" id="fileInput" accept=".json"> -->
+      
+        <div class="inline">
+          <button class="normalButton" onclick="sendTasks()">Atualizar no Sheets</button>
+          <img style="padding: 0px" id="attSheets" src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/09/carregado.png" width="30" height="30"/>
+        </div>
+      </div>
+      <div class="kanban-board" id="kanbanBoard"></div>
+    </div>
+  </div>
+  
+  <!-- DIFFER -->
+
+<script>
 //
 let sheetLink = ""; //link da planilha
 
@@ -32,7 +327,7 @@ var atualization = null;
 var colorByArea = true; //
 
 function renderBoard(columnId = null) {
-    if (!logged) return; // DIFFER
+    // if (!logged) return; // DIFFER
     if (tasks == null) return;
 
     pri("preRender: ");
@@ -127,9 +422,9 @@ function renderBoard(columnId = null) {
             <div class="top-task">
                 <span class="span-moving" style="width: 154px;" data-id="${task.id}">${task.title}</span>
                 <span class="kanban-actions">
-                    <button onclick="editTask('${task.id}')">E</button>
-                    <button onclick="removeTask('${task.id}')">L</button>
-                </span> <!-- EMOJIS -->
+                    <button onclick="editTask('${task.id}')">
+✏️</button>
+                    <button onclick="removeTask('${task.id}')">🗑️
             </div>
             <span class="span-datas" data-id="${task.id}">${(task.dataInicio == undefined) ? "---" : task.dataInicio} > ${(task.dataFim == undefined) ? "---" : task.dataFim}</span>
         
@@ -547,19 +842,11 @@ async function login(){
     }, 333);
 
     pri("Enviado: ("+user+", "+password+")")
-    // const response = await fetch("../wp-admin/admin-ajax.php?action=verifica_senha", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({ "user":user,"pass":password })
-    //   });
-
-    const response = await fetch("https://cemtec.demec.ufmg.br/wp-json/login/v1/verifica", {
+    const response = await fetch("../wp-admin/admin-ajax.php?action=verifica_senha", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ "user": user, "pass": password })
-        });
-
-
+        body: JSON.stringify({ "user":user,"pass":password })
+      });
     var resposta = await response.json();
     console.log("Resposta: "+resposta.message);
     if (resposta.success){
@@ -590,3 +877,5 @@ getJSON();
 renderBoard();
 // salvarJSON();
 // SCRIPT_SGL
+
+</script>

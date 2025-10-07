@@ -1,161 +1,4 @@
-<style>body {
-    font-family: Arial, sans-serif;
-    background: #f4f6fa;
-    margin: 0;
-}
-.kanban-board {
-    display: flex;
-    gap: 20px;
-    padding: 40px;
-}
-.kanban-column {
-    background: #b7b7b7;
-    border-radius: 8px;
-    border: 2px solid black;
-    box-shadow: 0 2px 8px #0001;
-    width: 300px;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-}
-.kanban-column h2 {
-    margin: 0 0 12px 0;
-    font-size: 1.2em;
-}
-.kanban-cards {
-    flex: 1;
-    min-height: 40px;
-}
-.kanban-card {
-    background: #a9c3f8;
-    border: 2px solid #4f8cff;
-    border-radius: 6px;
-    padding: 12px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    /* cursor: grab; */
-    transition: border 0.2s;
-
-    display: flex;
-    flex-direction: column;
-}
-.kanban-card[data-drop-position="before"] {
-    border-top: 12px solid #4f8cff;
-    /*border-top: 12px solid #ff874f;*/
-}
-.kanban-card[data-drop-position="after"] {
-    border-bottom: 12px solid #4f8cff;
-}
-.kanban-actions{
-    display: flex;
-  padding-left: 40px;
-}
-.kanban-actions button {
-    margin-left: 4px;
-    background: #d1d8e6;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    padding: 2px 6px;
-
-    align-self: flex-end;
-}
-.add-task-form {
-    display: flex;
-    margin-top: 12px;
-}
-.add-task-form input {
-    flex: 1;
-    padding: 4px;
-}
-.add-task-form button {
-    margin-left: 4px;
-}
-#editModal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: #0005;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-#editModal .modal-content {
-    background: #fff;
-    border-radius: 8px;
-    padding: 24px 32px;
-    min-width: 300px;
-    box-shadow: 0 4px 24px #0003;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    position: relative;
-}
-#editModal .modal-content button.close-btn {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: none;
-    border: none;
-    font-size: 1.2em;
-    cursor: pointer;
-}
-
-.top-task{
-    display: flex;
-    flex-direction: row;
-}
-.span-moving{
-    font-size: 20px;
-}
-.span-datas{
-    font-size: 15px;
-}
-
-.normalButton{
-  background-color: #d1d1d1;
-}
-.normalInput{
-  background-color: #f4f4f4;
-}
-
-/*cabeçalho*/
-
-.button-cab{
-    border-radius: 8px;
-    border: 2px solid black;
-    padding: 5px;
-    background: #4f8cff;
-    margin-left: 40px;
-    margin-top: 40px;
-}
-.button-cab:hover{
-    box-shadow:0 0 20px #000000;
-    background: #2670fa;
-}</style>
-  <div id="editModal">
-    <div class="modal-content">
-      <button class="close-btn" onclick="closeEditModal()">&times;</button>
-      <h3 id="headEditTask">Editar tarefa</h3>
-      Nome: <input class="normalInput" id="editInput" type="text"/>
-      Data Início: <input class="normalInput" id="dataInicio" type="date" min=""/>
-      Data Fim: <input class="normalInput" id="dataFim" type="date" min=""/>
-      <button class="nomalButton" onclick="saveEdit()" style="padding:8px; background:#4f8cff; color:#fff; border:none; border-radius:4px; font-size:1em; cursor:pointer;">Salvar</button>
-    </div>
-  </div>
-  <!-- <input type="file" id="fileInput" accept=".json"> -->
-  <div style="height: 40px;" id="sheetsInteraction">
-    <button class="button-cab" onclick="sendTasks()">Atualizar no Sheets</button>
-     <img style="padding: 0px" id="attSheets" src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/09/carregado.png" width="20" height="20"/>
-  </div>
-  <!-- <h4 id="iden" style="color: red;">o</h4> -->
-  <div class="kanban-board" id="kanbanBoard"></div>
-
-
-<script>//
+//
 let sheetLink = ""; //link da planilha
 
 //
@@ -184,8 +27,12 @@ let editingTaskId = null;
 let pauseLeituraJSON = false;
 var canReadJSON = true;
 var lastData = null;
+var logged = false;
+var atualization = null;
+var colorByArea = true; //
 
 function renderBoard(columnId = null) {
+    // if (!logged) return; // DIFFER
     if (tasks == null) return;
 
     pri("preRender: ");
@@ -196,20 +43,31 @@ function renderBoard(columnId = null) {
 
     const board = document.getElementById("kanbanBoard");
     board.innerHTML = "";
+    
 
     columns.forEach(col => {
         const colDiv = document.createElement("div");
         colDiv.className = "kanban-column";
-        colDiv.innerHTML = `
-            <h2>${col.name}</h2>
-            <div class="kanban-cards" id="cards-${col.id}"
-            ondragover="event.preventDefault()"
-            ondrop="onDropColumn('${col.id}')"></div>
-            <form class="add-task-form" onsubmit="addTask(event, '${col.id}')">
-            <input type="text" placeholder="Nova tarefa..." required>
-            <button type="submit">+</button>
-            </form>
-        `;
+        colDiv.id = "col-" + col.id;
+
+        if (col.id == "todo"){
+            colDiv.innerHTML = `
+                <h2>${col.name}</h2>
+                <form class="add-task-form" onsubmit="addTask(event, '${col.id}')">
+                    <input class="normalInput" type="text" placeholder="Nova tarefa ..." required>
+                    <button class="normalButton" type="submit">+</button>
+                </form>
+                <div class="kanban-cards" id="cards-${col.id}"
+                ondragover="event.preventDefault()"
+                ondrop="onDropColumn('${col.id}')"></div>`;
+        }else{
+            colDiv.innerHTML = `
+                <h2>${col.name}</h2>
+                <div style="height: 50px;"></div>
+                <div class="kanban-cards" id="cards-${col.id}"
+                ondragover="event.preventDefault()"
+                ondrop="onDropColumn('${col.id}')"></div>`;
+        }
         board.appendChild(colDiv);
 
         const cardsDiv = colDiv.querySelector(".kanban-cards");
@@ -267,11 +125,11 @@ function renderBoard(columnId = null) {
 
             card.innerHTML = `
             <div class="top-task">
-                <span class="span-moving" data-id="${task.id}">${task.title}</span>
+                <span class="span-moving" style="width: 154px;" data-id="${task.id}">${task.title}</span>
                 <span class="kanban-actions">
-                    <button onclick="editTask('${task.id}')">✏️</button>
-                    <button onclick="removeTask('${task.id}')">🗑️</button>
-                </span>
+                    <button onclick="editTask('${task.id}')">E</button>
+                    <button onclick="removeTask('${task.id}')">L</button>
+                </span> <!-- EMOJIS -->
             </div>
             <span class="span-datas" data-id="${task.id}">${(task.dataInicio == undefined) ? "---" : task.dataInicio} > ${(task.dataFim == undefined) ? "---" : task.dataFim}</span>
         
@@ -464,6 +322,7 @@ function addTask(event, columnId) {
     input.value = "";
     sendTasks();
     renderBoard();
+    editTask(newTask.id); // quando cria coloca pra editar tbm
 }
 
 function editTask(id) {
@@ -473,10 +332,16 @@ function editTask(id) {
         task = tasks[item].find(t => t.id === "" + id);
         if (task != null) break;
     }
+    pri("Task to edit: "+task);
     editingTaskId = id;
+
     document.getElementById("headEditTask").innerHTML = "Editando tarefa: "+task.title;
     document.getElementById("editInput").value = task.title;
     document.getElementById("editModal").style.display = "flex";
+
+    // pri("datas: ");
+    document.getElementById("dataInicio").value = task.dataInicio.split("/").reverse().join("-");
+    document.getElementById("dataFim").value = task.dataFim.split("/").reverse().join("-");
 }
 
 function removeTask(id) {
@@ -498,8 +363,8 @@ function closeEditModal() {
 
 // edição
 const hoje = new Date().toISOString().split('T')[0]; // pega só a parte da data
-document.getElementById("dataInicio").min = hoje;
-document.getElementById("dataFim").min = hoje;
+// document.getElementById("dataInicio").min = hoje;
+// document.getElementById("dataFim").min = hoje;
 
 function saveEdit() {
     const newTitle = document.getElementById("editInput").value.trim();
@@ -607,16 +472,13 @@ async function imagemAtualizacaoSheets(tipo) {
         img.id = "attSheets";
 
         // Gira a cada 50ms (ajuste se quiser mais rápido/lento)
-        intervalo = setInterval(() => {
+        clearInterval(atualization);
+        atualization = setInterval(() => {
             angulo += 5;
             img.style.transform = `rotate(${angulo}deg)`;
         }, 25);
-
-        setTimeout(() => {
-            clearInterval(intervalo);
-        }, 1500);
     } else {
-        clearInterval(intervalo);
+        clearInterval(atualization);
 
         var img = document.getElementById("attSheets");
         img.style.transform = `rotate(0deg)`;
@@ -666,11 +528,57 @@ async function iden(){
         await new Promise(resolve => setTimeout(resolve, 500));
     }
 }
+//login
+async function login(){
+    var user = document.getElementById("user").value;
+    var password = document.getElementById("password").value;
+
+    let qt = 1;
+    var logando = setInterval(()=> {
+        let pnts = "";
+        for (let i=0;i<qt;i++){
+            pnts += ".";
+        }
+        document.getElementById("infoLogin").innerHTML = "Processando "+pnts;
+        qt++;
+        if (qt>5){
+            qt = 1;
+        }
+    }, 333);
+
+    pri("Enviado: ("+user+", "+password+")")
+    const response = await fetch("../wp-admin/admin-ajax.php?action=verifica_senha", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ "user":user,"pass":password })
+      });
+    var resposta = await response.json();
+    console.log("Resposta: "+resposta.message);
+    if (resposta.success){
+        clearInterval(logando);
+        logged = true;
+        document.getElementById("user").value = "";
+        document.getElementById("password").value = "";
+        document.getElementById("infoLogin").innerHTML = "Bem vindo "+user+"!";
+        renderBoard();
+    }else{
+        clearInterval(logando);
+        logged = false;
+        document.getElementById("user").value = "";
+        document.getElementById("password").value = "";
+
+        document.getElementById("infoLogin").innerHTML = "Usuário ou Senha incorretos";
+        setTimeout(() => {
+            document.getElementById("infoLogin").innerHTML = "Digite o Usuário e Senha";
+        }, 5000);
+
+        renderBoard();
+    }
+}
 //  
 getLink();
 getJSON();
 // iden();
 renderBoard();
 // salvarJSON();
-
-</script>
+// SCRIPT_SGL
