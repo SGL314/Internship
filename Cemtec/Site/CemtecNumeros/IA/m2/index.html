@@ -3,22 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3D Cards Spiral Scroll</title>
+<title>Espiral 3D Scroll Reveal</title>
 <style>
-  body { margin:0; 
-    overflow-x:hidden; 
-    overflow-y:scroll; 
-    min-height:100px;
-    min-width: 100px; 
-    background:#070709; }
-  canvas { 
-    display:block; 
-    position:fixed; 
-    top:0px; 
-    left:0; 
-    width:100vw; 
-    min-height: 500px;
-   }
+  body {
+    margin: 0;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 4000px; /* altura para rolar bastante */
+    background: #070709;
+  }
+  canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: block;
+  }
 </style>
 </head>
 <body>
@@ -26,77 +25,90 @@
 <script type="module">
 import * as THREE from 'https://unpkg.com/three@0.152.2/build/three.module.js';
 
-// Scene, Camera, Renderer
+// --- Cena, câmera, renderizador ---
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-camera.position.z = 10;
+scene.background = new THREE.Color(0x070709);
 
-const renderer = new THREE.WebGLRenderer({ antialias:true });
-renderer.setSize(window.innerWidth, window.innerHeight);
+const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 1000);
+camera.position.z = 15;
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(innerWidth, innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// Light
-const light = new THREE.DirectionalLight(0xffffff, 1);
-light.position.set(5,5,5);
+// --- Luz ---
+const light = new THREE.DirectionalLight(0xffffff, 1.2);
+light.position.set(3, 5, 5);
 scene.add(light);
-const ambient = new THREE.AmbientLight(0x404040, 0.7);
-scene.add(ambient);
+scene.add(new THREE.AmbientLight(0x404040, 1));
 
-// Cards
+// --- Criar cards ---
 const cards = [];
-const cardCount = 5;
-for(let i=0;i<cardCount;i++){
-  const geo = new THREE.PlaneGeometry(3,2);
-  const mat = new THREE.MeshStandardMaterial({ color: 0x00e5ff, side: THREE.DoubleSide });
+const total = 10;
+for (let i = 0; i < total; i++) {
+  const geo = new THREE.PlaneGeometry(3, 2);
+  const mat = new THREE.MeshStandardMaterial({
+    color: 0x00e5ff,
+    side: THREE.DoubleSide,
+    roughness: 0.4,
+    metalness: 0.1,
+    transparent: true,
+    opacity: 0 // começa invisível
+  });
   const card = new THREE.Mesh(geo, mat);
-  const angle = i * 1.1; // inicial na espiral
-  card.userData = { angle: angle, y: i*1.5 };
-  card.position.set(Math.cos(angle)*4, card.userData.y, Math.sin(angle)*4);
-  card.userData.angle = i*Math.PI/2;
   scene.add(card);
   cards.push(card);
 }
 
-// Scroll tracking
-let scrollY = 0;
-window.addEventListener('scroll', ()=>{ scrollY = -window.scrollY / window.innerHeight; });
+// --- Atualização com base no scroll ---
+function updateCards(scrollPos) {
+  const t = scrollPos * 0.002; // controle de rotação
+  const radius = 5;
+  const spacing = 3;
 
-// Mouse parallax
-let mouse = {x:0, y:0};
-window.addEventListener('mousemove', e=>{
-  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = (e.clientY / window.innerHeight) * 2 - 1;
+  for (let i = 0; i < cards.length; i++) {
+    const card = cards[i];
+    const progress = t - i * 0.5; // controla quando cada card começa
+    const visible = true;
+    const angle = progress * 1.2; // gira conforme o scroll
+    const y = progress * 3 - i * spacing; // sobe suavemente
+
+    if (visible) {
+      // card.material.opacity = Math.min(1, progress); // aparece gradualmente
+      card.position.set(Math.cos(angle) * radius, y-10, Math.sin(angle) * radius);
+      card.lookAt(0, y-10, 0);  
+      card.material.opacity = 1;
+    }
+  }
+}
+
+// --- Mouse parallax ---
+const mouse = { x: 0, y: 0 };
+window.addEventListener('mousemove', (e) => {
+  mouse.x = (e.clientX / innerWidth - 0.5) * 2;
+  mouse.y = (e.clientY / innerHeight - 0.5) * 2;
 });
 
-// Animate
-function animate(){
+// --- Animação ---
+function animate() {
   requestAnimationFrame(animate);
+  const scroll = window.scrollY;
+  updateCards(scroll);
 
-  const t = scrollY;
-
-  cards.forEach((c, idx)=>{
-    // Espiral ao scroll
-    c.userData.angle += Math.PI/200*t/10; // rotação suave
-    c.position.x = Math.cos(c.userData.angle) * 4;
-    c.position.z = Math.sin(c.userData.angle) * 4; // sobe com scroll
-    c.position.y = c.userData.y - t*2;
-    c.position.t += 0.02;
-  });
-
-  // Parallax câmera
-  camera.position.x = mouse.x * 2;
-  camera.position.y = -mouse.y * 2;
-  camera.lookAt(0,0,0);
+  // Parallax suave
+  // camera.position.x += (mouse.x * 2 - camera.position.x) * 0.05;
+  // camera.position.y += (-mouse.y * 2 - camera.position.y) * 0.05;
+  // camera.lookAt(0, 0, 0);
 
   renderer.render(scene, camera);
 }
 animate();
 
-// Resize
-window.addEventListener('resize', ()=>{
-  camera.aspect = window.innerWidth / window.innerHeight;
+// --- Resize ---
+window.addEventListener('resize', () => {
+  // camera.aspect = innerWidth / innerHeight;
   camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(innerWidth, innerHeight);
 });
 </script>
 
