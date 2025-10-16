@@ -62,10 +62,20 @@ for (let i = 0; i < total; i++) {
 }
 
 var scroller = 0;
+var loop = 0;
+var loopLastChange = 0;
+var lastT = 0,t = 0;
+var timeToChange = 100;
 
 // --- Atualização com base no scroll ---
-function updateCards(scrollPos) { 
-  const t = (1250+scrollPos) * 0.001 + scroller*1250*0.002; // controle de rotação
+function updateCards(scrollPos) {
+  // return;
+  lastT = t;
+  const altY = 1250, divScrollPos = 0.001,divScroller = 0.002;
+  t = (altY+scrollPos) * divScrollPos + scroller*altY*divScroller; // controle de rotação
+  if (t != lastT){
+    loopLastChange = loop;
+  }
   const radius = 5;
   const spacing = 0;
   const difY = 15;
@@ -85,7 +95,26 @@ function updateCards(scrollPos) {
       card.material.opacity = 1;
     }
   }
-  console.log(scrollPos,t);
+  console.log(scrollPos,t,loopLastChange,loop - loopLastChange >= timeToChange);
+  loop++;
+  if (loop %60==0){
+    if (loop - loopLastChange >= timeToChange){
+      var gaps = [3684];
+      var adding = 2500;
+      for (var i =0 ;i<=total-1;i++){
+        gaps[i+1] = gaps[i]+adding;
+      }
+      const dif = 650;
+      for (var gap of gaps){
+        if (Math.abs(gap-scrollPos) <= dif){
+          console.log(gap);
+          scroller = (t-(altY+gap)*divScrollPos)/(altY*divScroller);
+          console.log( (altY+scrollPos) * divScrollPos + scroller*altY*divScroller);
+          break;
+        }
+      }
+    }
+  }
 }
 
 // --- Mouse parallax ---
@@ -94,6 +123,7 @@ window.addEventListener('mousemove', (e) => {
   mouse.x = (e.clientX / innerWidth - 0.5) * 2;
   mouse.y = (e.clientY / innerHeight - 0.5) * 2;
 });
+
 
 function attP(tecla){
   if (tecla == 'w'){
