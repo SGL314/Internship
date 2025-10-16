@@ -9,7 +9,7 @@
     margin: 0;
     overflow-y: scroll;
     overflow-x: hidden;
-    height: 4000px; /* altura para rolar bastante */
+    height: 64000px; /* altura para rolar bastante */
     background: #070709;
   }
   canvas {
@@ -44,11 +44,12 @@ scene.add(new THREE.AmbientLight(0x404040, 1));
 
 // --- Criar cards ---
 const cards = [];
-const total = 10;
+const total = 5;
+const colors = [0xff5733, 0xffbd33, 0x75ff33, 0x33ffbd, 0x3375ff];
 for (let i = 0; i < total; i++) {
-  const geo = new THREE.PlaneGeometry(3, 2);
+  const geo = new THREE.PlaneGeometry(8, 8);
   const mat = new THREE.MeshStandardMaterial({
-    color: 0x00e5ff,
+    color: colors[i],
     side: THREE.DoubleSide,
     roughness: 0.4,
     metalness: 0.1,
@@ -60,26 +61,31 @@ for (let i = 0; i < total; i++) {
   cards.push(card);
 }
 
+var scroller = 0;
+
 // --- Atualização com base no scroll ---
-function updateCards(scrollPos) {
-  const t = scrollPos * 0.002; // controle de rotação
+function updateCards(scrollPos) { 
+  const t = (1250+scrollPos) * 0.001 + scroller*1250*0.002; // controle de rotação
   const radius = 5;
-  const spacing = 3;
+  const spacing = 0;
+  const difY = 15;
+  const coe = 1;    
 
   for (let i = 0; i < cards.length; i++) {
     const card = cards[i];
-    const progress = t - i * 0.5; // controla quando cada card começa
+    const progress = t - i * 2.5; // controla quando cada card começa
     const visible = true;
-    const angle = progress * 1.2; // gira conforme o scroll
-    const y = progress * 3 - i * spacing; // sobe suavemente
+    const angle = progress * Math.PI*coe;// gira conforme o scroll
+    const y = progress * Math.PI*coe - i * spacing; // sobe suavemente
 
     if (visible) {
       // card.material.opacity = Math.min(1, progress); // aparece gradualmente
-      card.position.set(Math.cos(angle) * radius, y-10, Math.sin(angle) * radius);
-      card.lookAt(0, y-10, 0);  
+      card.position.set(Math.cos(angle) * radius, y-difY, Math.sin(angle) * radius);
+      card.lookAt(0, y-difY, 0);  
       card.material.opacity = 1;
     }
   }
+  console.log(scrollPos,t);
 }
 
 // --- Mouse parallax ---
@@ -87,6 +93,22 @@ const mouse = { x: 0, y: 0 };
 window.addEventListener('mousemove', (e) => {
   mouse.x = (e.clientX / innerWidth - 0.5) * 2;
   mouse.y = (e.clientY / innerHeight - 0.5) * 2;
+});
+
+function attP(tecla){
+  if (tecla == 'w'){
+    scroller -= 1;
+  }else if (tecla == 's'){
+    scroller += 1;
+  }
+
+}
+
+window.addEventListener('keydown', (event) => {
+  const tecla = event.key; // pega a tecla pressionada
+  if (/^[a-zA-Z]$/.test(tecla)) { // verifica se é letra
+    attP(tecla);
+  }
 });
 
 // --- Animação ---
