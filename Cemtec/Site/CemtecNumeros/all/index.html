@@ -404,6 +404,20 @@
 
 <!-- Google Charts -->
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<style>
+    table{
+        border-collapse: separate;
+        border-spacing: 0px;
+    }
+    th{
+        background-color: #777;
+        border: 1px solid #17252a;
+    }
+    td{
+        background-color: #ccc;
+        border: 1px solid #263238;
+    }
+</style>
 <script type="text/javascript">
     google.charts.load('current', { packages: ['corechart'] });
     google.charts.setOnLoadCallback(drawFinalidadeChart);
@@ -516,7 +530,7 @@
 
     function sheets2table(datas){
         var put = [];
-        for (var data of datas){
+        for (var data of datas){    
             var ano = data[0][0];
             if (ano > 2019) continue;
             print(data);
@@ -524,10 +538,26 @@
         }
 
         for (var year of put){
-            var body = document.getElementById("tableMaestra").getElementsByTagName("TBODY");
-            var tr = document.createElement("tr");
+            var body = document.getElementById("tabelaMestra").getElementsByTagName("TBODY")[0];
+            
+            ano = year[0][0];
+            var i = -1;
+            var td = document.createElement("td");
+            td.innerHTML = ano;
+            tr.appendChild(td);
+            
             for (var line of year){
-                line 
+                i+=1;
+                if (i==0) continue;
+                var tr = document.createElement("tr");
+                for (var item of line){
+                    td = document.createElement("td");
+                    td.innerHTML = item;
+                    tr.appendChild(td);
+
+                }
+
+                body.appendChild(tr);   
             }
         }
     }
