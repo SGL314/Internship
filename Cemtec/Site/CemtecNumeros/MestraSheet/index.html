@@ -390,11 +390,11 @@
     <table>
         <thead>
             <tr>
-                <th>ANO</th>
-                <th>Título</th>
-                <th>Revista</th>
-                <th>Autores</th>
-                <th>Área</th>
+                <th id="ano">Ano</th>
+                <th id="tit">Título</th>
+                <th id="rev">Revista</th>
+                <th id="aut">Autores</th>
+                <th id="are">Área</th>
             </tr>
         </thead>
         <tbody>
@@ -410,12 +410,20 @@
         border-spacing: 0px;
     }
     th{
-        background-color: #777;
+        background-color: #ccc;
         border: 1px solid #17252a;
+        min-width : 120px;
+        font-family: system-ui;
+        border-radius: 3px;
     }
     td{
-        background-color: #ccc;
+        background-color: #f0f4f9;
         border: 1px solid #263238;
+        text-align: center;
+    }
+
+    #are{
+        
     }
 </style>
 <script type="text/javascript">
@@ -510,7 +518,9 @@
         });
     }
     // sheets pros trem da planilha "listra mestra"
-    const link = "https://script.google.com/macros/s/AKfycbzFjyx8CsxJsQcPjQDAi6Qo6NrLzwI-Z-_N0YkfXNdTC8olFC070aXAE7Y0cM7tIFx3/exec";
+    const link01 = "https://script.google.com/macros/s/AKfycbzFjyx8CsxJsQcPjQDAi6Qo6NrLzwI-Z-_N0YkfXNdTC8olFC070aXAE7Y0cM7tIFx3/exec";
+    const link02 = "https://script.google.com/macros/s/AKfycbxoiuD23MoVjudF7FaI5hkz24RpzBDieJYtk0zE5SyREe16arW2P-1j2SYKcQ9LmP0e/exec";
+    var link = link02;
 
     async function lerJSON() {
         print("Lendo Sheets ...");
@@ -532,10 +542,16 @@
         var put = [];
         for (var data of datas){    
             var ano = data[0][0];
-            if (ano > 2019) continue;
+            if (ano > 2024) continue;
             print(data);
             put.push(data);
         }
+
+        var ord = [];
+        for (var i=put.length-1;i>=0;i--){
+            ord.push(put[i]);
+        }
+        put = ord;
 
         for (var year of put){
             var body = document.getElementById("tabelaMestra").getElementsByTagName("TBODY")[0];
@@ -543,19 +559,31 @@
             ano = year[0][0];
             
             var i = -1;
-            var td = document.createElement("td");
-            td.innerHTML = ano;
-            tr.appendChild(td);
+            // print(year);
             
             for (var line of year){
+                var tr = document.createElement("tr");
+                // print(line);
                 i+=1;
                 if (i==0) continue;
-                var tr = document.createElement("tr");
-                for (var item of line){
+                var td = document.createElement("td");
+                td.innerHTML = ano;
+                tr.appendChild(td);
+                for (var item in line){
+                    // print(item);
                     td = document.createElement("td");
-                    td.innerHTML = item;
-                    tr.appendChild(td);
+                    td.innerHTML = line[item];
 
+                    if (ano == 2019 && item == ""){ // atualização da área em 2019
+                        td.innerHTML = "Engenharias III";
+                    }
+                    if (item == "Observações"){ // muda a ordem da apresentação das coisas
+                        td.innerHTML = line["Beneficiados do resultado 1"];
+                    }else if (item == "Beneficiados do resultado 1"){
+                        td.innerHTML = line["Observações"];
+                    }
+
+                    tr.appendChild(td);
                 }
 
                 body.appendChild(tr);   

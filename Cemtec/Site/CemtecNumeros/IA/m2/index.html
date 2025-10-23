@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Espiral 3D Scroll Reveal</title>
 <style>
-  body {
+  #spiral{
     margin: 0;
     overflow-y: scroll;
     overflow-x: hidden;
-    height: 64000px; /* altura para rolar bastante */
+    height: 15300px; /* altura para rolar bastante */
     background: #070709;
   }
   canvas {
@@ -21,7 +21,7 @@
 </style>
 </head>
 <body>
-
+<div id="spiral"></div>
 <script type="module">
 import * as THREE from 'https://unpkg.com/three@0.152.2/build/three.module.js';
 
@@ -34,7 +34,7 @@ camera.position.z = 15;
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(innerWidth, innerHeight);
-document.body.appendChild(renderer.domElement);
+document.getElementById("spiral").appendChild(renderer.domElement);
 
 // --- Luz ---
 const light = new THREE.DirectionalLight(0xffffff, 1.2);
@@ -43,25 +43,116 @@ scene.add(light);
 scene.add(new THREE.AmbientLight(0x404040, 1));
 
 // --- Criar cards ---
-const cards = [];
+
+var cards = [];
 const total = 5;
-const colors = [0xff5733, 0xffbd33, 0x75ff33, 0x33ffbd, 0x3375ff];
+const images = [
+  './1.png',
+  './2.png',
+  './3.png',
+  './4.png',
+  './5.png'
+];
+var video,videoTexture;
+
 for (let i = 0; i < total; i++) {
-  const geo = new THREE.PlaneGeometry(8, 8);
-  const mat = new THREE.MeshStandardMaterial({
-    color: colors[i],
-    side: THREE.DoubleSide,
-    roughness: 0.4,
-    metalness: 0.1,
-    transparent: true,
-    opacity: 0 // começa invisível
-  });
-  const card = new THREE.Mesh(geo, mat);
-  scene.add(card);
-  cards.push(card);
+  if (i == -1){ // video -> não usual
+    // cria o elemento de vídeo
+    video = document.createElement('video');
+    video.src = 'a.mp4';
+    video.loop = true;
+    video.muted = true;       // ⚠ autoplay exige mutado
+    video.autoplay = true;
+    video.playsInline = true; // importante no mobile
+    video.style.display = 'none';
+    document.getElementById("spiral").appendChild(video); // precisa estar no DOM
+
+    // só criar a textura quando o vídeo estiver pronto
+    video.addEventListener('loadeddata', () => {
+      videoTexture = new THREE.VideoTexture(video);
+      videoTexture.minFilter = THREE.LinearFilter;
+      videoTexture.magFilter = THREE.LinearFilter;
+      videoTexture.format = THREE.RGBAFormat;
+
+      const mat = new THREE.MeshStandardMaterial({
+          map: videoTexture,
+          side: THREE.DoubleSide,roughness: 0.4,
+          metalness: 0.1,
+          transparent: true,
+          opacity: 1
+      });
+
+      const geo = new THREE.PlaneGeometry(8, 8);
+      const card = new THREE.Mesh(geo, mat);
+      scene.add(card);
+      // cards.push(card);
+
+      video.play(); // ⚡ começa a tocar
+
+      
+    });
+    
+    // continue;
+
+    
+
+    // // cria textura a partir do vídeo
+    // const videoTexture = new THREE.VideoTexture(video);
+    // videoTexture.minFilter = THREE.LinearFilter;
+    // videoTexture.magFilter = THREE.LinearFilter;
+    // videoTexture.format = THREE.RGBFormat;
+
+    // // taka o texto
+    // const size = 512;
+    // const canvas = document.createElement('canvas');
+    // const ctx = canvas.getContext('2d');
+    // ctx.fillStyle = 'rgba(0,0,0,0.4)';
+    // ctx.fillRect(0, 0, size, size);
+    // ctx.fillStyle = '#00e5ff';
+    // ctx.font = 'bold 48px Arial';
+    // ctx.textAlign = 'center';
+    // ctx.textBaseline = 'middle';
+    // ctx.fillText(`Card ${i + 1}`, size / 2, size / 2);
+    // videoTexture.needsUpdate = true;
+
+    // // cria o card com o vídeo
+    // const geometry = new THREE.PlaneGeometry(6, 4);
+    // const material = new THREE.MeshStandardMaterial({
+    //   map: videoTexture,
+    //   side: THREE.DoubleSide
+    // });
+
+    // const videoCard = new THREE.Mesh(geometry, material);
+    // scene.add(videoCard);
+    // cards.push(videoCard);
+    // videoCard.position.z = -5;
+  }else{
+    const geo = new THREE.PlaneGeometry(8, 8);
+
+    // 👉 Aqui é onde chama a função
+    const texture = makeCardTexture(`Card ${i + 1}`, images[i]);
+    const mat = new THREE.MeshStandardMaterial({
+      map: texture,
+      side: THREE.DoubleSide,
+      roughness: 0.4,
+      metalness: 0.1,
+      transparent: true,
+      opacity: 1,
+      name: `card${i+1}`
+    });
+    const card = new THREE.Mesh(geo, mat);
+    cards.push(card);
+    scene.add(card);
+  }
 }
 
+
+pri(cards);
+
+
+
 var scroller = 0;
+var t=0;
 var loop = 0;
 var loopLastChange = 0;
 var lastT = 0,t = 0;
@@ -79,14 +170,17 @@ function updateCards(scrollPos) {
   const radius = 5;
   const spacing = 0;
   const difY = 15;
-  const coe = 1;    
-
+  const coe = 1; 
+     
+  var appr = 0;
   for (let i = 0; i < cards.length; i++) {
     const card = cards[i];
     const progress = t - i * 2.5; // controla quando cada card começa
     const visible = true;
     const angle = progress * Math.PI*coe;// gira conforme o scroll
     const y = progress * Math.PI*coe - i * spacing; // sobe suavemente
+    card.rotation.y = Math.PI;
+    card.scale.x = -1;
 
     if (visible) {
       // card.material.opacity = Math.min(1, progress); // aparece gradualmente
@@ -94,10 +188,12 @@ function updateCards(scrollPos) {
       card.lookAt(0, y-difY, 0);  
       card.material.opacity = 1;
     }
+    appr ++;
   }
+  pri(appr);
   console.log(scrollPos,t,loopLastChange,loop - loopLastChange >= timeToChange);
   loop++;
-  if (loop %60==0){
+  if (loop %60==0 && false){
     if (loop - loopLastChange >= timeToChange){
       var gaps = [3684];
       var adding = 2500;
@@ -145,6 +241,9 @@ window.addEventListener('keydown', (event) => {
 function animate() {
   requestAnimationFrame(animate);
   const scroll = window.scrollY;
+  if (videoTexture && video.readyState >= video.HAVE_CURRENT_DATA) {
+    videoTexture.needsUpdate = true;
+  }
   updateCards(scroll);
 
   // Parallax suave
@@ -162,6 +261,54 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(innerWidth, innerHeight);
 });
+
+// image & text
+// --- Função para gerar textura com imagem + texto ---
+// --- Função para gerar textura com imagem + texto (corrigida) ---
+function makeCardTexture(text, imageURL) {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  const size = 512;
+  canvas.width = size;
+  canvas.height = size;
+
+  // Carrega a imagem com THREE.TextureLoader
+  const loader = new THREE.TextureLoader();
+  const texture = new THREE.CanvasTexture(canvas);
+
+  loader.load(
+    imageURL,
+    (imageTex) => {
+      const img = imageTex.image;
+      ctx.drawImage(img, 0, 0, size, size);
+
+      // Sobreposição escura pra legibilidade
+      ctx.fillStyle = 'rgba(0,0,0,0.4)';
+      ctx.fillRect(0, 0, size, size);
+
+      // Texto centralizado
+      ctx.fillStyle = '#00e5ff';
+      ctx.font = 'bold 48px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, size / 2, size / 2);
+
+      texture.needsUpdate = true; // 🔹 força atualização no WebGL
+    },
+    undefined,
+    (err) => console.error('Erro ao carregar imagem:', imageURL, err)
+  );
+
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  return texture;
+}
+
+
+function pri(item){
+  console.log(JSON.parse(JSON.stringify(item)))
+}
+
 </script>
 
 </body>

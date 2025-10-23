@@ -1,0 +1,26 @@
+const cards = [];
+const total = 5;
+const colors = [0xff5733, 0xffbd33, 0x75ff33, 0x33ffbd, 0x3375ff];
+for (let i = 0; i < total; i++) {
+  const geo = new THREE.PlaneGeometry(8, 8);
+  const mat = new THREE.MeshStandardMaterial({
+    color: colors[i],
+    side: THREE.DoubleSide,
+    roughness: 0.4,
+    metalness: 0.1,
+    transparent: true,
+    opacity: 0 // começa invisível
+  });
+  const card = new THREE.Mesh(geo, mat);
+  scene.add(card);
+  cards.push(card);
+}
+
+var scroller = 0;
+var loop = 0;
+var loopLastChange = 0;
+var lastT = 0,t = 0;
+var timeToChange = 100;
+
+// image e text
+// --- Criar cards com texto e imagem ---
