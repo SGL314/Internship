@@ -16,12 +16,18 @@
     overflow-x: hidden;
     height: 15300px; /* altura para rolar bastante */
     background: #070709;
+    z-index: 0;
   }
   canvas {
     position: fixed;
     top: 0;
     left: 0;
     display: block;
+    z-index: 0;
+  }
+  .ui{
+    height: 5000px;
+    z-index:10;
   }
   /*  */
     
@@ -515,8 +521,8 @@ function pri(item){
 }
 
   </script> -->
-<script type="module">
-import * as THREE from 'https://unpkg.com/three@0.152.2/build/three.module.js';
+<!-- <script type="module">
+  import * as THREE from 'https://unpkg.com/three@0.152.2/build/three.module.js';
 
 // --- Cena, câmera, renderizador ---
 const scene = new THREE.Scene();
@@ -538,6 +544,12 @@ scene.add(new THREE.AmbientLight(0x404040, 1));
 // --- Criar cards ---
 
 var cards = [];
+const textCard = [["🏬 +20","Empresa atendidas","com soluções personalizadas"],
+    ["🤝 15","Serviços de alto","impacto no mercado"],
+    ["💵 +25 Milhões","Em projetos executados","com nossos parceiros"],
+   ["🧾 +50","Projetos estratégicos","com o setor privado"],
+    ["📜 +65","Certificados emitidos","com excelência técnica"]
+];
 const total = 5;
 const images = [
   './data/1.png',
@@ -623,7 +635,7 @@ for (let i = 0; i < total; i++) {
     const geo = new THREE.PlaneGeometry(8, 8);
 
     // 👉 Aqui é onde chama a função
-    const texture = makeCardTexture(`Card ${i + 1}`, images[i]);
+    const texture = makeCardTexture(textCard[i], images[i]);
     const mat = new THREE.MeshStandardMaterial({
       map: texture,
       side: THREE.DoubleSide,
@@ -660,15 +672,15 @@ function updateCards(scrollPos) {
   const radius = 5;
   const spacing = 0;
   const difY = 15;
-  const coe = 1; 
+  const coe = 1/2; 
      
   var appr = 0;
   for (let i = 0; i < cards.length; i++) {
     const card = cards[i];
-    const progress = t - i * 2.5; // controla quando cada card começa
+    const progress = t - i*Math.PI/2 +3; // controla quando cada card começa
     const visible = true;
-    const angle = progress * Math.PI*coe;// gira conforme o scroll
-    const y = progress * Math.PI*coe - i * spacing; // sobe suavemente
+    const angle = -i*Math.PI*coe+t;// gira conforme o scroll
+    const y = progress * Math.PI - i * spacing; // sobe suavemente
     card.rotation.y = Math.PI;
     card.scale.x = -1;
 
@@ -776,12 +788,15 @@ function makeCardTexture(text, imageURL) {
       ctx.fillStyle = 'rgba(0,0,0,0.4)';
       ctx.fillRect(0, 0, size, size);
 
-      // Texto centralizado
+      // Texto centralizado 
       ctx.fillStyle = '#00e5ff';
-      ctx.font = 'bold 48px Arial';
+      ctx.font = 'bold 36px Arial';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(text, size / 2, size / 2);
+      ctx.fillText(text[0], size / 2, size / 2-50);
+      ctx.font = 'bold 24px Arial';
+      ctx.fillText(text[1], size / 2, size / 2);
+      ctx.fillText(text[2], size / 2, size / 2+30);
 
       texture.needsUpdate = true; // 🔹 força atualização no WebGL
     },
@@ -799,7 +814,7 @@ function pri(item){
   console.log(JSON.parse(JSON.stringify(item)))
 }
 
-</script>
+</script> -->
 </head>
 
 <body>
@@ -811,6 +826,9 @@ function pri(item){
   </header>
 
  <div id="spiral"></div>
+ <div class="ui">
+
+ 
   <section class="container">
     <div class="box">
       <h2>🏬 +20</h2>
@@ -914,5 +932,6 @@ function pri(item){
  <footer>
     *Dados referentes ao período de 2019 a 2024
   </footer>
+  </div>
 </body>
 </html>
