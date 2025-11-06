@@ -273,7 +273,7 @@ class CustomSinCurve extends THREE.Curve {
     getPoint(t, optionalTarget = new THREE.Vector3()) {
         // console.log(t);
         const tx = (t + this.sx) * 2 * this.lambdas - 1.5;
-        const ty = Math.sin(4 * Math.PI * (t + this.sy) * this.lambdas);
+        const ty = Math.sin(2 * Math.PI * (t + this.sy) * this.lambdas);
         const tz = 0;
         return optionalTarget.set(tx, ty, tz);
     }
