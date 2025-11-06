@@ -279,7 +279,7 @@ class CustomSinCurve extends THREE.Curve {
     }
 }
 class Wave {
-    constructor(color, angle) {
+    constructor(color, angle,x,y,z) {
         this.angle = angle;
         this.loopLogUp = 0;
         this.img;
@@ -288,7 +288,7 @@ class Wave {
         this.delta = 0;
         this.delta = -0.004;
         this.mult = 20;
-        this.logUp();
+        this.logUp(x,y,z,true);
     }
     log() {
 
@@ -299,13 +299,14 @@ class Wave {
         this.interactSpheres();
         this.logUp();
     }
-    logUp() {
+    logUp(x,y,z,att = false) {
         scene.remove(this.img);
 
         var poss;
         if (this.loopLogUp > 0) {
             poss = [this.img.position.x, this.img.position.y, this.img.position.z];
         } else {
+            poss
             this.path = new CustomSinCurve(10, 5);
             this.mat = new THREE.MeshStandardMaterial({
                 roughness: 1.3,
@@ -322,6 +323,8 @@ class Wave {
         if (this.loopLogUp > 0) {
             this.img.position.set(poss[0], poss[1], poss[2]);
             scene.add(this.img);
+        }else if (att) {
+            this.img.position.set(x,y,z);
         }
     }
     // Dentro da classe Wave
@@ -474,13 +477,15 @@ function moverEsfera() {
 function logicWaves() {
     // return;
     if (loop % freq == 0 && waves.length < 3) {
-        var wave = new Wave(rgbaToHex(Math.random() * 255, Math.random() * 255, Math.random() * 255, Math.random(), true), Math.PI / 180 * 360 * Math.random());
-        waves.push(wave);
-        wave.img.position.set(
-
-            Math.cos(wave.angle) * Math.min(mx, my),
-            Math.sin(wave.angle) * Math.min(mx, my),
+        let angle =  Math.PI / 180 * 360 * Math.random();
+        var wave = new Wave(
+            rgbaToHex(Math.random() * 255, Math.random() * 255, Math.random() * 255, Math.random(), true),
+            angle,
+            Math.cos(angle) * Math.min(mx, my),
+            Math.sin(angle) * Math.min(mx, my),
             0);
+        waves.push(wave);
+        
         var inF = Math.floor(Math.random() * variFreq) + baseFreq
         freq = inF + (inF < freq) ? freq - inF + 1 : 0;
     }
