@@ -23,32 +23,36 @@
 
     header {
       text-align: center;
-      padding: 100px 20px 60px;
+      padding: 60px 20px 60px;
       position: relative;
       z-index: 10;
+      background-color: #070709;
     }
 
     header h1 {
-      font-size: 3.5rem;
+      font-size: 6.5rem;
       margin: 0;
       color: #00e5ff;
     }
 
     header p {
-      font-size: 1.2rem;
+      font-size: 3.6rem;
       color: #999999;
       margin-top: 20px;
+      margin-bottom: 20px;
       max-width: 600px;
       margin-left: auto;
       margin-right: auto;
     }
 
-    canvas#three{
+    canvas#three {
       position: relative;
       display: block;
       width: 100%;
-      height: 1200px; /* ⬅️ AQUI você ajusta o tamanho do espaço entre header e ui */
-      margin: 40px 0; /* espaço acima e abaixo (opcional) */
+      height: 1200px;
+      /* ⬅️ AQUI você ajusta o tamanho do espaço entre header e ui */
+      margin: 40px 0;
+      /* espaço acima e abaixo (opcional) */
       z-index: 1;
     }
 
@@ -185,6 +189,29 @@
         font-size: 0.9rem;
       }
     }
+
+    table {
+      border-collapse: separate;
+      border-spacing: 0px;
+    }
+
+    th {
+      background-color: #ccc;
+      border: 1px solid #17252a;
+      color: #000000;
+      min-width: 120px;
+      font-family: system-ui;
+      border-radius: 3px;
+    }
+
+    td {
+      background-color: #f0f4f9;
+      border: 1px solid #263238;
+      color: #000000;
+      text-align: center;
+    }
+
+    #are {}
   </style>
 
 </head>
@@ -198,7 +225,7 @@
   <!-- <canvas id="three-canvas"></canvas> -->
 
   <div class="ui">
-    
+
 
     <h2 style="text-align: center; color: #333; font-weight: 700; margin-bottom: 5px;">
       🔬 Resultados Acadêmicos
@@ -266,7 +293,7 @@
 
     <hr style="margin-top: 50px; margin-bottom: 40px; border: none; border-top: 2px solid #ccc;">
 
-    <button onclick="window.location.href='slider/index.html'">slider</button>
+    <!-- <button onclick="window.location.href='slider/index.html'">slider</button> -->
     <footer>
       *Dados referentes ao período de 2019 a 2024
     </footer>
@@ -275,6 +302,83 @@
   <script src="js/utils.js"></script>
   <script type="module" src="js/sphere.js"></script>
   <script type="module" src="js/script002.js"></script>
-</body>
 
+  <h2 style="text-align:center; color:#17252a;">📊 Frequência de Uso dos Equipamentos</h2>
+
+  <div id="chartEquipamentos" style="width: 100%; max-width: 1000px; height: 500px; margin: auto;"></div>
+
+  <div style="max-width: 1000px; margin: 30px auto; font-size: 14px; line-height: 1.8; color: #333;">
+    <h3 style="color:#17252a; text-align:left;">📘 Equipamentos:</h3>
+    <ul style="columns: 2; list-style-type: none; padding-left: 10px; margin: 0;">
+      <li><b>SR-800N</b></li>
+      <li><b>Corpo Negro</b></li>
+      <li><b>Corpo Negro SR-800N-8HT</b></li>
+      <li><b>Corpo negro SR-2-33</b></li>
+      <li><b>célula TPW</b></li>
+      <li><b>Estação Solarimétrica</b></li>
+      <li><b>Forno Fluke 9118A</b></li>
+      <li><b>Forno Fluke 9170 / 9172</b></li>
+      <li><b>Banho Fluke 7341</b></li>
+      <li><b>Termografia Ativa: Laser</b></li>
+      <li><b>Termografia Ativa: Lâmpada</b></li>
+      <li><b>Termografia Ativa Flash</b></li>
+      <li><b>Termografia Ativa Vibração</b></li>
+      <li><b>Termografia Ativa: Solarcheck</b></li>
+      <li><b>Termorresistência : PT100</b></li>
+      <li><b>termômetro SPRT</b></li>
+      <li><b>Termohigrômetro Testo 440</b></li>
+      <li><b>Sistema de aquisição Fluke 1586A</b></li>
+      <li><b>Sistema de aquisição Fluke 1529</b></li>
+      <li><b>Termocâmera:T1020, SC660, X6801sc</b></li>
+      <li><b>Termohigrômetro Testo 622 / 971</b></li>
+      <li><b>Traçador de curvas</b></li>
+      <li><b>Pirômetro</b></li>
+      <li><b>Megômetro</b></li>
+    </ul>
+  </div>
+
+  <!-- Google Charts -->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+  <script type="module" src="js/dados.js"></script>
+
+  <hr style="margin: 30px auto 40px auto; width: 80%; border: none; border-top: 2px solid #ccc;">
+
+  <h3 style="text-align:center; color:#17252a;">📍 Distribuição por Finalidade de Uso</h3>
+
+  <!-- Área onde o gráfico será renderizado -->
+  <div id="graficoFinalidadeUso" style="width: 100%; max-width: 800px; height: 450px; margin: 0 auto;"></div>
+
+  <!-- Botões para alternar tipo de gráfico (AGORA ABAIXO DO GRÁFICO) -->
+  <div style="text-align: center; margin: 30px 0 10px 0;">
+    <button onclick="tipoGrafico='BarChart'; drawFinalidadeChart();" style="margin-right: 10px;">📊 Barras
+      Horizontais</button>
+    <button onclick="tipoGrafico='ColumnChart'; drawFinalidadeChart();" style="margin-right: 10px;">📈 Colunas
+      Verticais</button>
+    <button onclick="tipoGrafico='PieChart'; drawFinalidadeChart();">🥧 Gráfico de Pizza</button>
+  </div>
+
+  <div id="tabelaMestra">
+    <table>
+      <thead>
+        <tr>
+          <th id="ano">Ano</th>
+          <th id="tit">Título</th>
+          <th id="rev">Revista</th>
+          <th id="aut">Autores</th>
+          <th id="are">Área</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Google Charts -->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+  <script src="js/mestra.js" type="module"></script>
+</body>
 </html>
+
+

@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/noisejs@2.1.0/index.min.js"></script>
   <title>Document</title>
 
   <style>
@@ -185,6 +186,7 @@
       }
     }
   </style>
+
 </head>
 
 <body>
@@ -270,170 +272,9 @@
     </footer>
   </div>
 
-  <script type="module">
-    import * as THREE from 'https://unpkg.com/three@0.152.2/build/three.module.js';
-
-    const scene = new THREE.Scene();
-    const height = 881*2.2;
-    scene.background = new THREE.Color(0x070709);
-
-    const camera = new THREE.PerspectiveCamera(75, innerWidth / height, 0.1, 1000);
-    camera.position.set(0, 0, 15);
-    camera.updateProjectionMatrix();
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(innerWidth, height);
-    document.body.insertBefore(renderer.domElement, document.querySelector('.ui'));
-
-    const light = new THREE.DirectionalLight(0xffffff, 1.2);
-    light.position.set(3, 5, 5);  
-    scene.add(light);
-    scene.add(new THREE.AmbientLight(0x404040, 1));
-
-    const cards = [];
-    const textCard = [
-      ["🏬 +20", "Empresa atendidas", "com soluções personalizadas"],
-      ["🤝 15", "Serviços de alto", "impacto no mercado"],
-      ["💵 +25 Milhões", "Em projetos executados", "com nossos parceiros"],
-      ["🧾 +50", "Projetos estratégicos", "com o setor privado"],
-      ["📜 +65", "Certificados emitidos", "com excelência técnica"]
-    ];
-    const images = [
-      './data/1.png',
-      './data/2.png',
-      './data/3.png',
-      './data/4.png',
-      './data/5.png'
-    ];
-
-    function makeCardTexture(text, imageURL) {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      const size = 512;
-      const sizeHeight = size;
-      canvas.setAttribute('id', 'three');
-      canvas.width = size;
-      canvas.height = sizeHeight;
-
-      const loader = new THREE.TextureLoader();
-      const texture = new THREE.CanvasTexture(canvas);
-
-      loader.load(imageURL, (imgTex) => {
-        ctx.drawImage(imgTex.image, 0, 0, size, size);
-        ctx.fillStyle = 'rgba(0,0,0,0.4)';
-        ctx.fillRect(0, 0, size, size);
-
-        ctx.fillStyle = '#00e5ff';
-        ctx.font = 'bold 36px Arial';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(text[0], size / 2, size / 2 - 50);
-        ctx.font = 'bold 24px Arial';
-        ctx.fillText(text[1], size / 2, size / 2);
-        ctx.fillText(text[2], size / 2, size / 2 + 30);
-
-        texture.needsUpdate = true;
-      });
-
-      texture.minFilter = THREE.LinearFilter;
-      texture.magFilter = THREE.LinearFilter;
-      return texture;
-    }
-    
-    var tamCard = 8*881/height;
-    for (let i = 0; i < textCard.length; i++) {
-      const geo = new THREE.PlaneGeometry(tamCard, tamCard);
-      const mat = new THREE.MeshStandardMaterial({
-        map: makeCardTexture(textCard[i], images[i]),
-        side: THREE.DoubleSide,
-        roughness: 0.4,
-        metalness: 0.1,
-        transparent: true,
-        opacity: 1
-      });
-      const card = new THREE.Mesh(geo, mat);
-      cards.push(card);
-      scene.add(card);
-    }
-
-    let scroller = 0;
-    let t = 0;
-
-    function updateCards(scrollPos) {
-  const radius = 5 * 881 / height;
-  const spacing = 8 * 881 / height;
-  const difY = -1; // to down make up, to up make down
-  const coe = 1 / 2;
-  const padY = 0;
-
-  const altY = 1400;
-  const divScrollPos = 0.001;
-  const divScroller = 0.002;
-
-  t = (altY + scrollPos) * divScrollPos;
-
-  // define um fator de rotação extra baseado no scroll
-  const scrollAngle = (scrollPos / 275 + 0.3) * Math.PI / 2; // gira 90° a cada 200px descidos
-  console.log(scrollAngle);
-
-  for (let i = 0; i < cards.length; i++) {
-    const card = cards[i];
-
-    // progressão normal para posicionamento Y
-    const progress = t - i * Math.PI / (40 * height / 881);
-    const y = progress * Math.PI - i * spacing;
-
-    // ângulo original + rotação baseada no scroll
-    const angle = -i * Math.PI * coe + scrollAngle;
-
-    card.rotation.set(0, scrollAngle, 0);
-    card.scale.x = -1;
-
-    // mantém posição circular
-    card.position.set(
-      Math.cos(angle) * radius,
-      y - difY + padY,
-      Math.sin(angle) * radius
-    );
-
-    // olha para o centro do círculo no eixo Y
-    card.lookAt(0,0 , 0);
-  }
-}
-
-
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'w') scroller -= 1;
-      if (e.key === 's') scroller += 1;
-    });
-
-    function animate() {
-      requestAnimationFrame(animate);
-      updateCards(window.scrollY);
-      renderer.render(scene, camera);
-    }
-    animate();
-
-    window.addEventListener('resize', () => {
-      camera.aspect = innerWidth/height;
-      camera.updateProjectionMatrix();
-      renderer.setSize(innerWidth, height);
-    });
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const boxes = document.querySelectorAll('.box');
-      boxes.forEach((box, index) => {
-        if (index % 2 === 0) box.classList.add('from-left');
-        const observer = new IntersectionObserver(entries => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) entry.target.classList.add('show');
-            else entry.target.classList.remove('show');
-          });
-        }, { threshold: 0.3 });
-        observer.observe(box);
-      });
-    });
-  </script>
+  <script src="js/utils.js"></script>
+  <script type="module" src="js/sphere.js"></script>
+  <script type="module" src="js/script002.js"></script>
 </body>
-
+  
 </html>
