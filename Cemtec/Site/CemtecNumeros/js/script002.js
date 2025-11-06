@@ -1,6 +1,6 @@
 import * as THREE from 'https://unpkg.com/three@0.152.2/build/three.module.js';
-// import  Noise  from 'https://cdn.jsdelivr.net/npm/noisejs@2.1.0/index.min.js';
-
+// import  Noise  from 'https://cdn.jsdelivr.net/npm/noisejs@2.1.0/index.min.js'; // carregou no html
+// refatorar
 const noise = new Noise(Math.random());
 
 // animate();
@@ -103,12 +103,12 @@ function updateCards(scrollPos) {
 
     const altY = 1400;
     const divScrollPos = 0.001;
-    const divScroller = 0.002;
+    divScroller = 0.002;
 
     t = (altY + scrollPos) * divScrollPos;
 
     // define um fator de rotação extra baseado no scroll
-    const downPixels = 330;
+    const downPixels = 310;
     const scrollAngle = (scrollPos / downPixels + 0.35) * Math.PI / 2; // gira 90° a cada 200px descidos
     // console.log(scrollAngle);
 
@@ -129,7 +129,6 @@ function updateCards(scrollPos) {
     }
 }
 
-
 window.addEventListener('keydown', (e) => {
     if (e.key === 'w') scroller -= 1;
     if (e.key === 's') scroller += 1;
@@ -141,10 +140,6 @@ function animate() {
     renderer.render(scene, camera);
 }
 animate();
-
-
-
-
 
 window.addEventListener('resize', () => {
     camera.aspect = innerWidth / height;
@@ -166,21 +161,23 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-
-
 function pri(item) {
-  console.log(JSON.parse(JSON.stringify(item)))
+  console.log(JSON.parse(JSON.stringify(item)));
 }
-
 
 // SPHERE
 
-
 // mesh final
+var mx = 25,my = 25;
+
+var spheres = [];
 class Sphere {
     constructor(raio) {
         this.raio = raio;
+		this.color = 0xff0000;
+		this._colorColisonSphere = 0x0000ff;
         this.dy = 0;
+
         this.xoff=Math.random()*100;
         this.yoff=Math.random()*100;
         this.offs = 0.01*Math.random();
@@ -194,6 +191,43 @@ class Sphere {
         });
         this.img = new THREE.Mesh(this.esferaGeo, this.esferaMat);
     }
+	log(){
+		// paredes
+		if (this.img.position.x<-mx*0.5) this.img.position.x=-mx*0.5;
+		else if (this.img.position.x>mx*0.5) this.img.position.x=mx*0.5;
+
+		if (this.img.position.y<-my*0.5) this.img.position.y=-my*0.5;
+		else if (this.img.position.y>my*0.5) this.img.position.y=my*0.5;
+
+		// movimento
+		const desloc = 0.03;
+        if (window.scrollY != this.dy / divScroller) {
+            this.img.position.y -= this.dy - window.scrollY * divScroller;
+            this.dy = window.scrollY * divScroller;
+        }
+        this.img.position.y += 0 + noise.perlin2(this.xoff,0)*desloc;
+        this.img.position.x += 0 + noise.perlin2(0,this.yoff)*desloc;
+        this.xoff += this.offs;
+        this.yoff += this.offs;
+
+        // colisão
+        var normalColor = true;
+        for (var sphere of spheres) {
+            if (sphere != this){
+                if (this.dist(sphere)<this.raio*2){
+                    // pri("o");
+                    this.esferaMat.color.set(this.colorColisonSphere);
+                    sphere.esferaMat.color.set(sphere._colorColisonSphere);
+                    normalColor = false;
+                }
+            }
+        }
+
+        if (normalColor) this.esferaMat.color.set(this.color);
+
+
+
+	}
     dist(sphere){
         var dx = Math.pow(sphere.img.position.x-this.img.position.x,2);
         var dy = Math.pow(sphere.img.position.y-this.img.position.y,2);
@@ -202,51 +236,107 @@ class Sphere {
 }
 
 class CustomSinCurve extends THREE.Curve {
-    constructor(){
-        super();
+    constructor(sla,lbs){
+        super(sla);
         this.sx = 0;
         this.sy = 0;
         this.sz = 0;
+		this.lambdas = lbs;
     }
     setxyz(x,y,z){
-        this.sx = x;
-        this.sy = y;
-        this.sz = z;
+        this.sx += x;
+        this.sy += y;
+        this.sz += z;
     }
 	getPoint( t, optionalTarget = new THREE.Vector3() ) {
-        console.log(t);
-		const tx = (t+this.sx) * 3 - 1.5;
-		const ty = Math.sin( 2 * Math.PI * (t+this.sy) );
-		const tz = Math.cos(2 * Math.PI * (t+this.sz)) * 0.5;;
+        // console.log(t);
+		const tx = (t+this.sx) * 2 *this.lambdas- 1.5;
+		const ty = Math.sin( 2 * Math.PI * (t+this.sy) *this.lambdas );
+		const tz = 0;
 		return optionalTarget.set( tx, ty, tz );
 	}
 }
 class Wave {
-    constructor(angle){
+    constructor(color,angle){
         this.angle = angle;
-
-        this.path = new CustomSinCurve( 10 );
-        this.geo = new THREE.TubeGeometry(this.path, 100, 0.2, 32, true );
-        this.mat = new THREE.MeshBasicMaterial( { roughness: 1.3,
-            metalness: 0.25,color: 0x00ff00 } );
-
-        this.img = new THREE.Mesh(this.geo, this.mat);
+		this.loopLogUp = 0;
+		this.img;
+		this.raioInterior = 0.05;
+		this.color = color;
+		this.logUp();
     }
     log(){
-        this.img.position.x += 0.00001;
-        this.img.position.y = 0;
-        this.path.setxyz(this.path.sx+0.001,0,0)
+		var delta = -0.004,mult = 20;
+        this.img.position.x += delta*mult*Math.cos(this.angle);
+        this.img.position.y += delta*mult*Math.sin(this.angle);
+        this.path.setxyz(0,delta*2,0);
+		this.loopLogUp++;
+		this.interactSpheres();
+		this.logUp();
     }
+	logUp(){
+		scene.remove(this.img);
+
+		var poss;
+		if (this.loopLogUp > 0){
+			poss = [this.img.position.x,this.img.position.y,this.img.position.z];
+		}else{
+			this.path = new CustomSinCurve( 10,5);
+		}
+		
+        this.geo = new THREE.TubeGeometry(this.path, 100, this.raioInterior, 32, false );
+        this.mat = new THREE.MeshStandardMaterial({
+			roughness: 1.3,
+            metalness: 0.25,color: this.color
+		});
+        this.img = new THREE.Mesh(this.geo, this.mat);   
+		this.img.rotation.z = this.angle; 
+
+		if (this.loopLogUp > 0) this.img.position.set(poss[0],poss[1],poss[2]); 
+		scene.add(this.img);
+	}
+	interactSpheres(){
+		// Cria um Raycaster
+		const raycaster = new THREE.Raycaster();
+		const direction = new THREE.Vector3();
+
+		for (var sphere of spheres){
+			// Ponto de partida do raio (centro da esfera)
+			const origin = sphere.img.position.clone(); 
+			
+			// Direção do raio: do centro da esfera para o centro da Wave
+			direction.subVectors(this.img.position, origin).normalize();
+
+			// Configura o Raycaster
+			raycaster.set(origin, direction);
+			
+			// Define a distância máxima do raio para que não detecte objetos distantes. 
+			// Aqui, usamos 2x o raio da esfera como limite.
+			raycaster.far = sphere.raio * 2 + this.raioInterior*2; 
+
+			// Encontra as intersecções com a malha da Wave
+			const intersects = raycaster.intersectObject(this.img, true);
+
+			if (intersects.length > 0) {
+				// Houve intersecção! A esfera e a onda estão se tocando.
+				sphere.color = this.color;
+			}
+		}
+	}
+	distSphere(sphere){
+		var dx = Math.pow(sphere.img.position.x-this.img.position.x,2);
+		var dy = Math.pow(sphere.img.position.y-this.img.position.y,2);
+		return Math.pow(dx+dy,.5);
+	}
     distCenter(){
-        var dx = Math.pow(sphere.img.position.x,2);
-        var dy = Math.pow(sphere.img.position.y,2);
+        var dx = Math.pow(this.img.position.x,2);
+        var dy = Math.pow(this.img.position.y,2);
         return Math.pow(dx+dy,.5);
     }
 }
 
-var spheres = [];
-var mx = 20,my = 50;
-for (let i = 0; i < 1000; i++) {
+
+for (let i = 0; i < 200; i++) {
     var sphere = new Sphere(0.25/2);
     sphere.img.position.set(
         (Math.random() - 0.5) * mx,
@@ -256,75 +346,41 @@ for (let i = 0; i < 1000; i++) {
     spheres.push(sphere);
 }
 for (var sphere of spheres) {
-    // scene.add(sphere.img);
+    scene.add(sphere.img);
 }
+
+var waves = [];
 
 // --- Animação da esfera (movimento + rotação) ---
 function moverEsfera() {
-    return;
     // movimento senoidal no eixo Y
-    // console.log(spheres[0].dy, window.scrollY);
     for (var sphere of spheres) {
-        const desloc = 0.03;
-        if (window.scrollY != sphere.dy / divScroller) {
-            sphere.img.position.y -= sphere.dy - window.scrollY * divScroller;
-            sphere.dy = window.scrollY * divScroller;
-        }
-        // noise.perlin2(t, 0)
-        sphere.img.position.y += 0 + noise.perlin2(sphere.xoff,0)*desloc;
-        sphere.img.position.x += 0 + noise.perlin2(0,sphere.yoff)*desloc;
-        sphere.xoff += sphere.offs;
-        sphere.yoff += sphere.offs;
-
-        // sphere.img.rotation.x += 0.01;
-        // sphere.img.rotation.y += 0.02;
-
-        // if (Math.pow(Math.pow(sphere.img.position.x - mouse.x, 2) + Math.pow(sphere.img.position.y - mouse.y, 2), .5) < 1) { // dif mouse and sphere
-        //     // sphere.esferaMat.color.set(0x0000aa);
-
-        //     // pri("dentro");
-        // } else {
-        // }
-        
-
-        // colisão
-        var normalColor = true;
-        for (var sphere2 of spheres) {
-            if (sphere2 != sphere){
-                if (sphere.dist(sphere2)<sphere.raio*2){
-                    pri("o");
-                    sphere.esferaMat.color.set(0x0000aa);
-                    sphere2.esferaMat.color.set(0x0000aa);
-                    normalColor = false;
-                }
-            }
-        }
-        if (normalColor) sphere.esferaMat.color.set(0xaa0000);
+		sphere.log();
     }
-
 }
 
-var loop = 0,freq = 1;
-var waves = [];
+var loop = 0,baseFreq = 400,freq = baseFreq,variFreq = 200; // 200
 
 function logicWaves(){
     // return;
-    if (loop == freq){
-        var wave = new Wave(Math.random()*360);
-        wave.img.position.set(
-            (Math.random() - 0.5) * mx,
-            (Math.random() - 0.5) * my,
-            0
-        );
+    if (loop % freq == 0){
+        var wave = new Wave(rgbaToHex(Math.random()*255,Math.random()*255,Math.random()*255,Math.random(),true),Math.PI/180*360*Math.random());
         waves.push(wave);
-        scene.add(wave.img);
+		wave.img.position.set(
+
+			Math.cos(wave.angle)*Math.min(mx,my),
+			Math.sin(wave.angle)*Math.min(mx,my),
+		0);
+		var inF = Math.floor(Math.random()*variFreq)+baseFreq
+		freq = inF + (inF<freq) ? freq+inF : 0;
     }
     for (var wave of waves){
-        wave.log();
+		wave.log();
+		if (wave.distCenter() > mx*2) waves.splice(waves.findIndex((x) => x == wave),1);
     }
+	console.log(waves.length,freq,loop%freq);
     loop++;
 }
-
 
 const mouse = { x: 0, y: 0 };
 window.addEventListener('mousemove', (e) => {
@@ -341,8 +397,8 @@ animate = function () {
     //     videoTexture.needsUpdate = true;
     // }
     updateCards(scroll);
-    moverEsfera(); // 👈 atualiza a esfera aqui
-    logicWaves();
+    moverEsfera(); // esfera
+    logicWaves();  // waves
     renderer.render(scene, camera);
 };
 //
