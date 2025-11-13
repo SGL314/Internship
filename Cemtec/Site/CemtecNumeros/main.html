@@ -299,9 +299,7 @@
     </footer>
   </div>
 
-  <script src="js/utils.js"></script>
-  <script type="module" src="js/sphere.js"></script>
-  <script type="module" src="js/script002.js"></script>
+ 
 
   <h2 style="text-align:center; color:#17252a;">📊 Frequência de Uso dos Equipamentos</h2>
 
@@ -340,43 +338,47 @@
   <!-- Google Charts -->
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-  <script type="module" src="js/dados.js"></script>
-
+  
   <hr style="margin: 30px auto 40px auto; width: 80%; border: none; border-top: 2px solid #ccc;">
-
+  
   <h3 style="text-align:center; color:#17252a;">📍 Distribuição por Finalidade de Uso</h3>
-
+  
   <!-- Área onde o gráfico será renderizado -->
   <div id="graficoFinalidadeUso" style="width: 100%; max-width: 800px; height: 450px; margin: 0 auto;"></div>
-
+  
   <!-- Botões para alternar tipo de gráfico (AGORA ABAIXO DO GRÁFICO) -->
   <div style="text-align: center; margin: 30px 0 10px 0;">
-    <button onclick="tipoGrafico='BarChart'; drawFinalidadeChart();" style="margin-right: 10px;">📊 Barras
-      Horizontais</button>
+	  <button onclick="tipoGrafico='BarChart'; drawFinalidadeChart();" style="margin-right: 10px;">📊 Barras
+		  Horizontais</button>
     <button onclick="tipoGrafico='ColumnChart'; drawFinalidadeChart();" style="margin-right: 10px;">📈 Colunas
       Verticais</button>
-    <button onclick="tipoGrafico='PieChart'; drawFinalidadeChart();">🥧 Gráfico de Pizza</button>
-  </div>
+	  <button onclick="tipoGrafico='PieChart'; drawFinalidadeChart();">🥧 Gráfico de Pizza</button>
+	</div>
 
-  <div id="tabelaMestra">
-    <table>
-      <thead>
-        <tr>
-          <th id="ano">Ano</th>
-          <th id="tit">Título</th>
+	<div id="tabelaMestra">
+		<table>
+			<thead>
+				<tr>
+					<th id="ano">Ano</th>
+					<th id="tit">Título</th>
           <th id="rev">Revista</th>
           <th id="aut">Autores</th>
           <th id="are">Área</th>
         </tr>
-      </thead>
+	</thead>
       <tbody>
-      </tbody>
+	</tbody>
     </table>
   </div>
-
+  
   <!-- Google Charts -->
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
+  
+	<script src="js/utils.js"></script>
+  <script type="module" src="js/sphere.js"></script>
+  <script type="module" src="js/script002.js"></script>
+  
+  <script type="module" src="js/dados.js"></script>
   <script src="js/mestra.js" type="module"></script>
 </body>
 </html>

@@ -210,7 +210,7 @@ class Sphere {
         });
         this.img = new THREE.Mesh(this.esferaGeo, this.esferaMat);
     }
-    log() {
+    log(ind) {
         // paredes
         if (this.img.position.x < -mx * 0.5) this.img.position.x = -mx * 0.5;
         else if (this.img.position.x > mx * 0.5) this.img.position.x = mx * 0.5;
@@ -231,24 +231,17 @@ class Sphere {
 
         // colisão
         this.esferaMat.color.set(this.color);
-        var normalColor = true;
+		let i = -1;
         for (var sphere of spheres) {
+			i++;
+			if (i<=ind) continue;
             if (sphere != this) {
-                if (this.dist(sphere) < this.raio * 2) {
-                    // pri("o");
-                    sphere.esferaMat.color.set(sphere.color);
-
+                if (this.dist(sphere) < this.raio+sphere.raio) {
                     this.esferaMat.color.set(this.colorColisonSphere);
                     sphere.esferaMat.color.set(sphere.colorColisonSphere);
-                    normalColor = false;
                 }
             }
         }
-
-        if (normalColor) this.esferaMat.color.set(this.color);
-
-
-
     }
     dist(sphere) {
         var dx = Math.pow(sphere.img.position.x - this.img.position.x, 2);
@@ -297,34 +290,36 @@ class Wave {
         this.path.setxyz(0, this.delta * 2, 0);
         this.loopLogUp++;
         this.interactSpheres();
-        this.logUp();
+        this.logUp(0,0,0,false);
     }
     logUp(x,y,z,att = false) {
-        scene.remove(this.img);
-
-        var poss;
+		
+		var poss;
         if (this.loopLogUp > 0) {
-            poss = [this.img.position.x, this.img.position.y, this.img.position.z];
-        } else {
-            poss
-            this.path = new CustomSinCurve(10, 5);
-            this.mat = new THREE.MeshStandardMaterial({
+			poss = [this.img.position.x, this.img.position.y, this.img.position.z];
+			// this.img.dispose();
+			scene.remove(this.img);
+			this.geo.dispose();
+			this.mat = new THREE.MeshStandardMaterial({
                 roughness: 1.3,
                 metalness: 0.25,
                 color: this.color
             });
+        } else {
+            this.path = new CustomSinCurve(10, 5);
         }
+		this.geo = new THREE.TubeGeometry(this.path, 100, this.raioInterior, 32, false);
+		this.img = new THREE.Mesh(this.geo, this.mat);
+		
 
-        this.geo = new THREE.TubeGeometry(this.path, 100, this.raioInterior, 32, false);
-
-        this.img = new THREE.Mesh(this.geo, this.mat);
+		if (att) {
+            this.img.position.set(x,y,z);
+        }
         this.img.rotation.z = this.angle;
 
         if (this.loopLogUp > 0) {
             this.img.position.set(poss[0], poss[1], poss[2]);
             scene.add(this.img);
-        }else if (att) {
-            this.img.position.set(x,y,z);
         }
     }
     // Dentro da classe Wave
@@ -467,11 +462,14 @@ function moverEsfera() {
     const colorCollision = rgbaToHex(r, g, b, 1);
 
     // Aplica a cor de colisão a todas as esferas
+	let ind = 0;
     for (var sphere of spheres) {
         // Isso define a cor que a esfera terá QUANDO colidir com outra esfera.
         sphere.colorColisonSphere = colorCollision;
-        sphere.log();
-    }
+        sphere.log(ind);
+		ind ++;
+    }//
+	console.log(scene.children.length);
 }
 
 function logicWaves() {
@@ -479,7 +477,7 @@ function logicWaves() {
     if (loop % freq == 0 && waves.length < 3) {
         let angle =  Math.PI / 180 * 360 * Math.random();
         var wave = new Wave(
-            rgbaToHex(Math.random() * 255, Math.random() * 255, Math.random() * 255, Math.random(), true),
+            rgbaToHex(Math.random()*255,Math.random()*255,Math.random()*255, 1, false),
             angle,
             Math.cos(angle) * Math.min(mx, my),
             Math.sin(angle) * Math.min(mx, my),
@@ -491,9 +489,20 @@ function logicWaves() {
     }
     for (var wave of waves) {
         wave.log();
-        if (wave.distCenter() > mx * 2) waves.splice(waves.findIndex((x) => x == wave), 1);
+        if (wave.distCenter() > mx * 2){
+			let ind = waves.findIndex((x) => x == wave);
+			let a = [],b=[];
+			for (let i = 0;i<ind;i++){
+				a.push(waves[i]);
+			}
+			for (let i = ind+1;i<waves.length;i++){
+				b.push(waves[i]);
+			}
+			waves = a.concat(b);
+			scene.remove(wave.img);
+		}
     }
-    // console.log(waves.length,freq,loop%freq);
+    // console.log(waves.length);
 
 }
 
