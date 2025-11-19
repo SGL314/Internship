@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/noisejs@2.1.0/index.min.js"></script>
+  <title>Document</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+      background: #ffffff;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      padding: 60px 20px 60px;
+      position: relative;
+      z-index: 10;
+      background-color: #070709;
+    }
+
+    header h1 {
+      font-size: 6.5rem;
+      margin: 0;
+      color: #00e5ff;
+    }
+
+    header p {
+      font-size: 3.6rem;
+      color: #999999;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    canvas#three {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: 1200px;
+      /* ⬅️ AQUI você ajusta o tamanho do espaço entre header e ui */
+      margin: 40px 0;
+      /* espaço acima e abaixo (opcional) */
+      z-index: 1;
+    }
+
+    .ui {
+      position: relative;
+      z-index: 100;
+      padding-top: 20px;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 100px;
+      padding: 60px 200px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .box {
+      position: relative;
+      padding: 50px 40px;
+      font-size: 2rem;
+      opacity: 0;
+      transform: translateX(350px);
+      transition: all 2s ease-out;
+      background: linear-gradient(145deg, #2c3e50, #1c262b);
+      color: #fff;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .box h2 {
+      margin: 0;
+      font-size: 3rem;
+      color: #00e5ff;
+      font-weight: 700;
+    }
+
+    .box p {
+      margin-top: 15px;
+      font-size: 1.1rem;
+      color: #ddd;
+      letter-spacing: 0.5px;
+    }
+
+    .box.from-left {
+      transform: translateX(-350px);
+    }
+
+    .box.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    footer {
+      text-align: center;
+      color: #666;
+      font-size: 0.8rem;
+      margin-top: 80px;
+      padding-bottom: 40px;
+    }
+
+    .cemtec-grid {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      width: 941px;
+      max-width: 941px;
+      gap: 20px;
+    }
+
+    .line-grid {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .item-info {
+      background: #263238;
+      color: #fff;
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+      max-height: 160px;
+      width: 257px;
+      max-width: 257px;
+    }
+
+    .item-info h2 {
+      margin: 0px;
+      font-size: 1.8em;
+    }
+
+    .item-info p {
+      margin: 5px 0 0;
+    }
+
+    @media (max-width: 900px) {
+      .container {
+        padding: 40px;
+        gap: 80px;
+      }
+
+      .box h2 {
+        font-size: 2.5rem;
+      }
+
+      .box p {
+        font-size: 1rem;
+      }
+
+      header h1 {
+        font-size: 2.5rem;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .container {
+        padding: 30px 20px;
+      }
+
+      .box {
+        padding: 30px 20px;
+      }
+
+      .box h2 {
+        font-size: 2rem;
+      }
+
+      .box p {
+        font-size: 0.9rem;
+      }
+    }
+
+    table {
+      border-collapse: separate;
+      border-spacing: 0px;
+    }
+
+    th {
+      background-color: #ccc;
+      border: 1px solid #17252a;
+      color: #000000;
+      min-width: 120px;
+      font-family: system-ui;
+      border-radius: 3px;
+    }
+
+    td {
+      background-color: #f0f4f9;
+      border: 1px solid #263238;
+      color: #000000;
+      text-align: center;
+    }
+
+    #are {}
+  </style>
+
+</head>
+
+<body>
+  <header>
+    <h1>Frase impactante</h1>
+    <p>Texto ultra impactante</p>
+  </header>
+
+  <!-- <canvas id="three-canvas"></canvas> -->
+
+  <div class="ui">
+
+
+    <h2 style="text-align: center; color: #333; font-weight: 700; margin-bottom: 5px;">
+      🔬 Resultados Acadêmicos
+    </h2>
+    <p style="text-align: center; color: #777; margin-bottom: 40px;">
+      *Os dados apresentados compreendem o período entre 2019 e 2024
+    </p>
+
+    <div style="display: flex; justify-content: center;">
+      <div class="cemtec-grid">
+        <div class="line-grid">
+          <div class="item-info">
+            <h2>📄 +30</h2>
+            <p>Artigos Científicos</p>
+          </div>
+          <div class="item-info">
+            <h2>🌐 +35</h2>
+            <p>Participações em congressos</p>
+          </div>
+          <div class="item-info">
+            <h2>📘 19</h2>
+            <p>Dissertações concluídas</p>
+          </div>
+        </div>
+        <div class="line-grid">
+          <div class="item-info">
+            <h2>🧪 9</h2>
+            <p>Exames de Qualificação</p>
+          </div>
+          <div class="item-info">
+            <h2>📨 +50</h2>
+            <p>Manifestações do Setor Produtivo</p>
+          </div>
+          <div class="item-info">
+            <h2>💡 8</h2>
+            <p>Patentes</p>
+          </div>
+        </div>
+        <div class="line-grid">
+          <div class="item-info">
+            <h2>🎓 23</h2>
+            <p>Trabalhos de Conclusão de Curso</p>
+          </div>
+          <div class="item-info">
+            <h2>📝 10</h2>
+            <p>Relatórios de Ensaio</p>
+          </div>
+          <div class="item-info">
+            <h2>🧠 8</h2>
+            <p>Teses</p>
+          </div>
+        </div>
+        <div class="line-grid">
+          <div class="item-info">
+            <h2>🏛️ +120</h2>
+            <p>Atividades Internas</p>
+          </div>
+          <div class="item-info">
+            <h2>🌍 +150</h2>
+            <p>Atividades Externas</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr style="margin-top: 50px; margin-bottom: 40px; border: none; border-top: 2px solid #ccc;">
+
+    <!-- <button onclick="window.location.href='slider/index.html'">slider</button> -->
+    <footer>
+      *Dados referentes ao período de 2019 a 2024
+    </footer>
+  </div>
+
+ 
+
+  <h2 style="text-align:center; color:#17252a;">📊 Frequência de Uso dos Equipamentos</h2>
+
+  <div id="chartEquipamentos" style="width: 100%; max-width: 1000px; height: 500px; margin: auto;"></div>
+
+  <div style="max-width: 1000px; margin: 30px auto; font-size: 14px; line-height: 1.8; color: #333;">
+    <h3 style="color:#17252a; text-align:left;">📘 Equipamentos:</h3>
+    <ul style="columns: 2; list-style-type: none; padding-left: 10px; margin: 0;">
+      <li><b>SR-800N</b></li>
+      <li><b>Corpo Negro</b></li>
+      <li><b>Corpo Negro SR-800N-8HT</b></li>
+      <li><b>Corpo negro SR-2-33</b></li>
+      <li><b>célula TPW</b></li>
+      <li><b>Estação Solarimétrica</b></li>
+      <li><b>Forno Fluke 9118A</b></li>
+      <li><b>Forno Fluke 9170 / 9172</b></li>
+      <li><b>Banho Fluke 7341</b></li>
+      <li><b>Termografia Ativa: Laser</b></li>
+      <li><b>Termografia Ativa: Lâmpada</b></li>
+      <li><b>Termografia Ativa Flash</b></li>
+      <li><b>Termografia Ativa Vibração</b></li>
+      <li><b>Termografia Ativa: Solarcheck</b></li>
+      <li><b>Termorresistência : PT100</b></li>
+      <li><b>termômetro SPRT</b></li>
+      <li><b>Termohigrômetro Testo 440</b></li>
+      <li><b>Sistema de aquisição Fluke 1586A</b></li>
+      <li><b>Sistema de aquisição Fluke 1529</b></li>
+      <li><b>Termocâmera:T1020, SC660, X6801sc</b></li>
+      <li><b>Termohigrômetro Testo 622 / 971</b></li>
+      <li><b>Traçador de curvas</b></li>
+      <li><b>Pirômetro</b></li>
+      <li><b>Megômetro</b></li>
+    </ul>
+  </div>
+
+  <!-- Google Charts -->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+  
+  <hr style="margin: 30px auto 40px auto; width: 80%; border: none; border-top: 2px solid #ccc;">
+  
+  <h3 style="text-align:center; color:#17252a;">📍 Distribuição por Finalidade de Uso</h3>
+  
+  <!-- Área onde o gráfico será renderizado -->
+  <div id="graficoFinalidadeUso" style="width: 100%; max-width: 800px; height: 450px; margin: 0 auto;"></div>
+  
+  <!-- Botões para alternar tipo de gráfico (AGORA ABAIXO DO GRÁFICO) -->
+  <div style="text-align: center; margin: 30px 0 10px 0;">
+	  <button onclick="tipoGrafico='BarChart'; drawFinalidadeChart();" style="margin-right: 10px;">📊 Barras
+		  Horizontais</button>
+    <button onclick="tipoGrafico='ColumnChart'; drawFinalidadeChart();" style="margin-right: 10px;">📈 Colunas
+      Verticais</button>
+	  <button onclick="tipoGrafico='PieChart'; drawFinalidadeChart();">🥧 Gráfico de Pizza</button>
+	</div>
+
+	<div id="tabelaMestra">
+		<table>
+			<thead>
+				<tr>
+					<th id="ano">Ano</th>
+					<th id="tit">Título</th>
+          <th id="rev">Revista</th>
+          <th id="aut">Autores</th>
+          <th id="are">Área</th>
+        </tr>
+	</thead>
+      <tbody>
+	</tbody>
+    </table>
+  </div>
+  
+  <!-- Google Charts -->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  
+	<script src="js/utils.js"></script>
+  <script type="module" src="js/sphere.js"></script>
+  <script type="module" src="js/script003_ia.js"></script>
+  
+  <script type="module" src="js/dados.js"></script>
+  <script src="js/mestra.js" type="module"></script>
+</body>
+</html>
+
+
