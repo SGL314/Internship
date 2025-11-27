@@ -258,134 +258,133 @@ class Sphere {
 class CustomSinCurve extends THREE.Curve {
     constructor(sla, lbs) {
         super(sla);
-        this.sx = 0;
-        this.sy = 0;
-        this.sz = 0;
-        this.lambdas = lbs;
+        this.sx = 0; 
+        this.lambdas = lbs; 
     }
     setxyz(x, y, z) {
         this.sx += x;
-        this.sy += y;
-        this.sz += z;
     }
     getPoint(t, optionalTarget = new THREE.Vector3()) {
-        // console.log(t);
-        const tx = (t + this.sx) * 2 * this.lambdas - 1.5;
-        const ty = Math.sin(2 * Math.PI * (t + this.sy) * this.lambdas);
-        const tz = 0;
+        const angle = t * 2 * Math.PI * this.lambdas;
+        
+        // Comprimento Fixo (Escala de -10 a 10)
+        const fixedLength = 20; 
+        const tx = t * fixedLength - (fixedLength / 2) + this.sx; 
+
+        // Raio e Rotação da Hélice (Eixos Y e Z local)
+        const radius = 1.0; 
+        const ty = Math.cos(angle) * radius;
+        const tz = Math.sin(angle) * radius;
+        
         return optionalTarget.set(tx, ty, tz);
     }
 }
 class Wave {
-    constructor(color, angle,x,y,z) {
+    constructor(len,color, angle, x, y, z) {
         this.angle = angle;
         this.loopLogUp = 0;
         this.img;
+        this.group; // Variável para o THREE.Group
         this.raioInterior = 0.05;
         this.color = color;
-        this.delta = 0;
         this.delta = -0.004;
         this.mult = 20;
-        this.logUp(x,y,z,true);
-    }
-    log() {
+        this.currentScale = 0.01; // Inicia a escala em 0 (tamanho zero)
 
-        this.img.position.x += this.delta * this.mult * Math.cos(this.angle);
-        this.img.position.y += this.delta * this.mult * Math.sin(this.angle);
-        this.path.setxyz(0, this.delta * 2, 0);
+        // 🌟 NOVO: Criar o THREE.Group
+        this.group = new THREE.Group();
+
+        // 1. Criação ÚNICA da Geometria e Material
+		this.lambda = len;
+        this.path = new CustomSinCurve(5, this.lambda); 
+        this.mat = new THREE.MeshStandardMaterial({
+            roughness: 1.3,
+            metalness: 0.25,
+            color: this.color
+        });
+        this.geo = new THREE.TubeGeometry(this.path, 100, this.raioInterior, 32, false);
+        this.img = new THREE.Mesh(this.geo, this.mat); // O mesh é o filho
+
+        // 2. Aplicar Transformações ao Grupo e ao Mesh
+        
+        // O GRUPO faz a posição e a rotação direcional (aponta a onda)
+        this.group.position.set(x, y, z);
+        this.group.rotation.z = this.angle; 
+        this.group.scale.set(this.currentScale, this.currentScale, this.currentScale);
+        
+        // Adiciona o mesh ao grupo
+        this.group.add(this.img);
+        
+        // Adiciona o GRUPO à cena
+        scene.add(this.group); 
+    }
+    
+    log() {
+        // Translação: faz a onda se afastar do centro (aplicado no GROUP)
+        this.group.position.x += this.delta * this.mult * Math.cos(this.angle);
+        this.group.position.y += this.delta * this.mult * Math.sin(this.angle);
+        
+        // Anima o crest da onda (deslocamento)
+        this.path.setxyz(this.delta * 2, 0, 0);
+        // if (this.currentScale < maxScale) {
+        //     this.currentScale = Math.min(maxScale, this.currentScale + growthRate);
+        // }
+		this.group.scale.set(1,1,1);
+		
+        // 🌀 Rotação da Voltinha: Aplicada no MESH interno, no eixo X local
+        // Eixo X é o eixo longitudinal da curva, garantido pela hierarquia do Grupo.
+        const rotationSpeed = this.delta*this.mult*Math.PI*this.lambda/10; 
+        this.img.rotation.x += rotationSpeed; 
+
         this.loopLogUp++;
         this.interactSpheres();
-        this.logUp(0,0,0,false);
     }
-    logUp(x,y,z,att = false) {
-		
-		var poss;
-        if (this.loopLogUp > 0) {
-			poss = [this.img.position.x, this.img.position.y, this.img.position.z];
-			// this.img.dispose();
-			scene.remove(this.img);
-			this.geo.dispose();
-			
-        } else {
-            this.path = new CustomSinCurve(10, 5);
-<<<<<<< HEAD
-            this.mat = new THREE.MeshStandardMaterial({
-=======
-			this.mat = new THREE.MeshStandardMaterial({
->>>>>>> 15346b255975d08f7ebf4846efd904b5636f2844
-                roughness: 1.3,
-                metalness: 0.25,
-                color: this.color
-            });
-        }
-		this.geo = new THREE.TubeGeometry(this.path, 100, this.raioInterior, 32, false);
-		this.img = new THREE.Mesh(this.geo, this.mat);
-		
-
-		if (att) {
-            this.img.position.set(x,y,z);
-        }
-        this.img.rotation.z = this.angle;
-
-        if (this.loopLogUp > 0) {
-            this.img.position.set(poss[0], poss[1], poss[2]);
-            scene.add(this.img);
-        }
-    }
-    // Dentro da classe Wave
 
     interactSpheres() {
-        // 1. Obtenha os pontos da curva que define o tubo
-        // A TubeGeometry é baseada em uma curva (this.path), que possui um número 
-        // discreto de pontos ao longo de seu comprimento.
-        // O número de pontos da curva é 100 por padrão na sua TubeGeometry.
+        // Nota: A matriz de transformação this.img.matrixWorld já inclui a escala e rotação do Grupo
         const curvePoints = this.path.getPoints(100);
 
         for (var sphere of spheres) {
             let isColliding = false;
 
-            // 2. Itera sobre cada ponto da curva
             for (const curvePoint of curvePoints) {
-
-                // 3. Aplica a transformação (posição e rotação) do mesh da Wave ao ponto da curva.
-                // O ponto da curva está em coordenadas locais (relativas à malha da Wave).
-                // Usamos a matriz de transformação do mesh para obter a posição real (world position) do ponto.
+                // A posição do ponto é transformada usando a matriz MUNDIAL do mesh
                 const pointWorldPosition = curvePoint.clone();
                 pointWorldPosition.applyMatrix4(this.img.matrixWorld);
 
-                // 4. Calcula a distância 3D entre a esfera e o ponto real da curva
-                // Usamos a distância 3D, pois a esfera tem profundidade (Z).
                 const distance = pointWorldPosition.distanceTo(sphere.img.position);
 
-                // 5. Verifica a colisão: se a distância for menor que a soma dos raios, houve toque.
-                const collisionThreshold = sphere.raio + this.raioInterior;
+                // O raio da onda é afetado pela escala do grupo
+                const collisionThreshold = sphere.raio + this.raioInterior * this.currentScale; 
 
                 if (distance < collisionThreshold) {
                     isColliding = true;
-                    break; // Encontrou colisão, pode parar de checar os outros pontos da curva
+                    break; 
                 }
             }
 
-            // 6. Atualiza a cor da esfera se houver colisão
             if (isColliding) {
                 sphere.color = this.color;
             }
-            // Nota: Se você quiser que a cor "volte" após a onda passar, você precisará
-            // armazenar a cor original ou ter uma lógica para limpar a cor após um tempo.
-            // A lógica de colisão de Sphere vs Sphere (no log da Sphere) já trata isso 
-            // ao redefinir para a cor "normal" se não houver colisão.
         }
     }
     distSphere(sphere) {
-        var dx = Math.pow(sphere.img.position.x - this.img.position.x, 2);
-        var dy = Math.pow(sphere.img.position.y - this.img.position.y, 2);
+        // Usa a posição do GRUPO
+        var dx = Math.pow(sphere.img.position.x - this.group.position.x, 2);
+        var dy = Math.pow(sphere.img.position.y - this.group.position.y, 2);
         return Math.pow(dx + dy, .5);
     }
     distCenter() {
-        var dx = Math.pow(this.img.position.x, 2);
-        var dy = Math.pow(this.img.position.y, 2);
+        // Usa a posição do GRUPO
+        var dx = Math.pow(this.group.position.x, 2);
+        var dy = Math.pow(this.group.position.y, 2);
         return Math.pow(dx + dy, .5);
     }
+
+	removeMe(){
+		scene.remove(this.group);
+		this.geo.dispose();
+	}
 }
 
 var teste = new Wave(0x000000, 0);
@@ -486,11 +485,12 @@ function logicWaves() {
     // return;
     if (loop % freq == 0 && waves.length < 3) {
         let angle =  Math.PI / 180 * 360 * Math.random();
-        var wave = new Wave(
+		var lengthWave = 10;
+        var wave = new Wave(lengthWave,
             rgbaToHex(Math.random()*255,Math.random()*255,Math.random()*255, 1, false),
             angle,
-            Math.cos(angle) * Math.min(mx, my),
-            Math.sin(angle) * Math.min(mx, my),
+            Math.cos(angle) * (Math.min(mx, my)+lengthWave),
+            Math.sin(angle) * (Math.min(mx, my)+lengthWave),
             0);
         waves.push(wave);
         
@@ -501,6 +501,7 @@ function logicWaves() {
         wave.log();
         if (wave.distCenter() > mx * 2){
 			let ind = waves.findIndex((x) => x == wave);
+			waves[ind].removeMe();
 			let a = [],b=[];
 			for (let i = 0;i<ind;i++){
 				a.push(waves[i]);
