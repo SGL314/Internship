@@ -300,13 +300,14 @@ class Wave {
 			// this.img.dispose();
 			scene.remove(this.img);
 			this.geo.dispose();
-			this.mat = new THREE.MeshStandardMaterial({
+			
+        } else {
+            this.path = new CustomSinCurve(10, 5);
+            this.mat = new THREE.MeshStandardMaterial({
                 roughness: 1.3,
                 metalness: 0.25,
                 color: this.color
             });
-        } else {
-            this.path = new CustomSinCurve(10, 5);
         }
 		this.geo = new THREE.TubeGeometry(this.path, 100, this.raioInterior, 32, false);
 		this.img = new THREE.Mesh(this.geo, this.mat);
