@@ -308,11 +308,7 @@ class Wave {
 			
         } else {
             this.path = new CustomSinCurve(10, 5);
-<<<<<<< HEAD
-            this.mat = new THREE.MeshStandardMaterial({
-=======
 			this.mat = new THREE.MeshStandardMaterial({
->>>>>>> 15346b255975d08f7ebf4846efd904b5636f2844
                 roughness: 1.3,
                 metalness: 0.25,
                 color: this.color
