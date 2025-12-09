@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #ffffff;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      padding: 40px 20px 20px;
+      font-size: 2.2em;
+      color: #1f2a36;
+    }
+
+    .timeline {
+      position: relative;
+      max-width: 900px;
+      margin: auto;
+      padding: 20px 0;
+    }
+
+    .timeline::after {
+      content: '';
+      position: absolute;
+      width: 6px;
+      background-color: #005a8d;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      margin-left: -3px;
+    }
+
+    .timeline-item {
+      padding: 20px 30px;
+      position: relative;
+      width: 50%;
+      background-color: inherit;
+    }
+
+    .timeline-item::after {
+      content: ' ';
+      position: absolute;
+      width: 25px;
+      height: 25px;
+      right: -13px;
+      background-color: white;
+      border: 4px solid #005a8d;
+      top: 15px;
+      border-radius: 50%;
+      z-index: 1;
+    }
+
+    .left {
+      left: 0;
+    }
+
+    .right {
+      left: 50%;
+    }
+
+    .right::after {
+      left: -13px;
+    }
+
+    .content {
+      padding: 20px;
+      background-color: white;
+      position: relative;
+      border-radius: 8px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    .year {
+      font-weight: bold;
+      color: #005a8d;
+      margin-bottom: 10px;
+      font-size: 24px;
+    }
+
+    .content p {
+      font-size: 18px;
+      margin: 0 0 10px;
+      line-height: 1.6;
+    }
+
+    @media screen and (max-width: 768px) {
+      .timeline::after {
+        left: 31px;
+      }
+
+      .timeline-item {
+        width: 100%;
+        padding-left: 70px;
+        padding-right: 25px;
+      }
+
+      .timeline-item::after {
+        left: 18px;
+      }
+
+      .right {
+        left: 0%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="timeline">
+    <div class="timeline-item left">
+      <div class="content">
+        <div class="year">2005</div>
+        <p>O Laboratório de Termometria (LabTerm) é estabelecido na Escola de Engenharia da UFMG, sob coordenação do professor Roberto Márcio de Andrade.</p>
+        <p>Nesse mesmo ano, foi defendida a primeira tese vinculada ao laboratório, em colaboração com a área de Belas Artes: “Desenvolvimento de uma metodologia para aplicação de ensaios térmicos não destrutivos na avaliação da integridade de obras de arte.”</p>
+      </div>
+    </div>
+    <div class="timeline-item right">
+      <div class="content">
+        <div class="year">2005 a 2016</div>
+        <p>O LabTerm integrou quatro projetos de P&D da ANEEL:</p>
+        <p>Tecnologia de Processamento de Imagens Termográficas para Aplicações em Ambiente de Subestações de Energia(2005 a 2009);</p>
+        <p>Protótipo para Monitoramento e Diagnóstico Automático de Falhas em Pára-Raios, incluindo os de carboneto de silício, utilizando técnicas de sistema de infravermelho (2007 a 2009);</p>
+        <p>Metodologia para Melhoria da Confiabilidade da Termografia em Sistemas de Distribuição (2010 a 2013);</p>
+        <p>Sistema automatizado para monitoramento e diagnóstico de falhas em ativos de subestações, sem desligamento, através de varredura, localização, aquisição, tratamento e processamento de imagens no espectro visível e no infravermelho (P&D ANEEL 426, 2012 a 2016 – valor financiado: R$ 1.775.945,60).</p>
+      </div>
+    </div>
+    <div class="timeline-item left">
+      <div class="content">
+        <div class="year">2012</div>
+        <p>O LabTerm adquire sua primeira termocâmera científica, o modelo Flir SC660.</p>
+      </div>
+    </div>
+    <div class="timeline-item right">
+      <div class="content">
+        <div class="year">2014</div>
+        <p>O professor Matheus Porto assume a coordenação do LabTerm, incluindo a liderança no projeto P&D ANEEL 426.</p>
+      </div>
+    </div>
+    <div class="timeline-item left">
+      <div class="content">
+        <div class="year">2017 a 2020</div>
+        <p>O professor Matheus Porto lidera o projeto em parceria com a Nexa Resources: “Estudo teórico e experimental da produção de zinco por eletrorrecuperação alimentada por painéis fotovoltaicos orgânicos” (SIEX/UFMG, projeto 402766 – R$ 1.008.977,98). O projeto possibilitou a aquisição de uma estação meteorológica completa, fortalecendo a atuação do LabTerm em análises de radiação térmica.</p>
+      </div>
+    </div>
+    <div class="timeline-item right">
+      <div class="content">
+        <div class="year">2019</div>
+        <p>O LabTerm participa do OutLab, programa formativo em empreendedorismo.</p>
+        <p>O professor Matheus Porto submete proposta à FAPEMIG para o CEMTEC, aprovado com R$ 1.573.088,00 (APQ-00660-19).</p>
+      </div>
+    </div>
+    <div class="timeline-item left">
+      <div class="content">
+        <div class="year">2021</div>
+        <p>O CEMTEC é credenciado como Laboratório Institucional de Pesquisa (LIPq) da UFMG.</p>
+        <p>Recebe a termocâmera Flir X6801sc – alta sensibilidade, alta velocidade e capacidade multiespectral.</p>
+      </div>
+    </div>
+    <div class="timeline-item right">
+      <div class="content">
+        <div class="year">2022</div>
+        <p>Submetido à FAPEMIG o projeto “CEMTEC: Foco em Termografia Ativa” (APQ-01263-22 – R$ 1.445.216,02).</p>
+        <p>Estruturação do CEMTEC como pioneiro nacional em ensaios térmicos com excitação por laser, ultrassom, fontes ópticas, corrente elétrica, solar check e TSA.</p>
+        <p>Recebe corpos negros da CI-Systems, viabilizando calibração de termovisores.</p>
+      </div>
+    </div>
+    <div class="timeline-item left">
+      <div class="content">
+        <div class="year">2023</div>
+        <p>Projeto “CEMTEC: Excelência em Termometria” submetido à FAPEMIG (RED-00201-23 – R$ 1.475.255,95). Integra rede com UFMG, UFLA, UNIFEI e UEMG.</p>
+        <p>Participa do projeto APQ-03728-23 (R$ 4,2 milhões), adquirindo termocâmera Flir T1020.</p>
+        <p>É recredenciado como LIPq com elogios da Câmara de Pesquisa da UFMG.</p>
+      </div>
+    </div>
+    <div class="timeline-item right">
+      <div class="content">
+        <div class="year">2024</div>
+        <p>Recebe sistema de termografia ativa da Automation Technology.</p>
+        <p>Participa de proposta no Edital FINEP Temáticos para aquisição de termocâmera hiperespectral (USD 790 mil).</p>
+        <p>Participa novamente do programa OutLab.</p>
+      </div>
+    </div>
+    <div class="timeline-item left">
+      <div class="content">
+        <div class="year">2025</div>
+        <p>Aprovado o projeto FAPEMIG “CEMTEC: Desenvolvimento de Competências em Termografia Hiperespectral” (R$ 2.019.325,34).</p>
+        <p>Adquire espectrorradiômetro óptico (0,88 μm a 15 μm) com resolução de 1 cm⁻¹ para análises hiperespectrais avançadas.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

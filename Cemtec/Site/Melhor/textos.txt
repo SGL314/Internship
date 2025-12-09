@@ -1,0 +1,4 @@
+class="has-text-align-center has-ast-global-color-4-color has-text-color has-link-color has-large-font-size" 
+
+
+<p style="font-size: 70px; color: #ffffff; font-family: Calibri; text-align: center;">Linha do tempo</p>
