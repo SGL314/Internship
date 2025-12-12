@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>CEMTEC - Termografia Científica</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+        /* Tira o excesso de espaço interno da ÚLTIMA seção do CEMTEC */
+        .cemtec-page section:last-of-type .cemtec-section-inner {
+            padding-bottom: 0.5rem;
+        }
+
+        /* Garante que o container do CEMTEC não adicione respiro extra embaixo */
+        .cemtec-page {
+            padding-bottom: 0;
+        }
+
+        /* Tudo dentro de .cemtec-page para não interferir no resto do site */
+        .cemtec-page {
+            font-family: inherit;
+            color: #000000;
+            margin: 0;
+            padding: 0;
+        }
+
+        .cemtec-page section {
+            box-sizing: border-box;
+        }
+
+        .cemtec-page img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Força texto preto em tudo, inclusive se o tema mexer */
+        .cemtec-page h1,
+        .cemtec-page h2,
+        .cemtec-page h3,
+        .cemtec-page h4,
+        .cemtec-page h5,
+        .cemtec-page h6,
+        .cemtec-page p,
+        .cemtec-page span,
+        .cemtec-page li,
+        .cemtec-page .cemtec-section-eyebrow,
+        .cemtec-page .cemtec-mvv-label {
+            color: #000000 !important;
+        }
+
+        /* Links seguindo cor preta */
+        .cemtec-page a {
+            color: #000000 !important;
+            text-decoration: none;
+        }
+
+        /* Margens menores e largura mais solta */
+        .cemtec-section-inner {
+            width: 100%;
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 2.2rem 1.5rem;
+        }
+
+        .cemtec-section-header {
+            margin-bottom: 1.3rem;
+        }
+
+        .cemtec-section-eyebrow {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            opacity: 0.7;
+            margin-bottom: 0.25rem;
+        }
+
+        .cemtec-section-title {
+            margin: 0 0 0.4rem;
+            font-size: 1.6rem;
+            font-weight: 600;
+        }
+
+        /* ---------- HERO ---------- */
+
+        .cemtec-hero {
+            background-color: transparent;
+        }
+
+        .cemtec-hero-inner {
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.15fr);
+            gap: 2rem;
+            align-items: center;
+            min-height: 80vh;
+        }
+
+        .cemtec-hero-text h1 {
+            margin: 0 0 0.75rem;
+            font-size: clamp(2.2rem, 3.4vw, 2.8rem);
+            font-weight: 600;
+        }
+
+        .cemtec-hero-text p {
+            margin: 0 0 1.1rem;
+            font-size: 0.98rem;
+            opacity: 0.9;
+            max-width: 620px;
+        }
+
+        .cemtec-hero-meta {
+            font-size: 0.8rem;
+            opacity: 0.75;
+            margin-top: 0.6rem;
+        }
+
+        .cemtec-hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 0.4rem;
+        }
+
+        .cemtec-btn-primary,
+        .cemtec-btn-outline {
+            border-radius: 999px;
+            padding: 0.5rem 1.35rem;
+            font-size: 0.9rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            color: #000000 !important;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+        }
+
+        .cemtec-btn-primary:hover,
+        .cemtec-btn-outline:hover {
+            background: #f0f0f0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .cemtec-hero-image-wrap {
+            width: 100%;
+            height: 100%;
+            min-height: 340px;
+            display: flex;
+            align-items: stretch;
+            justify-content: stretch;
+        }
+
+        .cemtec-hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ---------- GRID 2 COLUNAS BÁSICO ---------- */
+
+        .cemtec-grid-2 {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
+        /* ---------- “FOTOS JOGADAS” – QUEM SOMOS (4 fotos com foco clicável) ---------- */
+
+        .cemtec-photo-selector {
+            position: relative;
+            width: 100%;
+        }
+
+        .cemtec-photo-input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .cemtec-photo-stack {
+            position: relative;
+            width: 100%;
+            padding-top: 95%;
+        }
+
+        .cemtec-photo-slot {
+            position: absolute;
+            width: 65%;
+            height: 65%;
+            box-shadow: 0 12px 22px rgba(0, 0, 0, 0.22);
+            border-radius: 8px;
+            background: #ffffff;
+            border: 4px solid #ffffff;
+            overflow: hidden;
+            display: block;
+            cursor: pointer;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+        }
+
+        .cemtec-photo-slot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Posições base (como cartas jogadas) */
+        .cemtec-photo-1 {
+            top: 2%;
+            left: 4%;
+            transform: rotate(-7deg);
+            z-index: 2;
+            opacity: 0.9;
+        }
+
+        .cemtec-photo-2 {
+            top: 18%;
+            right: 2%;
+            transform: rotate(5deg);
+            z-index: 2;
+            opacity: 0.9;
+        }
+
+        .cemtec-photo-3 {
+            bottom: 4%;
+            left: 10%;
+            transform: rotate(3deg);
+            z-index: 2;
+            opacity: 0.9;
+        }
+
+        .cemtec-photo-4 {
+            bottom: 12%;
+            right: 8%;
+            transform: rotate(-4deg);
+            z-index: 2;
+            opacity: 0.9;
+        }
+
+        /* Estado em foco (quando o radio está checado) */
+        #cemtec-photo-1:checked~.cemtec-photo-stack .cemtec-photo-1,
+        #cemtec-photo-2:checked~.cemtec-photo-stack .cemtec-photo-2,
+        #cemtec-photo-3:checked~.cemtec-photo-stack .cemtec-photo-3,
+        #cemtec-photo-4:checked~.cemtec-photo-stack .cemtec-photo-4 {
+            z-index: 5;
+            transform: translateY(-4px) scale(1.03) rotate(0deg);
+            opacity: 1;
+            box-shadow: 0 16px 28px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ---------- MISSÃO / VISÃO / VALORES – caixinhas ---------- */
+
+        .cemtec-mvv-section {
+            background-color: #ffffff;
+        }
+
+        .cemtec-mvv-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1.5rem;
+        }
+
+        .cemtec-mvv-card {
+            font-size: 0.95rem;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            background: #fafafa;
+            padding: 1.2rem 1.3rem 1.3rem;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+        }
+
+        .cemtec-mvv-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            opacity: 0.8;
+            margin-bottom: 0.45rem;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+            padding-bottom: 0.25rem;
+        }
+
+        .cemtec-mvv-card p {
+            margin: 0.4rem 0 0;
+        }
+
+        /* ---------- GALERIA / SEÇÃO VÍDEO ---------- */
+
+        .cemtec-gallery-section {
+            background-color: #f5f5f5;
+        }
+
+        /* vídeo responsivo à direita do texto */
+        .cemtec-video-wrap {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%;
+            /* 16:9 */
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+            background: #000;
+        }
+
+        .cemtec-video-wrap iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* ---------- CTA FINAL ---------- */
+
+        .cemtec-cta-section {
+            background-color: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .cemtec-cta-inner {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .cemtec-cta-title {
+            margin: 0 0 0.7rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .cemtec-cta-text {
+            margin: 0 0 1rem;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .cemtec-cta-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 0.4rem;
+        }
+
+        .cemtec-cta-image-wrap {
+            width: 100%;
+            height: 100%;
+            min-height: 220px;
+            display: flex;
+            align-items: stretch;
+            justify-content: stretch;
+        }
+
+        .cemtec-cta-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ---------- ANIMAÇÃO LEVE ---------- */
+
+        .cemtec-fade {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: cemtecFadeUp 0.6s ease forwards;
+        }
+
+        .cemtec-delay-1 {
+            animation-delay: 0.1s;
+        }
+
+        .cemtec-delay-2 {
+            animation-delay: 0.2s;
+        }
+
+        .cemtec-delay-3 {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes cemtecFadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ---------- RESPONSIVO ---------- */
+
+        @media (max-width: 900px) {
+
+            .cemtec-hero-inner,
+            .cemtec-grid-2,
+            .cemtec-mvv-grid,
+            .cemtec-cta-inner {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .cemtec-hero-inner {
+                min-height: auto;
+            }
+
+            .cemtec-photo-stack {
+                padding-top: 120%;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .cemtec-section-inner {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .cemtec-hero-actions,
+            .cemtec-cta-actions {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cemtec-page">
+
+        <!-- HERO -->
+        <section class="cemtec-hero" id="topo">
+            <div class="cemtec-section-inner">
+                <div class="cemtec-hero-inner">
+                    <div class="cemtec-hero-text cemtec-fade cemtec-delay-1">
+                        <h1>CEMTEC – Termografia científica aplicada a materiais, processos e sistemas</h1>
+                        <p>
+                            O CEMTEC é um laboratório especializado em métodos de
+                            termometria e termografia, dedicado ao desenvolvimento,
+                            análise e validação de materiais e processos. Atuamos como
+                            um centro de referência que integra pesquisa, inovação e
+                            suporte técnico-científico.
+                        </p>
+
+                        <div class="cemtec-hero-actions">
+                            <a href="#quem-somos" class="cemtec-btn-primary">Conheça o CEMTEC</a>
+                            <a href="#porque" class="cemtec-btn-outline">Por que escolher o CEMTEC</a>
+                        </div>
+
+                        <div class="cemtec-hero-meta">
+                            Campus Pampulha · Universidade Federal de Minas Gerais (UFMG) · Laboratório multiusuário de
+                            termografia científica.
+                        </div>
+                    </div>
+
+                    <div class="cemtec-hero-image-wrap cemtec-fade cemtec-delay-2">
+                        <img src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/04/cropped-20241010-OUTLAB2024-LAB-CEMTEC_45-scaled-1.jpg"
+                            alt="Aplicação de termografia científica no CEMTEC" class="cemtec-hero-image" />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- QUEM SOMOS -->
+        <section id="quem-somos">
+            <div class="cemtec-section-inner">
+                <div class="cemtec-section-header cemtec-fade cemtec-delay-1">
+                    <div class="cemtec-section-eyebrow">Institucional</div>
+                    <h2 class="cemtec-section-title">Quem somos</h2>
+                </div>
+
+                <div class="cemtec-grid-2 cemtec-fade cemtec-delay-2">
+                    <div>
+                        <p style="text-align: justify;">
+                            <strong>Quem somos:</strong>
+                            O CEMTEC é um laboratório da UFMG dedicado à termografia
+                            científica. Atendemos a comunidade acadêmica e o setor
+                            produtivo, realizando caracterização e diagnóstico de
+                            materiais, processos e sistemas por meio de análises
+                            térmicas. Trabalhamos com rigor metrológico e metodologias
+                            consolidadas para garantir resultados tecnicamente
+                            confiáveis.
+                        </p>
+                    </div>
+
+                    <div>
+                        <div class="cemtec-photo-selector">
+                            <!-- Radios para controlar qual foto está em foco -->
+                            <input type="radio" name="cemtec-photo" id="cemtec-photo-1" class="cemtec-photo-input"
+                                checked />
+                            <input type="radio" name="cemtec-photo" id="cemtec-photo-2" class="cemtec-photo-input" />
+                            <input type="radio" name="cemtec-photo" id="cemtec-photo-3" class="cemtec-photo-input" />
+                            <input type="radio" name="cemtec-photo" id="cemtec-photo-4" class="cemtec-photo-input" />
+
+                            <div class="cemtec-photo-stack">
+                                <label for="cemtec-photo-1" class="cemtec-photo-slot cemtec-photo-1">
+                                    <img src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/10/2025-09-19_CEMTEC_9-scaled.jpg"
+                                        alt="Equipe CEMTEC 1" />
+                                </label>
+
+                                <label for="cemtec-photo-2" class="cemtec-photo-slot cemtec-photo-2">
+                                    <img src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/10/2025-09-19_CEMTEC_17-scaled.jpg"
+                                        alt="Equipe CEMTEC 2" />
+                                </label>
+
+                                <label for="cemtec-photo-3" class="cemtec-photo-slot cemtec-photo-3">
+                                    <img src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/07/20241010-OUTLAB2024-LAB-CEMTEC_15-scaled.jpg"
+                                        alt="Equipe CEMTEC 3" />
+                                </label>
+
+                                <label for="cemtec-photo-4" class="cemtec-photo-slot cemtec-photo-4">
+                                    <img src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/06/20241030-OUTLAB-DIA10_187-scaled.jpg"
+                                        alt="Equipe CEMTEC 4" />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MISSÃO / VISÃO / VALORES -->
+        <section class="cemtec-mvv-section" id="mvv">
+            <div class="cemtec-section-inner">
+                <div class="cemtec-section-header cemtec-fade cemtec-delay-1">
+                    <div class="cemtec-section-eyebrow">Diretrizes</div>
+                    <h2 class="cemtec-section-title">Missão, Visão e Valores</h2>
+                </div>
+
+                <div class="cemtec-mvv-grid">
+                    <div class="cemtec-mvv-card cemtec-fade cemtec-delay-1">
+                        <div class="cemtec-mvv-label">Missão</div>
+                        <p>
+                            <strong>Missão:</strong>
+                            Oferecer infraestrutura de ponta, metodologias laboratoriais avançadas e suporte
+                            técnico-científico para a caracterização e o diagnóstico de materiais, processos e sistemas
+                            por meio de análises térmicas.
+                        </p>
+                    </div>
+
+                    <div class="cemtec-mvv-card cemtec-fade cemtec-delay-2">
+                        <div class="cemtec-mvv-label">Visão</div>
+                        <p>
+                            <strong>Visão:</strong>
+                            Expandir as fronteiras da aplicação da termografia científica no Brasil, promovendo o uso da
+                            técnica ao patamar de referência em ensaios térmicos de imagem.
+                        </p>
+                    </div>
+
+                    <div class="cemtec-mvv-card cemtec-fade cemtec-delay-3">
+                        <div class="cemtec-mvv-label">Valores</div>
+                        <p>
+                            <strong>Valores:</strong>
+                            Excelência, Comprometimento, Rigor, Transparência e Responsabilidade.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- POR QUE ESCOLHER O CEMTEC + VÍDEO -->
+        <section class="cemtec-gallery-section" id="porque">
+            <div class="cemtec-section-inner">
+                <div class="cemtec-section-header cemtec-fade cemtec-delay-1">
+                    <div class="cemtec-section-eyebrow">Infraestrutura & Diferenciais</div>
+                    <h2 class="cemtec-section-title">Por que escolher o CEMTEC ?</h2>
+                </div>
+
+                <div class="cemtec-grid-2 cemtec-fade cemtec-delay-2">
+                    <div>
+                        <p>
+                            <!-- <strong>Por que escolher o CEMTEC: </strong> -->
+                        <p style="text-align: justify;">
+                            O CEMTEC dispõe de termocâmeras científicas e sistemas para
+                            ensaios não destrutivos por termografia ativa, incluindo as
+                            modalidades pulsada, transiente, lock-in, vibracional e
+                            térmica. Trabalhamos com padrões metrológicos independentes
+                            para garantir resultados confiáveis e imparciais. A
+                            infraestrutura é aberta à comunidade acadêmica e ao setor
+                            produtivo, oferecendo acesso compartilhado a equipamentos e
+                            suporte técnico para projetos de pesquisa e desenvolvimento.
+                        </p>
+                        </p>
+                    </div>
+
+                    <div>
+                        <div class="cemtec-video-wrap">
+                            <iframe width="560" height="315"
+                                src="https://www.youtube.com/embed/N3cYvZOpvR8?si=E1gj1dGrmdiw85we"
+                                title="YouTube video player" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA FINAL -->
+        <section class="cemtec-cta-section" id="contato">
+            <div class="cemtec-section-inner">
+                <div class="cemtec-cta-inner">
+                    <div class="cemtec-fade cemtec-delay-1">
+                        <h2 class="cemtec-cta-title">No CEMTEC, o seu projeto encontra estrutura para ir além.</h2>
+
+                        <p class="cemtec-cta-text">
+                            Para agendar ensaios, esclarecer dúvidas técnicas ou discutir parcerias, acesse nossa página
+                            de contato ou conheça os equipamentos disponíveis no laboratório.
+                        </p>
+
+                        <p class="cemtec-cta-text">
+                            Em caso de dúvidas, entre em contato com o CEMTEC por meio das nossas redes sociais,
+                            telefone ou e-mail. Telefone: +55 (31) 3409-5241<br>
+                            E-mail: cemtec.ufmg@gmail.com. Será um prazer te atender.
+                        </p>
+
+                        <div class="cemtec-cta-actions">
+                            <a href="https://cemtec.demec.ufmg.br/contato/" class="cemtec-btn-primary">
+                                Agendar atendimento
+                            </a>
+                            <a href="https://cemtec.demec.ufmg.br/equipamentos/" class="cemtec-btn-outline">
+                                Conhecer equipamentos
+                            </a>
+                            <a href="#topo" class="cemtec-btn-outline">
+                                Voltar ao topo
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="cemtec-cta-image-wrap cemtec-fade cemtec-delay-2">
+                        <img src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/04/20241010-OUTLAB2024-LAB-CEMTEC_4-scaled.jpg"
+                            alt="Imagem de destaque da página inicial do CEMTEC" class="cemtec-cta-image" />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</body>
+
+</html>

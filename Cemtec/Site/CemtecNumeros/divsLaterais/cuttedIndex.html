@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script src="https://cdn.jsdelivr.net/npm/noisejs@2.1.0/index.min.js"></script>
+
+    <style>
+        * { box-sizing: border-box !important; }
+        body {
+            padding: 0 !important;
+            font-family: 'Segoe UI', sans-serif !important;
+            color: white !important;
+            background: #ffffff !important;
+            overflow-x: hidden !important;
+        }
+        .header { text-align:center !important; padding:60px 20px 60px !important; position:relative!important; z-index:-1!important; background-color:#ffffff!important; }
+        .header h1 { font-size:6.5rem!important; margin:0!important; color:#00e5ff!important; }
+        .header p { font-size:3.6rem!important; color:#999999!important; margin-top:20px!important; margin-bottom:20px!important; margin-left:auto!important; margin-right:auto!important; }
+        canvas#three { position:relative!important; display:block!important; width:100%!important; height:1200px!important; margin:40px 0!important; z-index:1!important; }
+        .ui { position:relative!important; z-index:100!important; padding-top:0px!important; }
+        .resto { margin-top:40px!important; }
+        .container { display:flex!important; flex-direction:column!important; gap:100px!important; padding:60px 200px!important; max-width:1100px!important; margin:0 auto!important; }
+        .box { position:relative!important; padding:50px 40px!important; font-size:2rem!important; opacity:0!important; transform:translateX(350px)!important; transition:all 2s ease-out!important; background:linear-gradient(145deg,#2c3e50,#1c262b)!important; color:#fff!important; border-radius:20px!important; text-align:center!important; box-shadow:0 20px 40px rgba(0,0,0,0.3)!important; border:1px solid rgba(255,255,255,0.08)!important; }
+        .box h2 { margin:0!important; font-size:3rem!important; color:#00e5ff!important; font-weight:700!important; }
+        .box p { margin-top:15px!important; font-size:1.1rem!important; color:#ddd!important; letter-spacing:0.5px!important; }
+        .box.from-left { transform:translateX(-350px)!important; }
+        .box.show { opacity:1!important; transform:translateX(0)!important; }
+        footer { text-align:center!important; color:#666!important; font-size:0.8rem!important; margin-top:80px!important; padding-bottom:40px!important; }
+        .cemtec-grid { display:flex!important; justify-content:center!important; flex-direction:column!important; width:941px!important; max-width:941px!important; gap:20px!important; }
+        .line-grid { display:flex!important; flex-direction:row!important; justify-content:center!important; gap:20px!important; }
+        .item-info { background:#263238!important; color:#fff!important; padding:15px!important; border-radius:12px!important; text-align:center!important; max-height:160px!important; width:257px!important; max-width:257px!important; }
+        .item-info h2 { margin:0px!important; font-size:1.8em!important; color:#ffffff!important; }
+        .item-info p { margin:5px 0 0!important; }
+        table { border-collapse:separate!important; border-spacing:0px!important; }
+        th { background-color:#ccc!important; border:1px solid #17252a!important; color:#000!important; min-width:120px!important; border-radius:3px!important; }
+        td { background-color:#f0f4f9!important; border:1px solid #263238!important; color:#000!important; text-align:center!important; }
+    </style>
+
+    <section class="container">
+        <div class="box"><h2>🏬 +20</h2><p>Empresas atendidas</p></div>
+        <div class="box"><h2>🤝 15</h2><p>Serviços oferecidos</p></div>
+        <div class="box"><h2>💵 +25 milhões</h2><p>Em projetos executados</p></div>
+        <div class="box"><h2>🧾 +50</h2><p>Projetos com o setor privado</p></div>
+        <div class="box"><h2>📜 +65</h2><p>Certificados emitidos</p></div>
+    </section>
+
+    <script>
+        const boxes = document.querySelectorAll('.box');
+        boxes.forEach((box, index) => {
+            if (index % 2 === 0) box.classList.add('from-left');
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('show');
+                    else entry.target.classList.remove('show');
+                });
+            }, { threshold: 0.3 });
+            observer.observe(box);
+        });
+    </script>
+
+    <div class="resto">
+        <h2 style="text-align:center; color:#333; font-weight:700;">🔬 Resultados Acadêmicos</h2>
+        <p style="text-align:center; color:#777;">*Os dados apresentados compreendem o período entre 2019 e 2024</p>
+
+        <div style="display:flex; justify-content:center;">
+            <div class="cemtec-grid">
+                <div class="line-grid">
+                    <div class="item-info"><h2>📄 +30</h2><p>Artigos Científicos</p></div>
+                    <div class="item-info"><h2>🌐 +35</h2><p>Participações em congressos</p></div>
+                    <div class="item-info"><h2>📘 19</h2><p>Dissertações concluídas</p></div>
+                </div>
+                <div class="line-grid">
+                    <div class="item-info"><h2>🧪 9</h2><p>Exames de Qualificação</p></div>
+                    <div class="item-info"><h2>📨 +50</h2><p>Manifestações do Setor Produtivo</p></div>
+                    <div class="item-info"><h2>💡 8</h2><p>Patentes</p></div>
+                </div>
+                <div class="line-grid">
+                    <div class="item-info"><h2>🎓 23</h2><p>Trabalhos de Conclusão de Curso</p></div>
+                    <div class="item-info"><h2>📝 10</h2><p>Relatórios de Ensaio</p></div>
+                    <div class="item-info"><h2>🧠 8</h2><p>Teses</p></div>
+                </div>
+                <div class="line-grid">
+                    <div class="item-info"><h2>🏛️ +120</h2><p>Atividades Internas</p></div>
+                    <div class="item-info"><h2>🌍 +150</h2><p>Atividades Externas</p></div>
+                </div>
+            </div>
+        </div>
+
+        <hr style="margin-top:50px; margin-bottom:40px; border:none; border-top:2px solid #ccc;">
+        <footer>*Dados referentes ao período de 2019 a 2024</footer>
+    </div>
+
+    <div id="tabelaMestra">
+        <table>
+            <thead>
+                <tr>
+                    <th id="ano">Ano</th>
+                    <th id="tit">Título</th>
+                    <th id="rev">Revista</th>
+                    <th id="aut">Autores</th>
+                    <th id="are">Área</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+</body>
+</html>
