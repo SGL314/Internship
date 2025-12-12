@@ -1,0 +1,223 @@
+<link rel="stylesheet" href="cssAdicional.css">
+<div class="fullwidth-override hero-cemtec">
+	<div class="conteudo-cemtec">
+		<h1>CEMTEC – Seja bem-vindo ao nosso laboratório!</h1>
+		<p style="color: white;">Aqui exploramos as fronteiras da termografia e da termometria, impulsionando a
+			inovação com diversas áreas científicas e industriais.</p>
+		<a class="botao" href="#cemtec">Conheça o CEMTEC</a>
+	</div>
+</div>
+<!-- //--2-- -->
+<!-- <div class="fullwidth-override">
+        <section class="grade-gifs-explicativos">
+                <div class="bloco"><img src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/07/video1.gif"
+                                alt="Respiração térmica" /></div>
+                <div class="bloco"><img src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/07/video2.gif"
+                                alt="Soldagem térmica" /></div>
+                <div class="bloco"><img src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/07/video3.gif"
+                                alt="Fogo térmico" /></div>
+        </section>
+</div> -->
+<!-- //--3-- -->
+<p>
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			const observer = new IntersectionObserver((entries) => {
+				entries.forEach(entry => {
+					if (entry.isIntersecting) {
+						// entry.target.classList.add('visivel');
+					}
+				});
+			}, {
+				threshold: 0.3
+			});
+
+			document.querySelectorAll('.bloco').forEach(bloco => {
+				observer.observe(bloco);
+			});
+		});
+	</script>
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			const slides = document.querySelectorAll(".slider-equipe .slide");
+			let index = 0;
+
+			function mostrarProximoSlide() {
+				slides[index].classList.remove("ativo");
+				index = (index + 1) % slides.length;
+				slides[index].classList.add("ativo");
+			}
+
+			setInterval(mostrarProximoSlide, 5000); // troca a cada 5 segundos
+		});
+	</script>
+</p>
+<!-- //--4-- -->
+<style>
+	.prev,
+	.next {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		background: rgba(0, 0, 0, 0.5);
+		color: white;
+		border: none;
+		padding: 8px 12px;
+		cursor: pointer;
+		font-size: 2rem;
+		border-radius: 10px;
+	}
+
+	.prev {
+		left: 5px;
+	}
+
+	.next {
+		right: 5px;
+	}
+</style>
+<!-- //--5-- -->
+<!-- Introdução com animação de digitação -->
+<div id="intro-cemtec"
+	style="background-color: black; color: white; height: 500px; display: flex; justify-content: center; align-items: center; flex-direction: column; text-align: center;">
+	<h1 id="typing-text" style="font-size: 2.5rem; font-family: 'Roboto Mono', monospace; color: white;"> </h1>
+</div>
+<!-- Galeria (será exibida após a digitação) -->
+<div id="galeriaCemtec" class="fullwidth-override" style="display: none;">
+	<h2 style="text-align: center; margin-bottom: 20px; color: #17252a; font-size: 40px;">Galeria do CEMTEC</h2>
+	<section class="grade-galeria"> <!--Aqui estão os blocos de imagem e vídeo-->
+		<!-- <div class="bloco"><img src="http://cemtec.demec.ufmg.br/wp-content/uploads/20 25/07/video1.gif"
+                                alt="Respiração térmica" /></div> -->
+		<div class="bloco" id="1"><img src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/07/video2.gif"
+				alt="Soldagem térmica" /></div>
+		<div class="bloco" id="2"><img src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/07/video3.gif"
+				alt="Fogo térmico" /></div>
+		<div class="bloco" id="3"><video
+				src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/07/REC1-sem-filtro.mov" autoplay="autoplay"
+				loop="loop" muted="" width="300" height="150"></video></div>
+		<div class="bloco" id="4"><img src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/07/boiling-water.gif"
+				alt="Água fervendo" /></div>
+		<div class="bloco" id="5"><img src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/07/natanael_teste.gif"
+				alt="Natanael teste" /></div>
+		<div class="bloco" id="6"><img src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/07/3_3-usinagem.gif"
+				alt="Usinagem térmica" /></div>
+		<div class="bloco" id="7"><img src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/07/disco2.gif"
+				alt="Disco térmico" /></div>
+		<div class="bloco" id="8"><img src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/07/FLIR0190.gif"
+				alt="FLIR imagem térmica 1" /></div>
+		<div class="bloco" id="9"><img src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/07/teste_flexao_3.gif"
+				alt="Teste de flexão 3" /></div>
+		<div class="bloco" id="10"><img
+				src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/07/teste_flexao_4_gray.gif"
+				alt="Teste de flexão 4" /></div>
+		<div class="bloco" id="11"><img src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/07/BREATHING2_5_.gif"
+				alt="Respiração térmica 2" /></div>
+
+	</section>
+	<button class="prev">❮</button>
+	<button class="next">❯</button>
+
+</div>
+<script>
+	function iniciarCarrossel() {
+
+		const track = document.querySelector(".grade-galeria");
+		let slides = [...document.querySelectorAll(".bloco")];
+		const qt = 3;
+
+		const cardWidth = document.querySelector(".bloco").offsetWidth;
+		console.log("Largura real:", cardWidth);
+
+		let index = qt;
+
+		// CLONES
+		const firstClones = slides.slice(0, qt).map(s => s.cloneNode(true));
+		const lastClones = slides.slice(-qt).map(s => s.cloneNode(true));
+
+		lastClones.forEach(c => track.insertBefore(c, track.firstChild));
+		firstClones.forEach(c => track.appendChild(c));
+
+		slides = [...document.querySelectorAll(".bloco")];
+
+		track.style.transform = `translateX(${-cardWidth * index}px)`;
+
+
+		// FUNÇÕES
+		function goTo(i) {
+			track.style.transition = "transform 0.4s ease";
+			index = i;
+			track.style.transform = `translateX(${-cardWidth * index}px)`;
+		}
+
+		function next() {
+			goTo(index + 1);
+
+			if (index === slides.length - qt) {
+				setTimeout(() => {
+					track.style.transition = "none";
+					index = qt;
+					track.style.transform = `translateX(${-cardWidth * index}px)`;
+				}, 400);
+			}
+		}
+
+		function prev() {
+			goTo(index - 1);
+
+			if (index === 0) {
+				setTimeout(() => {
+					track.style.transition = "none";
+					index = slides.length - qt * 2;
+					track.style.transform = `translateX(${-cardWidth * index}px)`;
+				}, 400);
+			}
+		}
+
+		document.querySelector(".next").onclick = next;
+		document.querySelector(".prev").onclick = prev;
+	}
+</script>
+
+<!-- //--6-- -->
+<p>
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			const texto = "Excelência em termografia e termometria";
+			const elemento = document.getElementById('typing-text');
+			let i = 0;
+
+			function digitar() {
+				if (i < texto.length) {
+					elemento.innerHTML += texto.charAt(i);
+					i++;
+					setTimeout(digitar, 70); // mudar tempo aqui : 70
+				} else {
+					// Após terminar a digitação, esconde o texto e mostra a galeria
+					setTimeout(() => {
+						document.getElementById('intro-cemtec').style.display = 'none';
+						document.getElementById('galeriaCemtec').style.display = 'block';
+
+						iniciarCarrossel(); 
+					}, 1500); // mudar tempo aqui : 1500
+
+				}
+			}
+
+			digitar();
+		});
+	</script>
+</p>
+<!-- //--7-- -->
+<div class="fullwidth-override equipe-foto">
+	<div class="conteudo-equipe-foto">
+		<h2>Eventos</h2>
+		<div class="slider-equipe">
+			<img class="slide ativo"
+				src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/06/20241030-OUTLAB-DIA10_187-scaled.jpg"
+				alt="Equipe CEMTEC - Foto 1" />
+			<img class="slide"
+				src="http://cemtec.demec.ufmg.br/wp-content/uploads/2025/07/20241010-OUTLAB2024-LAB-CEMTEC_15-scaled.jpg"
+				alt="Equipe CEMTEC - Foto 2" />
+		</div>
+	</div>
+</div>

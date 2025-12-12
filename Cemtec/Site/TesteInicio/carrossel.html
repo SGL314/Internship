@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        .carousel {
+            width: 1800px;
+            height: 300px;
+            overflow: hidden;
+            position: relative;
+            margin: auto;
+            border-radius: 12px;
+        }
+
+        .slides {
+            display: flex;
+            transition: transform 0.4s ease;
+        }
+
+        .slide {
+            min-width: 33.3333%;
+            max-width: 33.3333%;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .prev,
+        .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 2rem;
+            border-radius: 10px;
+        }
+
+        .prev {
+            left: 5px;
+        }
+
+        .next {
+            right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="carousel">
+        <div class="slides">
+
+            <div class="slide"><img src="https://picsum.photos/600/300?1"></div>
+            <div class="slide"><img src="https://picsum.photos/600/300?2"></div>
+            <div class="slide"><img src="https://picsum.photos/600/300?3"></div>
+            <div class="slide"><img src="https://picsum.photos/600/300?4"></div>
+            <div class="slide"><img src="https://picsum.photos/600/300?5"></div>
+            <div class="slide"><img src="https://picsum.photos/600/300?6"></div>
+
+        </div>
+
+        <button class="prev">❮</button>
+        <button class="next">❯</button>
+    </div>
+
+    <script>
+        const track = document.querySelector(".slides");
+        let slides = [...document.querySelectorAll(".slide")];
+        const qt = 3;
+        const cardWidth = document.querySelector(".slide").offsetWidth;
+
+        let index = qt;
+
+        // --------- 1. CRIAÇÃO DOS CLONES ----------
+        const firstClones = slides.slice(0, qt).map(s => s.cloneNode(true));
+        const lastClones = slides.slice(-qt).map(s => s.cloneNode(true));
+
+        // adiciona clones no início e fim
+        lastClones.forEach(c => track.insertBefore(c, track.firstChild));
+        firstClones.forEach(c => track.appendChild(c));
+
+        // atualiza lista final
+        slides = [...document.querySelectorAll(".slide")];
+
+        // posiciona no primeiro slide real
+        track.style.transform = `translateX(${-cardWidth * index}px)`;
+
+        // --------- 2. FUNÇÕES ---------
+
+        function goTo(i) {
+            track.style.transition = "transform 0.4s ease";
+            index = i;
+            track.style.transform = `translateX(${-cardWidth * index}px)`;
+        }
+
+        function next() {
+            goTo(index + 1);
+
+            // se chegou nos clones finais → teleporta sem animação
+            if (index === slides.length - qt) {
+                setTimeout(() => {
+                    track.style.transition = "none";
+                    index = qt;
+                    track.style.transform = `translateX(${-cardWidth * index}px)`;
+                }, 400);
+            }
+        }
+
+        function prev() {
+            goTo(index - 1);
+
+            // se chegou nos clones iniciais → teleporta
+            if (index === 0) {
+                setTimeout(() => {
+                    track.style.transition = "none";
+                    index = slides.length - qt * 2;
+                    track.style.transform = `translateX(${-cardWidth * index}px)`;
+                }, 400);
+            }
+        }
+
+        // --------- 3. EVENTOS ---------
+        document.querySelector(".next").onclick = next;
+        document.querySelector(".prev").onclick = prev;
+    </script>
+
+</body>
+
+</html>
