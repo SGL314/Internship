@@ -613,7 +613,11 @@ Quid iam depofitas proprio mortalis in usus
   {
     id: "99",
     title: "DOMÍNIO",
-    content: [`Homem com nobre, e rico vestimento, terá cingida a cabeça por uma serpente, e com a esguerda mão tenha um Cetro, em cima do qual se seja um olho, & o braço, & o dedo indicador da direita mão distendido, como costumam fazer aqueles que têm domínio, & comando.`],
+    content: [`Homem com nobre, e rico vestimento, terá 
+		cingida a cabeça por uma serpente, e com a esguerda 
+		mão tenha um Cetro, em cima do qual se seja um olho, 
+		& o braço, & o dedo indicador da direita mão distendido, 
+		como costumam fazer aqueles que têm domínio, & comando.`],
     images: ['dominio.png']
   },
   {

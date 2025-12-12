@@ -185,7 +185,6 @@ function pri(item) {
 }
 
 // SPHERE
-
 // mesh final
 var mx = 20, my = 23;
 
