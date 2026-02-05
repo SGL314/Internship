@@ -7,9 +7,8 @@ add_action('wp_footer', function () {
         setTimeout(drawEquipamentosChart, 500);
     });
 
-    var tipoGrafico = 'PieChart';
-
-    // --- TODO O SEU CÓDIGO EXATAMENTE COMO VOCÊ ENVIOU ---
+    // >>> AQUI VOCÊ MUDA O TIPO DO GRÁFICO <<<
+    var tipoGrafico = 'PieChart';  // ex: PieChart, ColumnChart, BarChart, LineChart
 
     function drawFinalidadeChart() {
         const query = new google.visualization.Query(
@@ -53,7 +52,11 @@ add_action('wp_footer', function () {
 
             const data = google.visualization.arrayToDataTable(dataArray);
 
-            let chart = new google.visualization.PieChart(document.getElementById('graficoFinalidadeUso'));
+            // >>> AQUI A TROCA DE GRÁFICO FUNCIONA <<<
+            let chart = new google.visualization[tipoGrafico](
+                document.getElementById('graficoFinalidadeUso')
+            );
+
             chart.draw(data, { pieHole: 0.4 });
         });
 
@@ -73,7 +76,7 @@ add_action('wp_footer', function () {
 
             const apelidos = {
                 "SR-800N": "Corpo Negro SR-800N",
-                // "Corpo Negro": "-rem-Corpo Negro",
+                // "Corpo Negro": "Corpo Negro",
                 "SR-800N-8HT": "Corpo Negro SR-800N-8HT",
                 "SR-2-33": "Corpo Negro SR-2-33",
                 "TPW": "Célula TPW",
@@ -87,8 +90,8 @@ add_action('wp_footer', function () {
                 "Flash": "Termografia Ativa Flash",
                 "Vibra": "Termografia Ativa Vibração",
                 "Solar Check": "Termografia Ativa: Solarcheck",
-                "3450": "PT100", // Não tem regsitro
-                "3451": "PT100", // junto com o de cima 
+                "3450": "PT100",
+                // "3451": "PT100",  taka em cima
                 "SPRT": "SPRT",
                 "440": "testo 440",
                 "1586A": "Sistema de aquisição Fluke 1586A",
@@ -97,11 +100,12 @@ add_action('wp_footer', function () {
                 "SC660": "Termocâmera sc660",
                 "X6801sc": "Termocâmera x6801sc",
                 "622": "testo 622",
-                "971": "-rem-testo 971", //n existe
+                // "971": "testo 971", n existe
                 "Traçador": "Traçador de curvas",
                 "Pirômetro": "Pirômetro",
                 "Megômetro": "Megômetro",
                 // outros
+
             };
 
             for (let i = 0; i < dataTable.getNumberOfRows(); i++) {
@@ -132,9 +136,11 @@ add_action('wp_footer', function () {
 
             const data = google.visualization.arrayToDataTable(dados);
 
+            // >>> AQUI A TROCA DE GRÁFICO FUNCIONA TAMBÉM <<<
             let chart = new google.visualization[tipoGrafico](
                 document.getElementById('chartEquipamentos')
             );
+
             chart.draw(data, { title: 'Usos por Equipamento' });
 
             google.charts.setOnLoadCallback(drawFinalidadeChart);
@@ -144,21 +150,21 @@ add_action('wp_footer', function () {
     <?php
 });
 
-// URL do seu Web App publicado no Google Apps Script
-$googleScriptUrl = 'https://docs.google.com/spreadsheets/d/1GjFHo8gTf3WbQhANTKDpcrL3nVUGJCh6Sd7dhoUkn5I/gviz/tq?sheet=Sheet1&headers=1';
+// // URL do seu Web App publicado no Google Apps Script
+// $googleScriptUrl = 'https://docs.google.com/spreadsheets/d/1GjFHo8gTf3WbQhANTKDpcrL3nVUGJCh6Sd7dhoUkn5I/gviz/tq?sheet=Sheet1&headers=1';
 
-$data = [
-    "nome" => $_POST['nome'] ?? "",
-    "email" => $_POST['email'] ?? "",
-    "mensagem" => $_POST['mensagem'] ?? ""
-];
+// $data = [
+//     "nome" => $_POST['nome'] ?? "",
+//     "email" => $_POST['email'] ?? "",
+//     "mensagem" => $_POST['mensagem'] ?? ""
+// ];
 
-$ch = curl_init($googleScriptUrl);
-curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+// $ch = curl_init($googleScriptUrl);
+// curl_setopt($ch, CURLOPT_POST, 1);
+// curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+// curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-$response = curl_exec($ch);
-curl_close($ch);
+// $response = curl_exec($ch);
+// curl_close($ch);
 
-echo $response;
+// echo $response;

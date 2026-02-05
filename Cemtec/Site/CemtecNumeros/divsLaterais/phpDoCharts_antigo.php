@@ -7,9 +7,8 @@ add_action('wp_footer', function () {
         setTimeout(drawEquipamentosChart, 500);
     });
 
-    var tipoGrafico = 'PieChart';
-
-    // --- TODO O SEU CÓDIGO EXATAMENTE COMO VOCÊ ENVIOU ---
+    // >>> AQUI VOCÊ MUDA O TIPO DO GRÁFICO <<<
+    var tipoGrafico = 'PieChart';  // ex: PieChart, ColumnChart, BarChart, LineChart
 
     function drawFinalidadeChart() {
         const query = new google.visualization.Query(
@@ -53,7 +52,11 @@ add_action('wp_footer', function () {
 
             const data = google.visualization.arrayToDataTable(dataArray);
 
-            let chart = new google.visualization.PieChart(document.getElementById('graficoFinalidadeUso'));
+            // >>> AQUI A TROCA DE GRÁFICO FUNCIONA <<<
+            let chart = new google.visualization[tipoGrafico](
+                document.getElementById('graficoFinalidadeUso')
+            );
+
             chart.draw(data, { pieHole: 0.4 });
         });
 
@@ -72,36 +75,35 @@ add_action('wp_footer', function () {
             const contagem = {};
 
             const apelidos = {
-                "SR-800N": "Corpo Negro SR-800N",
-                // "Corpo Negro": "-rem-Corpo Negro",
+                "SR-800N": "SR-800Naadaueyt09w350v",
+                "Corpo Negro": "Corpo Negro",
                 "SR-800N-8HT": "Corpo Negro SR-800N-8HT",
-                "SR-2-33": "Corpo Negro SR-2-33",
-                "TPW": "Célula TPW",
+                "SR-2-33": "Corpo negro SR-2-33",
+                "TPW": "célula TPW",
                 "Solarimétrica": "Estação Solarimétrica",
                 "9118A": "Forno Fluke 9118A",
-                "9170": "Forno Fluke 9170",
-                "9172": "Forno Fluke 9172",
+                "9170": "Forno Fluke 9170 / 9172",
+                "9172": "Forno Fluke 9170 / 9172",
                 "7341": "Banho Fluke 7341",
                 "Laser": "Termografia Ativa: Laser",
                 "Lâmpada": "Termografia Ativa: Lâmpada",
                 "Flash": "Termografia Ativa Flash",
                 "Vibra": "Termografia Ativa Vibração",
                 "Solar Check": "Termografia Ativa: Solarcheck",
-                "3450": "PT100", // Não tem regsitro
-                "3451": "PT100", // junto com o de cima 
-                "SPRT": "SPRT",
-                "440": "testo 440",
+                "3450": "Termorresistência : PT100",
+                "3451": "Termorresistência : PT100",
+                "SPRT": "termômetro SPRT",
+                "440": "Termohigrômetro Testo 440",
                 "1586A": "Sistema de aquisição Fluke 1586A",
                 "1529": "Sistema de aquisição Fluke 1529",
-                "T1020": "Termocâmera T1020",
-                "SC660": "Termocâmera sc660",
-                "X6801sc": "Termocâmera x6801sc",
-                "622": "testo 622",
-                "971": "-rem-testo 971", //n existe
+                "T1020": "Termocâmera:T1020, SC660, X6801sc",
+                "SC660": "Termocâmera:T1020, SC660, X6801sc",
+                "X6801sc": "Termocâmera:T1020, SC660, X6801sc",
+                "622": "Termohigrômetro Testo 622 / 971",
+                "971": "Termohigrômetro Testo 622 / 971",
                 "Traçador": "Traçador de curvas",
                 "Pirômetro": "Pirômetro",
-                "Megômetro": "Megômetro",
-                // outros
+                "Megômetro": "Megômetro"
             };
 
             for (let i = 0; i < dataTable.getNumberOfRows(); i++) {
@@ -132,9 +134,11 @@ add_action('wp_footer', function () {
 
             const data = google.visualization.arrayToDataTable(dados);
 
+            // >>> AQUI A TROCA DE GRÁFICO FUNCIONA TAMBÉM <<<
             let chart = new google.visualization[tipoGrafico](
                 document.getElementById('chartEquipamentos')
             );
+
             chart.draw(data, { title: 'Usos por Equipamento' });
 
             google.charts.setOnLoadCallback(drawFinalidadeChart);

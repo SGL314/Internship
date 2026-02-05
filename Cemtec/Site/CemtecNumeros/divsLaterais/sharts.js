@@ -109,7 +109,7 @@ function drawEquipamentosChart() {
         const contagem = {};
 
         const apelidos = {
-            "SR-800N": "SR-800N",
+            "SR-800N": "SR-800Noou",
             "Corpo Negro": "Corpo Negro",
             "SR-800N-8HT": "Corpo Negro SR-800N-8HT",
             "SR-2-33": "Corpo negro SR-2-33",
