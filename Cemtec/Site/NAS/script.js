@@ -7,10 +7,7 @@ const { chromium } = require('playwright');
     const usuario = "MatheusPorto";
     const senha = "CemtecLIPq2024#";
 
-    const browser = await chromium.launch({
-        headless: true,
-        args: ["--no-sandbox", "--ignore-certificate-errors"]
-    });
+    const browser = await chromium.launch({ headless: true });
 
     const context = await browser.newContext({
         acceptDownloads: true,
@@ -21,24 +18,53 @@ const { chromium } = require('playwright');
 
     const page = await context.newPage();
 
-    // 1️⃣ Login DSM
-    await page.goto(loginUrl, { waitUntil: "networkidle" });
-    await page.fill('input[name="account"]', usuario);
-    await page.fill('input[name="passwd"]', senha);
-    await page.click('button[type="submit"]');
-    await page.waitForNavigation({ waitUntil: "networkidle" });
+    await page.goto(loginUrl, { waitUntil: "domcontentloaded" });
 
-    // 2️⃣ Acessar a planilha
+    // esperar o loader sumir
+    // await page.waitForFunction(() => {
+    //     const el = document.querySelector('#sds-login-vue');
+    //     console.log("sds-login-vue:", el ? el.innerHTML.length : "não existe");
+    //     return el && el.innerHTML.trim().length > 0;
+    // }, { timeout: 10000 });
+    //photo
+
+
+    await page.goto(loginUrl, { waitUntil: "domcontentloaded" });
+    //usuário
+    await page.waitForSelector('input[placeholder="Username"]', { timeout: 10000 });
+    await page.fill('input[placeholder="Username"]', usuario);
+    //debug
+    //clicar seta azul
+    await page.waitForSelector('.login-btn-spinner-wrapper', { timeout: 10000 });
+    await page.locator('.login-btn-spinner-wrapper').first().click({ force: true });
+    //esperar campo de senha
+    await page.waitForSelector('input[type="password"]', { timeout: 10000 });
+    //debug
+    //senha
+    await page.fill('input[type="password"]', senha);
+    //clicar entrar
+    await page.locator('.login-btn-spinner-wrapper').first().click({ force: true });
+    //aguardar login
+    await page.waitForLoadState('networkidle');
+
+
+
+    // 2️⃣ voltar para a planilha
     await page.goto(targetUrl, { waitUntil: "networkidle" });
-
+    
+    
     // 3️⃣ Clicar no menu Exportar
-    await page.waitForSelector('#ext-gen62');
+    //aguardar botão habilitado
+    await page.waitForSelector('#ext-gen62:not([aria-disabled="true"])', { timeout: 10000 });
     await page.click('#ext-gen62');
-
+    await page.screenshot({ path: '/downloads/dbg1.png', fullPage: true });
+    
     // 4️⃣ Selecionar opção XLSX
     await page.waitForSelector('#ext-comp-1103');
     await page.click('#ext-comp-1103');
-    await page.waitForSelector('#ext-gen490');
+    await page.screenshot({ path: '/downloads/dbg2.png', fullPage: true });
+    await page.waitForSelector('#ext-gen490', { timeout: 10000 });
+    await page.screenshot({ path: '/downloads/dbg3.png', fullPage: true });
     const [download] = await Promise.all([
         page.waitForEvent('download'),
         page.click('#ext-gen490')
