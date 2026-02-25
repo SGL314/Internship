@@ -1,3 +1,5 @@
+<?php include "charts.php"; ?>
+<!-- Site/CemtecNumeallInOne.html -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,6 +16,7 @@
 <body>
     <!-- <div id="gatilho"> -->
 
+        <script src="charts.php"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/noisejs@2.1.0/index.min.js"></script>
     <style>
@@ -22,31 +25,31 @@
         }
 
         body {
-            margin: 0 !important;
+            /* margin: 0 !important; */
             padding: 0 !important;
-            margin: -30px !important;
+            /* margin: -30px !important; */
             font-family: 'Segoe UI', sans-serif !important;
             color: white !important;
             background: #ffffff !important;
             overflow-x: hidden !important;
         }
 
-        header {
+        .header {
             text-align: center !important;
             padding: 60px 20px 60px !important;
             position: relative !important;
-            z-index: 10 !important;
-            margin-bottom: -50px !important;
-            background-color: #070709 !important;
+            z-index: -1 !important;
+            /* margin-bottom: -50px !important; */
+            background-color: #ffffff !important;
         }
 
-        header h1 {
+        .header h1 {
             font-size: 6.5rem !important;
             margin: 0 !important;
             color: #00e5ff !important;
         }
 
-        header p {
+        .header p {
             font-size: 3.6rem !important;
             color: #999999 !important;
             margin-top: 20px !important;
@@ -162,6 +165,7 @@
         .item-info h2 {
             margin: 0px !important;
             font-size: 1.8em !important;
+            color: #ffffff !important;
         }
 
         .item-info p {
@@ -232,14 +236,176 @@
 
     <!-- <canvas id="three-canvas"></canvas> -->
 
-    <header>
-        <h1>CEMTEC: Excelência Comprovada</h1>
+    <!-- <div class="header">
+        <h1>CEMTEC</h1>
         <!-- <p>Nossos <strong>resultados robustos</strong> são a <strong>evidência inquestionável</strong> da nossa -->
-        <!-- <strong>eficácia superior</strong>.</p> -->
-        <p><strong>Não apenas entregamos; nós superamos!</strong></p>
-    </header>
-    <div class="ui">
-    </div>
+    <!-- <strong>eficácia superior</strong>.</p> -->
+    <p><strong> Excelência Comprovada.<br>Não apenas entregamos; nós superamos!</strong></p>
+    </div> -->
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 150px;
+            padding: 100px 200px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .box {
+            position: relative;
+            padding: 50px 40px;
+            font-size: 2rem;
+            opacity: 0;
+            transform: translateX(350px);
+            transition: all 3s ease-out;
+            background: linear-gradient(145deg, #2c3e50, #1c262b);
+            color: #fff;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(4px);
+            width: 600px;
+        }
+
+        .box h2 {
+            margin: 0;
+            font-size: 3rem;
+            color: #00e5ff;
+            font-weight: 700;
+        }
+
+        .box p {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            color: #ddd;
+            letter-spacing: 0.5px;
+        }
+
+        /* animação vinda da esquerda */
+        .box.from-left {
+            transform: translateX(-350px);
+        }
+
+        /* quando estiver visível */
+        .box.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Responsivo básico */
+        @media (max-width: 900px) {
+            .container {
+                padding: 60px 40px;
+                gap: 100px;
+            }
+
+            .box {
+                font-size: 1.6rem;
+                padding: 40px 30px;
+            }
+
+            .box h2 {
+                font-size: 2.5rem;
+            }
+
+            .box p {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 40px 20px;
+                gap: 80px;
+            }
+
+            .box {
+                font-size: 1.4rem;
+                padding: 30px 20px;
+            }
+
+            .box h2 {
+                font-size: 2rem;
+            }
+
+            .box p {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+
+
+    <!-- <h1 style="text-align: center; color: #333; font-size: 60px; margin-bottom: 5px; margin-top:100px;">
+  📈 Resultados
+</h1>
+<p style="text-align: center; color: #777; margin-bottom: 40px; font-size: 12px;">
+  *Os dados apresentados compreendem o período entre 2019 e 2024
+</p> -->
+    <section class="container">
+        <div class="box">
+            <h2>🏬 +20</h2>
+            <p>Empresas atendidas</p>
+        </div>
+        <div class="box">
+            <h2>🤝 15</h2>
+            <p>Serviços oferecidos</p>
+        </div>
+        <div class="box">
+            <h2>💵 +25 milhões</h2>
+            <p>Em projetos executados</p>
+        </div>
+        <div class="box">
+            <h2>🧾 +50</h2>
+            <p>Projetos com o setor privado</p>
+        </div>
+        <div class="box">
+            <h2>📜 +65</h2>
+            <p>Certificados emitidos</p>
+        </div>
+
+    </section>
+
+    <script>
+        const boxes = document.querySelectorAll('.box');
+
+        boxes.forEach((box, index) => {
+            if (index % 2 === 0) {
+                box.classList.add('from-left');
+            }
+
+            const observer = new IntersectionObserver(
+                entries => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('show');
+                        } else {
+                            entry.target.classList.remove('show'); // 👉 remove classe se sair da tela
+                        }
+                    });
+                },
+                {
+                    threshold: 0.3
+                }
+            );
+
+            observer.observe(box);
+        });
+    </script>
+
     <div class="resto">
 
         <h2 style="text-align: center; color: #333; font-weight: 700; margin-bottom: 5px;">
@@ -341,7 +507,7 @@
                 <li><b>Termohigrômetro Testo 440</b></li>
                 <li><b>Sistema de aquisição Fluke 1586A</b></li>
                 <li><b>Sistema de aquisição Fluke 1529</b></li>
-                <li><b>Termocâmera:T1020, SC660, X6801sc</b></li>
+                <li><b>Termocâmera: T1020, SC660, X6801sc</b></li>
                 <li><b>Termohigrômetro Testo 622 / 971</b></li>
                 <li><b>Traçador de curvas</b></li>
                 <li><b>Pirômetro</b></li>
@@ -350,7 +516,7 @@
         </div>
 
         <!-- Google Charts -->
-        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
 
 
         <hr style="margin: 30px auto 40px auto; width: 80%; border: none; border-top: 2px solid #ccc;">
@@ -366,7 +532,7 @@
                 Horizontais</button>
             <button onclick="tipoGrafico='ColumnChart'; drawFinalidadeChart();" style="margin-right: 10px;">📈 Colunas
                 Verticais</button>
-            <button onclick="tipoGrafico='PieChart'; drawFinalidadeChart();">🥧 Gráfico de Pizza</button>
+            <button onclick="tipoGrafico='PieChart'; drawFinalidadeChart();">🥧 Gráfico de Rosca</button>
         </div>
     </div>
 
@@ -391,11 +557,13 @@
 
     <!-- inner -->
     <!-- </div> -->
-    <!-- RETIRAR ABAIXO -->
+    <!-- DADOS -->
 
+    <!-- RETIRAR ABAIXO -->
     
 
 
 </body>
+<!-- Cemtec\Site\CemtecNumeros\divsLaterais\allInOne.html -->
 
 </html>
