@@ -1,9 +1,9 @@
-docker exec playwright node scripts/transformOsheetSheet.js
+docker exec getteOsheet node scripts/transformOsheetSheet.js
 
 pm2 start /volume1/site/libreoffice/scripts/seuScript.js --name meu-script
 
 docker run -d \
---name getterOsheet \
+--name getterOsheet \ 
 -v /volume1/site/libreoffice:/app \
 -w /app \
 mcr.microsoft.com/playwright:jammy \

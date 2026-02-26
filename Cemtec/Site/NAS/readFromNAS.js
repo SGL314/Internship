@@ -14,7 +14,7 @@ const FILE_PATH = '/site/libreoffice/downloads/teste.xlsx';
 // Login no Synology e retorna SID
 async function login() {
     const url = `${BASE_URL}/webapi/auth.cgi?api=SYNO.API.Auth&version=6&method=login&account=${encodeURIComponent(USER)}&passwd=${encodeURIComponent(PASS)}&session=FileStation&format=sid`;
-    
+
     console.log("Fetching logging");
     const res = await fetch(url, { agent });
     // console.log(res);
@@ -33,8 +33,15 @@ async function baixarArquivo() {
     try {
         console.log("Logando ...");
         const sid = await login();
-        const downloadUrl = `${BASE_URL}/webapi/entry.cgi?api=SYNO.FileStation.Download&version=2&method=download&path=${encodeURIComponent(FILE_PATH)}&mode=open&_sid=${sid}`;
-        
+        //
+        const rootsUrl = `${BASE_URL}/webapi/entry.cgi?api=SYNO.FileStation.List&version=2&method=list_share&folder_path=${encodeURIComponent('/Site/')}&_sid=${sid}`;
+
+        const rootsRes = await fetch(rootsUrl, { agent });
+        const rootsData = await rootsRes.json();
+        console.log(JSON.stringify(rootsData, null, 2));
+        //
+        const downloadUrl = `${BASE_URL}/webapi/entry.cgi?api=SYNO.FileStation.Download&version=2&method=download&path=${encodeURIComponent('/Site')}&mode=open&_sid=${sid}`;
+
         console.log("fetching ...");
         const res = await fetch(downloadUrl, { agent });
 

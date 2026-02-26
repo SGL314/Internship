@@ -35,14 +35,14 @@ async function baixarArquivo() {
         console.log("Logando ...");
         const sid = await login();
 
-        const rootsUrl = `${BASE_URL}/webapi/entry.cgi?api=SYNO.FileStation.List&version=2&method=list_share&folder_path=${encodeURIComponent('/volume1')}&_sid=${sid}`;
+        const rootsUrl = `${BASE_URL}/webapi/entry.cgi?api=SYNO.FileStation.List&version=2&method=list_share&folder_path=${encodeURIComponent('/Site')}&_sid=${sid}`;
 
         const rootsRes = await fetch(rootsUrl, { agent });
         const rootsData = await rootsRes.json();
-        console.log(JSON.stringify(rootsData, null, 2));
+        // console.log(JSON.stringify(rootsData, null, 2));
 
-        const downloadUrl = `${BASE_URL}/webapi/entry.cgi?api=SYNO.FileStation.List&version=2&method=list&folder_path=${encodeURIComponent(FILE_PATH)}&_sid=${sid}`;
-
+        const downloadUrl = `${BASE_URL}/webapi/entry.cgi?api=SYNO.FileStation.Download&version=2&method=download&path=${encodeURIComponent('/Site/equipments.xlsx')}&mode=download&_sid=${sid}`;
+        // const downloadUrl = `${BASE_URL}/webapi/entry.cgi?api=SYNO.FileStation.Download&version=2&method=download&path=${encodeURIComponent(FILE_PATH)}&mode=open&_sid=${sid}`;
         console.log("fetching ...");
         const res = await fetch(downloadUrl, { agent });
 
@@ -50,22 +50,68 @@ async function baixarArquivo() {
             throw new Error(`Erro no download: ${res.status} ${res.statusText}`);
         }
 
-        const buffer = await res.buffer();
+        const arrayBuffer = await res.arrayBuffer();
 
-        console.log("Tamanho buffer:", buffer.length);
-        console.log("Primeiros bytes:", buffer.slice(0, 50).toString());
+        const workbook = XLSX.read(arrayBuffer, {
+            type: 'array'
+        });
 
-        const workbook = XLSX.read(buffer, { type: 'buffer' });
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const data = XLSX.utils.sheet_to_json(sheet);
-
-        console.log('Dados do Excel:');
-        console.table(data);
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        console.log(sheet['C40']);
+        var sending = [];
+        //
+        const range = XLSX.utils.decode_range(sheet['!ref']);
+        const tetoMaxThings = range.e.r - range.s.r + 1;
+        var rems = 0;
+        for (var i = 0; i < tetoMaxThings; i++) {
+            var putIn = [
+                    sheet['B' + (i + 1)]?.v || "",
+                    sheet['C' + (i + 1)]?.v || "",
+                    sheet['D' + (i + 1)]?.v || ""
+                ];
+            if (putIn.every(v => v == "")){
+                console.log(i+1);
+                rems++;
+                continue;
+            }
+            sending.push({
+                "line": i+1-rems, // no google sheets começa na linha 1, não 0
+                "values": putIn
+            });
+        }
+        console.log("Sending ...");
+        return sending;
 
     } catch (err) {
         console.error('Erro:', err.message);
     }
 }
 
-// Executa
-baixarArquivo();
+async function sendTo_GSheets() {
+    var sending = await baixarArquivo();
+
+    const axios = require('axios');
+
+    const URL = "https://script.google.com/macros/s/AKfycbzkiF9LVOG-yx1ei3f6EOnISVQGdQZ-7TrNf_8SO52NYrGi-7mj_7zllPhNKNv3zlI_Nw/exec";
+
+    async function enviar() {
+        try {
+            // console.log(await sending);
+            const response = await axios.post(URL, {
+                "lines": await sending,
+                "columns": await sending[0]['values'].length
+            });
+            // console.log(sending);
+
+            console.log(response.data);
+        } catch (err) {
+            console.error("Erro:", err.message);
+        }
+    }
+
+    enviar();
+
+}
+
+sendTo_GSheets();
