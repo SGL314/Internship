@@ -8,3 +8,8 @@ docker run -d \
 -w /app \
 mcr.microsoft.com/playwright:jammy \
 sleep infinity
+
+python3 -m http.server 8090
+
+VIM:
+remove td do arquivo: ':%d'

@@ -150,21 +150,3 @@ add_action('wp_footer', function () {
     <?php
 });
 
-// // URL do seu Web App publicado no Google Apps Script
-// $googleScriptUrl = 'https://docs.google.com/spreadsheets/d/1GjFHo8gTf3WbQhANTKDpcrL3nVUGJCh6Sd7dhoUkn5I/gviz/tq?sheet=Sheet1&headers=1';
-
-// $data = [
-//     "nome" => $_POST['nome'] ?? "",
-//     "email" => $_POST['email'] ?? "",
-//     "mensagem" => $_POST['mensagem'] ?? ""
-// ];
-
-// $ch = curl_init($googleScriptUrl);
-// curl_setopt($ch, CURLOPT_POST, 1);
-// curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-// curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-// $response = curl_exec($ch);
-// curl_close($ch);
-
-// echo $response;

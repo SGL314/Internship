@@ -16,7 +16,7 @@
 <body>
     <!-- <div id="gatilho"> -->
 
-        <script src="charts.php"></script>
+    <script src="charts.php"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/noisejs@2.1.0/index.min.js"></script>
     <style>
@@ -479,45 +479,21 @@
             *Dados referentes ao período de 2019 a 2024
         </footer>
     </div>
-    <div class="meio">
 
+    <div class="meio">
+        <!-- o código disso, dde onde puxa da planilha, está em charts -->
         <h2 style="text-align:center; color:#17252a;">📊 Frequência de Uso dos Equipamentos</h2>
 
         <div id="chartEquipamentos" style="width: 100%; max-width: 1000px; height: 500px; margin: auto;"></div>
 
         <div style="max-width: 1000px; margin: 30px auto; font-size: 14px; line-height: 1.8; color: #333;">
             <h3 style="color:#17252a; text-align:left;">📘 Equipamentos:</h3>
-            <ul style="columns: 2; list-style-type: none; padding-left: 10px; margin: 0;">
-                <li><b>SR-800N</b></li>
-                <li><b>Corpo Negro</b></li>
-                <li><b>Corpo Negro SR-800N-8HT</b></li>
-                <li><b>Corpo negro SR-2-33</b></li>
-                <li><b>célula TPW</b></li>
-                <li><b>Estação Solarimétrica</b></li>
-                <li><b>Forno Fluke 9118A</b></li>
-                <li><b>Forno Fluke 9170 / 9172</b></li>
-                <li><b>Banho Fluke 7341</b></li>
-                <li><b>Termografia Ativa: Laser</b></li>
-                <li><b>Termografia Ativa: Lâmpada</b></li>
-                <li><b>Termografia Ativa Flash</b></li>
-                <li><b>Termografia Ativa Vibração</b></li>
-                <li><b>Termografia Ativa: Solarcheck</b></li>
-                <li><b>Termorresistência : PT100</b></li>
-                <li><b>termômetro SPRT</b></li>
-                <li><b>Termohigrômetro Testo 440</b></li>
-                <li><b>Sistema de aquisição Fluke 1586A</b></li>
-                <li><b>Sistema de aquisição Fluke 1529</b></li>
-                <li><b>Termocâmera: T1020, SC660, X6801sc</b></li>
-                <li><b>Termohigrômetro Testo 622 / 971</b></li>
-                <li><b>Traçador de curvas</b></li>
-                <li><b>Pirômetro</b></li>
-                <li><b>Megômetro</b></li>
+            <ul id="equipments-list" style="columns: 2; list-style-type: none; padding-left: 10px; margin: 0;">
             </ul>
         </div>
 
         <!-- Google Charts -->
         <!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
-
 
         <hr style="margin: 30px auto 40px auto; width: 80%; border: none; border-top: 2px solid #ccc;">
 
@@ -555,12 +531,82 @@
     <!-- Google Charts -->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
+    <script type="text/javascript"> // pega da planilha de apoio ao site no google sheets
+        (function () {
+            const formId = 205;       // ID do formulário
+            const fieldId = 13;       // ID do dropdown visível
+            const hiddenFieldId = 99; // ID do campo oculto para envio
+            const apiURL = 'https://script.google.com/macros/s/AKfycbwQFOpCHt0xupiYB3-jQHe9qiaC53735PPceNCzBWXmU9HVcxrME4K3kwG7zC8aLI0Kng/exec?sheet=From NAS';
+
+            // Função para buscar dados da planilha
+            async function fetchSheetItems() {
+                try {
+                    const res = await fetch(apiURL);
+                    if (!res.ok) throw new Error('Erro na requisição');
+                    const data = await res.json();
+                    return data.map(item => Object.values(item)[0]).filter(v => v);
+                } catch (err) {
+                    console.error('Erro ao buscar dados da planilha:', err);
+                    return [];
+                }
+            }
+
+            // Função para popular dropdown e campo oculto
+            async function populateDropdown() {
+                console.log("populate");
+                const items = await fetchSheetItems();
+                console.log("items:", items);
+                if (items.length === 0) return;
+
+                // Adiciona opções
+
+                var itemsFormulados = []
+                items.forEach(item => {
+                    var pass = false;
+                    var removeNames = ["Equipamento", "Energia", "Termometria"];
+                    for (var name of removeNames) {
+                        if (item == name) {
+                            pass = true;
+                            break;
+                        }
+                    }
+                    if (!pass) {
+                        itemsFormulados.push(item);
+                    }
+                });
+                var num = 1;
+                for (var item of itemsFormulados.sort()) {
+                    const local = document.querySelector("#equipments-list");
+                    console.log(local);
+                    // adding=in : <li><b>SR-800N</b></li>
+                    const itemElement = document.createElement('li');
+                    const bolding = document.createElement('b');
+                    bolding.textContent = item;
+                    itemElement.appendChild(bolding);
+                    local.appendChild(itemElement);
+                    num++;
+                }
+
+                console.log('Dropdown populado e campo oculto pronto');
+            }
+
+            // Checa se o form já está no DOM
+            function checkForm() {
+                console.log("checkForm");
+                populateDropdown();
+            }
+
+            // Inicia a checagem
+            checkForm();
+        })();
+    </script>
+
     <!-- inner -->
     <!-- </div> -->
     <!-- DADOS -->
 
     <!-- RETIRAR ABAIXO -->
-    
+
 
 
 </body>
