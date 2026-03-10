@@ -1,5 +1,5 @@
-<?php include "charts.php"; ?>
 <!-- Site/CemtecNumeallInOne.html -->
+ <!-- Cemtec em números, editor de texto -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -241,7 +241,7 @@
         <!-- <p>Nossos <strong>resultados robustos</strong> são a <strong>evidência inquestionável</strong> da nossa -->
     <!-- <strong>eficácia superior</strong>.</p> -->
     <p><strong> Excelência Comprovada.<br>Não apenas entregamos; nós superamos!</strong></p>
-    </div> -->
+    </div>
 
     <style>
         * {
@@ -481,7 +481,7 @@
     </div>
 
     <div class="meio">
-        <!-- o código disso, dde onde puxa da planilha, está em charts -->
+        <!-- o código disso, dde onde puxa da planilha, está em charts.php (snippet de código) -->
         <h2 style="text-align:center; color:#17252a;">📊 Frequência de Uso dos Equipamentos</h2>
 
         <div id="chartEquipamentos" style="width: 100%; max-width: 1000px; height: 500px; margin: auto;"></div>
@@ -512,7 +512,8 @@
         </div>
     </div>
 
-    <div id="tabelaMestra">
+    <!-- snippet de código tabelaMestra-->
+    <div id="tabelaMestra"> 
         <table>
             <thead>
                 <tr>
@@ -536,7 +537,7 @@
             const formId = 205;       // ID do formulário
             const fieldId = 13;       // ID do dropdown visível
             const hiddenFieldId = 99; // ID do campo oculto para envio
-            const apiURL = 'https://script.google.com/macros/s/AKfycbwQFOpCHt0xupiYB3-jQHe9qiaC53735PPceNCzBWXmU9HVcxrME4K3kwG7zC8aLI0Kng/exec?sheet=From NAS';
+            const apiURL = 'https://script.google.com/macros/s/AKfycbwQFOpCHt0xupiYB3-jQHe9qiaC53735PPceNCzBWXmU9HVcxrME4K3kwG7zC8aLI0Kng/exec?sheet=From NAS-equipments';
 
             // Função para buscar dados da planilha
             async function fetchSheetItems() {
@@ -577,7 +578,7 @@
                 var num = 1;
                 for (var item of itemsFormulados.sort()) {
                     const local = document.querySelector("#equipments-list");
-                    console.log(local);
+                    // console.log(local);
                     // adding=in : <li><b>SR-800N</b></li>
                     const itemElement = document.createElement('li');
                     const bolding = document.createElement('b');

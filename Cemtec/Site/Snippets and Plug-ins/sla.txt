@@ -1,0 +1,89 @@
+(2) ['CEMTEC', 247]
+
+(2) ['Aula Prática', 25]
+
+(2) ['Labterm (sala 2933)', 14]
+
+(2) ['Usina Tesla', 13]
+
+(2) ['Oásis (cad 2)', 13] // oasis 23
+ 
+(2) ['Oásis cad 3', 12] // oasis 24
+
+(2) ['Laboratório da usinagem', 4]
+
+(2) ['Sala demo', 3]
+ 
+(2) ['Cad 3', 3] // oasis in 20
+
+(2) ['Franzen', 3]
+
+(2) ['Oasis', 2] // oasis in 21
+
+(2) ['Equipamentos utilizados', 1]
+
+(2) ['GREA', 1]
+
+(2) ['Unidade da isoform', 1]
+
+(2) ['Unidade do atendimento', 1]
+
+(2) ['StreamLab', 1]
+
+(2) ['Ceu - ufmg', 1]
+
+(2) ['Oásis (cad 3)', 1] // oasis 22
+
+(2) ['Uso externo', 1]
+
+(2) ['Estacionamento da engenharia mecânica', 1]
+
+(2) ['Sala laboratório de fluidos', 1] // sala de aula
+
+(2) ['Sala  laboratório de fluidos', 1] // sala de aula
+
+(2) ['Cdtn', 1]
+
+(2) ['Unidade da cemig', 1]
+
+
+/////
+
+
+(2) ['CEMTEC', 247]
+
+(2) ['Aula Prática', 25]
+
+(2) ['Labterm (sala 2933)', 14]
+
+(2) ['Usina Tesla', 13]
+
+(2) ['Laboratório da usinagem', 4]
+
+(2) ['Sala demo', 3]
+ 
+(2) ['Cad 3', 3] // oasis in 20
+
+(2) ['Franzen', 3]
+
+(2) ['Equipamentos utilizados', 1]
+
+(2) ['GREA', 1]
+
+(2) ['Unidade da isoform', 1]
+
+(2) ['Unidade do atendimento', 1]
+
+(2) ['StreamLab', 1]
+
+(2) ['Ceu - ufmg', 1]
+
+(2) ['Uso externo', 1]
+
+(2) ['Estacionamento da engenharia mecânica', 1]
+
+(2) ['Sala laboratório de fluidos', 1]
+
+(2) ['Cdtn', 1]
+
+(2) ['Unidade da cemig', 1]

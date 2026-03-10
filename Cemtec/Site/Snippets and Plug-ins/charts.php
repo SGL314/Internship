@@ -7,14 +7,16 @@ add_action('wp_footer', function () {
         setTimeout(drawEquipamentosChart, 500);
     });
 
-    // >>> AQUI VOCÊ MUDA O TIPO DO GRÁFICO <<<
-    var tipoGrafico = 'PieChart';  // ex: PieChart, ColumnChart, BarChart, LineChart
+    var tipoGrafico = 'PieChart';
+
+    // --- TODO O SEU CÓDIGO EXATAMENTE COMO VOCÊ ENVIOU ---
 
     function drawFinalidadeChart() {
         const query = new google.visualization.Query(
-            'https://docs.google.com/spreadsheets/d/1GjFHo8gTf3WbQhANTKDpcrL3nVUGJCh6Sd7dhoUkn5I/gviz/tq?sheet=Sheet1&headers=1'
+            'https://docs.google.com/spreadsheets/d/1UOG3efEmOsUGTFmd4kHr_P6o0jjvNoKPppjHyUa4olE/gviz/tq?sheet=From NAS-uses_equipments'
         );
-        query.setQuery("select G where G is not null");
+        // https://docs.google.com/spreadsheets/d/1GjFHo8gTf3WbQhANTKDpcrL3nVUGJCh6Sd7dhoUkn5I/gviz/tq?sheet=Sheet1&headers=1
+        query.setQuery("select A where A is not null");
 
         query.send(function (response) {
             if (response.isError()) {
@@ -27,10 +29,13 @@ add_action('wp_footer', function () {
 
             for (let i = 0; i < dataTable.getNumberOfRows(); i++) {
                 let finalidade = dataTable.getValue(i, 0);
-                if (!finalidade || finalidade === "-") continue;
-
+                if (!finalidade || finalidade === "-" || finalidade.toLowerCase().includes("equipamentos")) continue;
                 finalidade = finalidade.toLowerCase().trim();
-
+                //uso externo
+                var extern = ["franzen","grea","unidade da isoform","unidade do atendimento","streamlab",
+                    "ceu - ufmg","uso externo","estacionamento","cdtn","cemig"
+                ]
+                //
                 if (finalidade.includes("tesla")) finalidade = "Usina Tesla";
                 if (finalidade.includes("pesquisa")) finalidade = "Pesquisa";
                 if (finalidade.includes("treinamento")) finalidade = "Treinamento";
@@ -40,23 +45,28 @@ add_action('wp_footer', function () {
                 if (finalidade.includes("grea")) finalidade = "GREA";
                 if (finalidade.includes("trevizoli")) finalidade = "StreamLab";
                 if (finalidade.includes("cemtec")) finalidade = "CEMTEC";
+                if (finalidade.includes("oasis") || finalidade.includes("oásis") || finalidade.includes("cad 3")) finalidade = "Oásis";
+                if (finalidade.includes("laboratório de fluidos")) finalidade = "Sala de Aula";
+                // uso externo
+                if (extern.some(ext => finalidade.toLowerCase().trim().includes(ext))) finalidade = "Uso Externo";
+                //
 
                 finalidade = finalidade.charAt(0).toUpperCase() + finalidade.slice(1);
                 counts[finalidade] = (counts[finalidade] || 0) + 1;
+                // console.log(`Finalidade: ${finalidade}, Contagem Atual: ${counts[finalidade]}`);
             }
 
-            const dataArray = [['Finalidade', 'Usos']];
+            var dataArray = [['Finalidade', 'Usos']];
             for (const finalidade in counts) {
                 dataArray.push([finalidade, counts[finalidade]]);
             }
-
+            console.log(dataArray);
+            // ordena
+            dataArray = dataArray.sort((a, b) => b[1] - a[1]);
+            //
             const data = google.visualization.arrayToDataTable(dataArray);
 
-            // >>> AQUI A TROCA DE GRÁFICO FUNCIONA <<<
-            let chart = new google.visualization[tipoGrafico](
-                document.getElementById('graficoFinalidadeUso')
-            );
-
+            let chart = new google.visualization.PieChart(document.getElementById('graficoFinalidadeUso'));
             chart.draw(data, { pieHole: 0.4 });
         });
 
@@ -76,7 +86,7 @@ add_action('wp_footer', function () {
 
             const apelidos = {
                 "SR-800N": "Corpo Negro SR-800N",
-                // "Corpo Negro": "Corpo Negro",
+                // "Corpo Negro": "-rem-Corpo Negro",
                 "SR-800N-8HT": "Corpo Negro SR-800N-8HT",
                 "SR-2-33": "Corpo Negro SR-2-33",
                 "TPW": "Célula TPW",
@@ -90,8 +100,8 @@ add_action('wp_footer', function () {
                 "Flash": "Termografia Ativa Flash",
                 "Vibra": "Termografia Ativa Vibração",
                 "Solar Check": "Termografia Ativa: Solarcheck",
-                "3450": "PT100",
-                // "3451": "PT100",  taka em cima
+                "3450": "PT100", // Não tem regsitro
+                "3451": "PT100", // junto com o de cima 
                 "SPRT": "SPRT",
                 "440": "testo 440",
                 "1586A": "Sistema de aquisição Fluke 1586A",
@@ -100,12 +110,11 @@ add_action('wp_footer', function () {
                 "SC660": "Termocâmera sc660",
                 "X6801sc": "Termocâmera x6801sc",
                 "622": "testo 622",
-                // "971": "testo 971", n existe
+                "971": "-rem-testo 971", //n existe
                 "Traçador": "Traçador de curvas",
                 "Pirômetro": "Pirômetro",
                 "Megômetro": "Megômetro",
                 // outros
-
             };
 
             for (let i = 0; i < dataTable.getNumberOfRows(); i++) {
@@ -134,13 +143,13 @@ add_action('wp_footer', function () {
                 .sort((a, b) => b[1] - a[1])
                 .forEach(([nome, valor]) => dados.push([nome, valor]));
 
+            console.log(dados); 
+
             const data = google.visualization.arrayToDataTable(dados);
 
-            // >>> AQUI A TROCA DE GRÁFICO FUNCIONA TAMBÉM <<<
             let chart = new google.visualization[tipoGrafico](
                 document.getElementById('chartEquipamentos')
             );
-
             chart.draw(data, { title: 'Usos por Equipamento' });
 
             google.charts.setOnLoadCallback(drawFinalidadeChart);
@@ -150,3 +159,21 @@ add_action('wp_footer', function () {
     <?php
 });
 
+// URL do seu Web App publicado no Google Apps Script
+$googleScriptUrl = 'https://docs.google.com/spreadsheets/d/1GjFHo8gTf3WbQhANTKDpcrL3nVUGJCh6Sd7dhoUkn5I/gviz/tq?sheet=Sheet1&headers=1';
+
+$data = [
+    "nome" => $_POST['nome'] ?? "",
+    "email" => $_POST['email'] ?? "",
+    "mensagem" => $_POST['mensagem'] ?? ""
+];
+
+$ch = curl_init($googleScriptUrl);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+curl_close($ch);
+
+echo $response;

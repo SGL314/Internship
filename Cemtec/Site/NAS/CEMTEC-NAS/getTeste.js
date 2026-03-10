@@ -5,13 +5,19 @@ const { chromium } = require('playwright');
     const ip = "192.168.1.144";
     const loginUrl = `https://${ip}:5001`;
     const targetUrls = [
-        "https://" + ip + ":5001/oo/r/16Bv36gxKdaQ4nVfJGbDqTLt7k32ZNmc",
-        "https://" + ip + ":5001/oo/r/16pnNL531nNH1sACJaKSMXKf1pacX7RH"
+        "https://"+ip+":5001/oo/r/16Bv36gxKdaQ4nVfJGbDqTLt7k32ZNmc",
+        "https://"+ip+":5001/oo/r/16pnNL531nNH1sACJaKSMXKf1pacX7RH",
+        "https://"+ip+":5001/oo/r/16GpG31Hg0yh1PlBaJih9IyLtMXL7Vn7"
     ];
-    const names = ["equipments.xlsx","uses_equipments.xlsx"];
+    const names = ["equipments.xlsx","uses_equipments.xlsx","demands.xlsx"];
     const usuario = "CEMTEC";
     const senha = "CemtecLIPq2024#";
     const localSave = '/app/downloads';
+
+    if (names.length < targetUrls.length) {
+        console.warn("Atenção: Nem todos os arquivos terão nomes personalizados, pois a lista de nomes é menor que a de URLs.");
+        return;
+    }
 
     const browser = await chromium.launch({ headless: true });
 

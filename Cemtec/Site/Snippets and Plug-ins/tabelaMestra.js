@@ -1,6 +1,11 @@
-const link01 = "https://script.google.com/macros/s/AKfycbzFjyx8CsxJsQcPjQDAi6Qo6NrLzwI-Z-_N0YkfXNdTC8olFC070aXAE7Y0cM7tIFx3/exec";
+
+const link01 = "https://script.google.com/macros/s/AKfycbxg09vGIustEFDI41OQbIcG-YSTyL4_N_5lPmVqKKDxYisfH7_IIZzguRZOk4fhuUtwww/exec";
 const link02 = "https://script.google.com/macros/s/AKfycbwT-8h2HsO2zvFFCwfS_3tZS3J6bb_kZlftmOFkgbFQxrsH6QMxOsx5WS_ypIw92OShvA/exec";
-var link = link02;
+const link03 = "https://script.google.com/macros/s/AKfycbz2bReGU_Ms8ByeSCTUljYIvFlI2bAG5j8rekPUbVvutt-Ctdxumq9s50-wB_ryhA0A1g/exec";
+
+const sheetName = "From NAS-demands"
+
+var link = link03+"?sheet="+sheetName;
 
 function lerJSON() {
     console.log("Lendo Sheets ...");
@@ -8,25 +13,27 @@ function lerJSON() {
     fetch(link) //link pega sheet
         .then(res => res.json())
         .then(data => {
-            print("Dados coletados do Sheets.");
+//             print("Dados coletados do Sheets.");
             sheets2table(data);
             console.log("JSON carregado !");
-            print("Sheets lido.");
+//             print("Sheets lido.");
         })
         .catch(err => console.error('Erro ao carregar JSON:', err));
 
-    print("afterrr ...");
+//     print("afterrr ...");
 }
 
 function sheets2table(datas) {
     var put = [];
+    // console.log(datas);
     for (var data of datas) {
-        var ano = data[0][0];
-        if (ano > 2024) continue;
-        print(data);
-        put.push(data);
+        console.log(data);
+//         var ano = data[0][0];
+//         if (ano > 2024) continue;
+// //         print(data);
+//         put.push(data);
     }
-
+    return;
     var ord = [];
     for (var i = put.length - 1; i >= 0; i--) {
         ord.push(put[i]);
@@ -39,25 +46,22 @@ function sheets2table(datas) {
         ano = year[0][0];
 
         var i = -1;
-        // print(year);
 
         for (var line of year) {
             var tr = document.createElement("tr");
-            // print(line);
             i += 1;
             if (i == 0) continue;
             var td = document.createElement("td");
             td.innerHTML = ano;
             tr.appendChild(td);
             for (var item in line) {
-                // print(item);
                 td = document.createElement("td");
                 td.innerHTML = line[item];
 
-                if (ano == 2019 && item == "") { // atualização da área em 2019
+                if (ano == 2019 && item == "") { 
                     td.innerHTML = "Engenharias III";
                 }
-                if (item == "Observações") { // muda a ordem da apresentação das coisas
+                if (item == "Observações") { 
                     td.innerHTML = line["Beneficiados do resultado 1"];
                 } else if (item == "Beneficiados do resultado 1") {
                     td.innerHTML = line["Observações"];
@@ -70,3 +74,5 @@ function sheets2table(datas) {
         }
     }
 }
+
+lerJSON();
