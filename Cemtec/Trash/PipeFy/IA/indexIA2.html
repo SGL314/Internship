@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KanBan</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6fa;
+      margin: 0;
+    }
+    .kanban-board {
+      display: flex;
+      gap: 20px;
+      padding: 40px;
+    }
+    .kanban-column {
+      background: #fff;
+      border-radius: 8px;
+      border: 2px solid black;
+      box-shadow: 0 2px 8px #0001;
+      width: 300px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+    }
+    .kanban-column h2 {
+      margin: 0 0 12px 0;
+      font-size: 1.2em;
+    }
+    .kanban-cards {
+      flex: 1;
+      min-height: 40px;
+    }
+    .kanban-card {
+      background: #e3e7ef;
+      border: 2px solid #4f8cff;
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: grab;
+      transition: border 0.2s;
+    }
+    .kanban-card[data-drop-position="before"] {
+      border-top: 12px solid #4f8cff;
+    }
+    .kanban-card[data-drop-position="after"] {
+      border-bottom: 12px solid #4f8cff;
+    }
+    .kanban-actions button {
+      margin-left: 4px;
+      background: #d1d8e6;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 2px 6px;
+    }
+    .add-task-form {
+      display: flex;
+      margin-top: 12px;
+    }
+    .add-task-form input {
+      flex: 1;
+      padding: 4px;
+    }
+    .add-task-form button {
+      margin-left: 4px;
+    }
+    #editModal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: #0005;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    #editModal .modal-content {
+      background: #fff;
+      border-radius: 8px;
+      padding: 24px 32px;
+      min-width: 300px;
+      box-shadow: 0 4px 24px #0003;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+    }
+    #editModal .modal-content button.close-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: none;
+      border: none;
+      font-size: 1.2em;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="editModal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeEditModal()">&times;</button>
+      <h3>Editar tarefa</h3>
+      <input id="editInput" type="text" />
+      <button onclick="saveEdit()" style="padding:8px; background:#4f8cff; color:#fff; border:none; border-radius:4px; font-size:1em; cursor:pointer;">Salvar</button>
+    </div>
+  </div>
+
+  <div class="kanban-board" id="kanbanBoard"></div>
+
+  <script>
+    const columns = [
+      { name: "A Fazer", id: "todo" },
+      { name: "Em Progresso", id: "doing" },
+      { name: "Concluído", id: "done" }
+    ];
+
+    let tasks = {
+      todo: [
+        { id: "1", title: "a", index: 0 },
+        { id: "2", title: "b", index: 1 },
+        { id: "3", title: "c", index: 2 },
+        { id: "4", title: "d", index: 3 },
+        { id: "5", title: "e", index: 4 }
+      ],
+      doing: [],
+      done: []
+    };
+
+    let dragTaskId = null;
+    let editingTaskId = null;
+
+    function renderBoard(columnId = null) {
+      if (columnId) orderTasks(columnId);
+
+      const board = document.getElementById("kanbanBoard");
+      board.innerHTML = "";
+
+      columns.forEach(col => {
+        const colDiv = document.createElement("div");
+        colDiv.className = "kanban-column";
+        colDiv.innerHTML = `
+          <h2>${col.name}</h2>
+          <div class="kanban-cards" id="cards-${col.id}"
+            ondragover="event.preventDefault()"
+            ondrop="onDropColumn('${col.id}')"></div>
+          <form class="add-task-form" onsubmit="addTask(event, '${col.id}')">
+            <input type="text" placeholder="Nova tarefa..." required>
+            <button type="submit">+</button>
+          </form>
+        `;
+        board.appendChild(colDiv);
+
+        const cardsDiv = colDiv.querySelector(".kanban-cards");
+        const colTasks = tasks[col.id].slice().sort((a, b) => a.index - b.index);
+
+        colTasks.forEach(task => {
+          if (!task) return;
+          const card = document.createElement("div");
+          card.className = "kanban-card";
+          card.draggable = true;
+          card.dataset.id = task.id;
+
+          card.ondragstart = e => {
+            dragTaskId = task.id;
+            card.classList.add("dragging");
+            e.dataTransfer.effectAllowed = "move";
+          };
+
+          card.ondragend = () => {
+            dragTaskId = null;
+            card.classList.remove("dragging");
+            clearDropIndicators();
+          };
+
+          card.ondragover = e => {
+            e.preventDefault();
+            setDropIndicator(card, e);
+          };
+
+          card.ondragleave = () => {
+            card.removeAttribute("data-drop-position");
+          };
+
+          card.ondrop = e => {
+            e.preventDefault();
+            handleDropOnCard(task.id, col.id, e);
+          };
+
+          card.innerHTML = `
+            <span class="span-moving" data-id="${task.id}">${task.title}</span>
+            <span class="kanban-actions">
+              <button onclick="editTask('${task.id}')">✏️</button>
+              <button onclick="removeTask('${task.id}')">🗑️</button>
+            </span>
+          `;
+
+          cardsDiv.appendChild(card);
+        });
+      });
+    }
+
+    function setDropIndicator(card, e) {
+      const bounding = card.getBoundingClientRect();
+      const offset = e.clientY - bounding.top;
+      const height = bounding.height;
+      card.dataset.dropPosition = offset < height / 2 ? "before" : "after";
+    }
+
+    function clearDropIndicators() {
+      document.querySelectorAll('.kanban-card').forEach(card => {
+        card.removeAttribute("data-drop-position");
+      });
+    }
+
+    function handleDropOnCard(targetId, columnId, e) {
+      if (!dragTaskId || dragTaskId === targetId) return;
+
+      const colTasks = tasks[columnId];
+      const dragIdx = colTasks.findIndex(t => t.id === dragTaskId);
+      const targetIdx = colTasks.findIndex(t => t.id === targetId);
+      const dragged = colTasks.splice(dragIdx, 1)[0];
+      const dropPosition = e.currentTarget.dataset.dropPosition;
+
+      let insertIdx = targetIdx;
+      if (dropPosition === "after") insertIdx++;
+
+      colTasks.splice(insertIdx, 0, dragged);
+      redefineIndexes(columnId);
+      renderBoard(columnId);
+    }
+
+    function orderTasks(columnId) {
+      tasks[columnId].sort((a, b) => a.index - b.index);
+      redefineIndexes(columnId);
+    }
+
+    function redefineIndexes(columnId) {
+      tasks[columnId].forEach((t, i) => {
+        t.index = i;
+      });
+    }
+
+    function onDropColumn(columnId) {
+      if (dragTaskId !== null) {
+        // Remove de onde estava
+        for (const col in tasks) {
+          const idx = tasks[col].findIndex(t => t.id === dragTaskId);
+          if (idx !== -1) {
+            const [dragged] = tasks[col].splice(idx, 1);
+            dragged.index = tasks[columnId].length;
+            tasks[columnId].push(dragged);
+            break;
+          }
+        }
+        renderBoard();
+      }
+    }
+
+    function addTask(event, columnId) {
+      event.preventDefault();
+      const input = event.target.querySelector("input");
+      const newTask = {
+        id: String(Date.now()) + Math.random().toString(36).substring(2, 6),
+        title: input.value,
+        index: tasks[columnId].length
+      };
+      tasks[columnId].push(newTask);
+      input.value = "";
+      renderBoard();
+    }
+
+    function editTask(id) {
+      let taskFound = null;
+      for (const col in tasks) {
+        taskFound = tasks[col].find(t => t.id === id);
+        if (taskFound) break;
+      }
+      if (!taskFound) return;
+      editingTaskId = id;
+      document.getElementById("editInput").value = taskFound.title;
+      document.getElementById("editModal").style.display = "flex";
+    }
+
+    function closeEditModal() {
+      document.getElementById("editModal").style.display = "none";
+      editingTaskId = null;
+    }
+
+    function saveEdit() {
+      const newTitle = document.getElementById("editInput").value.trim();
+      if (!newTitle || editingTaskId === null) return;
+
+      for (const col in tasks) {
+        const task = tasks[col].find(t => t.id === editingTaskId);
+        if (task) {
+          task.title = newTitle;
+          break;
+        }
+      }
+
+      renderBoard();
+      closeEditModal();
+    }
+
+    function removeTask(id) {
+      for (const col in tasks) {
+        const idx = tasks[col].findIndex(t => t.id === id);
+        if (idx !== -1) {
+          tasks[col].splice(idx, 1);
+          renderBoard();
+          break;
+        }
+      }
+    }
+
+    renderBoard();
+  </script>
+</body>
+</html>
