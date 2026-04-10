@@ -17,7 +17,7 @@ for (var i = demands[1]; i >= demands[0]; i--) {
 }
 //
 const models = [
-    {
+    { // nas cemtec -> pasta de equipa -> listas mestra -> LM-03Lista de euipamntos
         'name': "Equipamentos",
         'nameSheet': "From NAS-equipments",
         'file': 'equipments.xlsx',
@@ -40,7 +40,7 @@ const models = [
         'nameSheet': "From NAS-demands",
         'file': 'demands.xlsx',
         'sheets': sheetsDemands,
-        'columns': ['A', 'C', 'K', 'U', 'AP', 'AZ'],
+        'columns': ['A', 'C', 'K', 'AF', 'AP'], // tipo, ano, título, autores, revista
         'initReading': 4,
         'funcs': {
             'filter_putting_putIn': function (sheetName,thing,  col,pos) {
@@ -112,10 +112,12 @@ async function baixarArquivo() {
                 cellStyles: true
             });
 
-            console.log("Nomes das sheets: ", model['sheets']);
+            console.log("Nomes das sheets: ", model['sheets'],"from",workbook.SheetNames);
             var indSheet = 0, maxColumns = 0;
             var send = [],initDefault=[];
             for (var sheetName of model['sheets']) {
+                send.push([]);
+                console.log(sheetName+" ...");
                 const sheet = workbook.Sheets[sheetName]; // o 'te' do 'site' corta estranhamente
                 // baixa o arquivo localmente para debug
                 const baixar = true;
@@ -156,15 +158,15 @@ async function baixarArquivo() {
 
                     puts.push(putIn);
                     // coloca as sheets uma do lado da outra
-                    if (indSheet == 0 || send.length <= i - initReading - rems) {
-                        send.push({
-                            "line": i - initReading - rems, // 
-                            "values": initDefault.concat(putIn)
-                        });
-                    } else {
-                        // console.log(" -"+i - initReading - rems);
-                        send[i - initReading - rems]['values'] = send[i - initReading - rems]['values'].concat(putIn);
-                    }
+                    send[indSheet].push({
+                        "line": i - initReading - rems, // 
+                        "values": initDefault.concat(putIn)
+                    });
+                    
+                    // else {
+                    //     // console.log(" -"+i - initReading - rems);
+                    //     send[i - initReading - rems]['values'] = send[i - initReading - rems]['values'].concat(putIn);
+                    // }
                     // cols++;
                     // maxColumns = (cols>maxColumns)?cols:maxColumns;
                 }
@@ -178,12 +180,27 @@ async function baixarArquivo() {
                 //
                 indSheet++;
             }
-            // preenche os q n completa td
-            for (var s of send) {
-                while (s['values'].length < maxColumns) {
-                    s['values'].push("0-0");
+            // compacta o send
+            var sendA = send;
+            for (var i=0;i<sendA.length-1;i++) {
+                for (var j=0;j<sendA[i].length;j++) {
+                    if (j>=sendA[i+1].length) {
+                        sendA[i+1].push(sendA[i][j]);
+                    }
+                    if (sendA[i+1][j]['values'][i*model['columns'].length]=="") {
+                        var newLine = sendA[i+1][j]['values'];
+                        for (var k=0;k<model['columns'].length*(i+1);k++) {
+                            newLine[k] = sendA[i][j]['values'][k];
+                        }
+                        sendA[i+1][j]['values'] = newLine;
+                    }
+
                 }
+                // break;
             }
+            console.log("qt. sendA: "+sendA.length);
+            send = sendA[sendA.length-1]; // (sendA.length>=2)?2:
+            // send = sendA[1];
             //envia
             sending.push({
                 "name": model['name'],
@@ -199,7 +216,7 @@ async function baixarArquivo() {
         return sending;
 
     } catch (err) {
-        console.error('Erro:', err.message);
+        console.error('Erro(baixarArquivo):', err.message);
     }
 }
 

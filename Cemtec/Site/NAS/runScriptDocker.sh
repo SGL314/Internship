@@ -1,3 +1,5 @@
+echo "Iniciando docker ..."
+docker start getterOsheet
 echo "Coletando dados da Lista Mestra ..."
 docker exec getterOsheet node scripts/getTeste.js
 echo "Colocando dados no Sheets do Google ..."

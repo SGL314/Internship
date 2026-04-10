@@ -5,7 +5,7 @@ const { chromium } = require('playwright');
     const ip = "192.168.1.144";
     const loginUrl = `https://${ip}:5001`;
     const targetUrls = [
-        "https://"+ip+":5001/oo/r/16Bv36gxKdaQ4nVfJGbDqTLt7k32ZNmc",
+        "https://"+ip+":5001/oo/r/16Bv36gxKdaQ4nVfJGbDqTLt7k32ZNmc", // pasta de euipa -> listas mestra -> lm-03_lista de equips
         "https://"+ip+":5001/oo/r/16pnNL531nNH1sACJaKSMXKf1pacX7RH",
         "https://"+ip+":5001/oo/r/16GpG31Hg0yh1PlBaJih9IyLtMXL7Vn7"
     ];
@@ -19,7 +19,7 @@ const { chromium } = require('playwright');
         return;
     }
 
-    const browser = await chromium.launch({ headless: true });
+    const browser = await chromium.launch({ headless: true, devtools: true});
 
     const context = await browser.newContext({
         acceptDownloads: true,
@@ -73,19 +73,19 @@ const { chromium } = require('playwright');
         await page.click('#ext-gen62');
 
         // 4️⃣ Selecionar opção XLSX
+        await page.screenshot({ path: localSave + '/dbg2.png', fullPage: true });
         await page.waitForSelector('#ext-comp-1103');
         await page.click('#ext-comp-1103');
-        await page.screenshot({ path: localSave + '/dbg2.png', fullPage: true });
-        await page.waitForSelector('#ext-gen490', { timeout: 10000 });
         await page.screenshot({ path: localSave + '/dbg3.png', fullPage: true });
+        await page.waitForSelector('#ext-comp-1081', { timeout: 10000 });
         const [download] = await Promise.all([
             page.waitForEvent('download'),
-            page.click('#ext-gen490')
+            page.click('#ext-comp-1081')
         ]);
+        await page.screenshot({ path: localSave + '/dbg4.png', fullPage: true });
 
         // 5️⃣ Salvar arquivo
         // console.log("foto!");
-        await page.screenshot({ path: localSave + '/dbg4.png', fullPage: true });
         var nameFile = names[ind] || `file${ind}.xlsx`;
         await download.saveAs(localSave + `/${nameFile}`);
         await page.screenshot({ path: localSave + '/dbg5.png', fullPage: true });
@@ -93,5 +93,6 @@ const { chromium } = require('playwright');
         console.log("Arquivo exportado com sucesso! - " + nameFile);
         ind++;
     }
+    await page.screenshot({ path: localSave + '/dbg6.png', fullPage: true });
     await browser.close();
 })();

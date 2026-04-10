@@ -3,13 +3,16 @@ add_action('wp_footer', function() {
 <script>
 // ================================
 // SEU código original (SEM ALTERAR)
+// COLOQUE O CÓDIGO .JS AQUI DENTRO, SEM ALTERAR O RESTANTE
 // ================================
 
 const link01 = "https://script.google.com/macros/s/AKfycbxg09vGIustEFDI41OQbIcG-YSTyL4_N_5lPmVqKKDxYisfH7_IIZzguRZOk4fhuUtwww/exec";
 const link02 = "https://script.google.com/macros/s/AKfycbwT-8h2HsO2zvFFCwfS_3tZS3J6bb_kZlftmOFkgbFQxrsH6QMxOsx5WS_ypIw92OShvA/exec";
-const link03 = "https://script.google.com/macros/s/AKfycbwTIe__agkkoq7NcU-EFz6seaZcJ6BxXwjVUI6JYDA3N0S_Pz2h1otcGzzPEoqHNUz3aA/exec";
+const link03 = "https://script.google.com/macros/s/AKfycbz2bReGU_Ms8ByeSCTUljYIvFlI2bAG5j8rekPUbVvutt-Ctdxumq9s50-wB_ryhA0A1g/exec";
 
-var link = link01;
+const sheetName = "From NAS-demands"
+
+var link = link03 + "?sheet=" + sheetName;
 
 function lerJSON() {
     console.log("Lendo Sheets ...");
@@ -17,69 +20,71 @@ function lerJSON() {
     fetch(link) //link pega sheet
         .then(res => res.json())
         .then(data => {
-//             print("Dados coletados do Sheets.");
+            //             print("Dados coletados do Sheets.");
             sheets2table(data);
             console.log("JSON carregado !");
-//             print("Sheets lido.");
+            //             print("Sheets lido.");
         })
         .catch(err => console.error('Erro ao carregar JSON:', err));
 
-//     print("afterrr ...");
+    //     print("afterrr ...");
 }
 
 function sheets2table(datas) {
-    var put = [];
+    var put = [], process = [];
+    const tamanhoBlocoDados = 5;
+    const anosColocados = 7;
+    // console.log(datas);
     for (var data of datas) {
-        var ano = data[0][0];
-        if (ano > 2024) continue;
-//         print(data);
-        put.push(data);
-    }
-
-    var ord = [];
-    for (var i = put.length - 1; i >= 0; i--) {
-        ord.push(put[i]);
-    }
-    put = ord;
-
-    for (var year of put) {
-        var body = document.getElementById("tabelaMestra").getElementsByTagName("TBODY")[0];
-
-        ano = year[0][0];
-
-        var i = -1;
-
-        for (var line of year) {
-            var tr = document.createElement("tr");
-            i += 1;
-            if (i == 0) continue;
-            var td = document.createElement("td");
-            td.innerHTML = ano;
-            tr.appendChild(td);
-            for (var item in line) {
-                td = document.createElement("td");
-                td.innerHTML = line[item];
-
-                if (ano == 2019 && item == "") { 
-                    td.innerHTML = "Engenharias III";
+        for (var a = 0; a < anosColocados; a++) {
+            if (data[a * tamanhoBlocoDados] == "Artigo científico") {
+                var show = [];
+                for (var i = 0; i < tamanhoBlocoDados; i++) {
+                    show.push(data[a * tamanhoBlocoDados + i]);
                 }
-                if (item == "Observações") { 
-                    td.innerHTML = line["Beneficiados do resultado 1"];
-                } else if (item == "Beneficiados do resultado 1") {
-                    td.innerHTML = line["Observações"];
+                if (!isStrange(show)) {
+                    process.push(show);
                 }
-
-                tr.appendChild(td);
             }
-
-            body.appendChild(tr);
         }
     }
+    // sort & cut type
+    process.sort(function (a, b) {
+        return b[1] - a[1]; // Ordena pelo segundo elemento (ano)
+    });
+    process = process.map(function (item) {
+        var a = [];
+        for (var i = 1; i < item.length; i++) {
+            a.push(item[i]);
+        }
+        return a;
+    });
+    // console.log(process);
+    // put there
+    var body = document.getElementById("tabelaMestra").getElementsByTagName("TBODY")[0];
+    for (var data of process) {
+        var tr = document.createElement("tr");
+        for (var item of data) {
+            var td = document.createElement("td");
+            td.innerHTML = item;
+            tr.appendChild(td);
+        }
+        body.appendChild(tr);
+    }
+    return;
 }
 
+function isStrange(show) {
+    for (var item of show) {
+        if (item == undefined || item == null || item == "" || item == "-" || item == "n/a") return true;
+    }
+    return false;
+}
 // ================================
 // START AUTOMÁTICO AO ABRIR A PÁGINA
+// COLOQUE O CÓDIGO .JS AQUI DENTRO, SEM ALTERAR O RESTANTE
 // ================================
+
 document.addEventListener("DOMContentLoaded", function() {
     // evita erro caso a página não tenha tabela
     const tab = document.getElementById("tabelaMestra");
