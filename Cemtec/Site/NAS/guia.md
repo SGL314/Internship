@@ -18,8 +18,12 @@ uptime
 docker run -d --name getterOsheet -v /volume1/site_admin/libreoffice:/app -w /app mcr.microsoft.com/playwright:v1.58.2-jammy sleep infinity
 
 # Debugging
-## Rodaqr docker do python
+## Rodar docker do python
 python3 -m http.server 8090
+### Coloque em:
+root@CEMTEC:/volume1/site_admin/libreoffice# 
+### Acesse em:
+192.168.1.144:8090
 
 # VIM:
 remove td do arquivo: ':%d'

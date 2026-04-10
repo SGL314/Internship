@@ -18,6 +18,7 @@ const { chromium } = require('playwright');
 
 
     const page = await context.newPage();
+    const timeWait  = 15000;
 
     await page.goto(loginUrl, { waitUntil: "domcontentloaded" });
 
@@ -26,20 +27,20 @@ const { chromium } = require('playwright');
     //     const el = document.querySelector('#sds-login-vue');
     //     console.log("sds-login-vue:", el ? el.innerHTML.length : "não existe");
     //     return el && el.innerHTML.trim().length > 0;
-    // }, { timeout: 10000 });
+    // }, { timeout: timeWait });
     //photo
 
 
     await page.goto(loginUrl, { waitUntil: "domcontentloaded" });
     //usuário
-    await page.waitForSelector('input[placeholder="Username"]', { timeout: 10000 });
+    await page.waitForSelector('input[placeholder="Username"]', { timeout: timeWait });
     await page.fill('input[placeholder="Username"]', usuario);
     //debug
     //clicar seta azul
-    await page.waitForSelector('.login-btn-spinner-wrapper', { timeout: 10000 });
+    await page.waitForSelector('.login-btn-spinner-wrapper', { timeout: timeWait });
     await page.locator('.login-btn-spinner-wrapper').first().click({ force: true });
     //esperar campo de senha
-    await page.waitForSelector('input[type="password"]', { timeout: 10000 });
+    await page.waitForSelector('input[type="password"]', { timeout: timeWait });
     //debug
     //senha
     await page.fill('input[type="password"]', senha);
@@ -57,14 +58,14 @@ const { chromium } = require('playwright');
     // 3️⃣ Clicar no menu Exportar
     //aguardar botão habilitado
     await page.screenshot({ path: localSave+'/dbg1.png', fullPage: true });
-    await page.waitForSelector('#ext-gen62:not([aria-disabled="true"])', { timeout: 10000 });
+    await page.waitForSelector('#ext-gen62:not([aria-disabled="true"])', { timeout: timeWait });
     await page.click('#ext-gen62');
     
     // 4️⃣ Selecionar opção XLSX
     await page.waitForSelector('#ext-comp-1103');
     await page.click('#ext-comp-1103');
     await page.screenshot({ path: localSave+'/dbg2.png', fullPage: true });
-    await page.waitForSelector('#ext-gen490', { timeout: 10000 });
+    await page.waitForSelector('#ext-gen490', { timeout: timeWait });
     const [download] = await Promise.all([
         page.waitForEvent('download'),
         page.click('#ext-gen490')
