@@ -1,0 +1,20 @@
+limpos: 
+miguel 1474, 
+david 2853
+
+ssh a2023951474@teiacoltec.org@150.164.102.160
+
+URGENTE:
+
+
+SEMI-URGENTE:
+1:colocar pra adicionar informações quando cria;
+
+ADEREÇO:
+1:alterar cores; 
+2:corrigir botões quando adiciona; VER
+
+CODIGOS:
+rm teste/*; cp outOfWP/* teste;
+
+rm outOfWP/*; cp teste/* outOfWP;

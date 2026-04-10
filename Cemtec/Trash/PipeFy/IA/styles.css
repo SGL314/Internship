@@ -1,0 +1,114 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6fa;
+    margin: 0;
+}
+.kanban-board {
+    display: flex;
+    gap: 20px;
+    padding: 40px;
+}
+.kanban-column {
+    background: #fff;
+    border-radius: 8px;
+    border: 2px solid black;
+    box-shadow: 0 2px 8px #0001;
+    width: 300px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+}
+.kanban-column h2 {
+    margin: 0 0 12px 0;
+    font-size: 1.2em;
+}
+.kanban-cards {
+    flex: 1;
+    min-height: 40px;
+}
+.kanban-card {
+    background: #e3e7ef;
+    border: 2px solid #4f8cff;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* cursor: grab; */
+    transition: border 0.2s;
+
+    display: flex;
+    flex-direction: column;
+}
+.kanban-card[data-drop-position="before"] {
+    border-top: 12px solid #4f8cff;
+    /*border-top: 12px solid #ff874f;*/
+}
+.kanban-card[data-drop-position="after"] {
+    border-bottom: 12px solid #4f8cff;
+}
+.kanban-actions button {
+    margin-left: 4px;
+    background: #d1d8e6;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 2px 6px;
+
+    align-self: flex-end;
+    display: flex;
+    flex-direction: column;
+}
+.add-task-form {
+    display: flex;
+    margin-top: 12px;
+}
+.add-task-form input {
+    flex: 1;
+    padding: 4px;
+}
+.add-task-form button {
+    margin-left: 4px;
+}
+#editModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: #0005;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+#editModal .modal-content {
+    background: #fff;
+    border-radius: 8px;
+    padding: 24px 32px;
+    min-width: 300px;
+    box-shadow: 0 4px 24px #0003;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+}
+#editModal .modal-content button.close-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+.top-task{
+    display: flex;
+    flex-direction: row;
+}
+.span-moving{
+    font-size: 20px;
+}
+.span-datas{
+    font-size: 15px;
+}
