@@ -531,7 +531,7 @@
     <!-- Google Charts -->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-    <script type="text/javascript"> // pega da planilha de apoio ao site no google sheets
+    <script type="text/javascript"> // pega da planilha de apoio ao site no google sheets, preenche os equipamentos
         (function () {
             const formId = 205;       // ID do formulário
             const fieldId = 13;       // ID do dropdown visível
@@ -577,8 +577,6 @@
                 var num = 1;
                 for (var item of itemsFormulados.sort()) {
                     const local = document.querySelector("#equipments-list");
-                    // console.log(local);
-                    // adding=in : <li><b>SR-800N</b></li>
                     const itemElement = document.createElement('li');
                     const bolding = document.createElement('b');
                     bolding.textContent = item;
